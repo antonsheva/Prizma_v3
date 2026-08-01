@@ -15,6 +15,8 @@ public:
   static void initTimer();
   static void fillDevParams(int dataArrLen, String *data);
   static void callback();
+  static void send(String str);
+ 
 
   static void run(void *param);
 };

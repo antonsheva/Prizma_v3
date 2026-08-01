@@ -6,7 +6,7 @@
 
 #include "define.h"
 #include "AN_objects.h"
-
+#include "AN_btCb.h"
 
 
 #include "AN_taskUsb.h"
@@ -22,9 +22,8 @@
 #include "AN_taskPwrAut.h"
 #include "AN_taskCmd.h"
 #include "AN_taskBt.h"
-#include "AN_taskRmAut.h"
 #include "AN_taskPrefs.h"
 
-
+extern TaskHandle_t Handle_taskRmReceive;
 
 #endif

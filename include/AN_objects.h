@@ -8,7 +8,7 @@
 #include "freertos/semphr.h" 
 #include "driver/uart.h"
   
-// #include "Preferences.h"
+#include <BluetoothSerial.h>
 #include "JammerState.h"
 #include "define.h"
 
@@ -67,6 +67,7 @@ typedef struct{
 typedef struct{
     BYTE opCodeList [16]  = {0};
     BYTE opCodeQty        = 0;
+    BYTE rmSel            = 0;
     bool swtchActDev      = 0;
 }_RM_AUT;
 
@@ -100,7 +101,7 @@ typedef struct {
 } _RM_PACK;
 
 
- 
+extern BluetoothSerial SerialBT;  
 
 extern std::vector<JammerState> G_jmmrsList;
  
@@ -145,7 +146,7 @@ extern EventGroupHandle_t EventGroupSpp   ;
 extern EventGroupHandle_t EventGroupBt    ;  
  
 extern BYTE G_subscribersQty;
-
+extern uint8_t G_selRm;
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];
 

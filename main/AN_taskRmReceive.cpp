@@ -1,12 +1,13 @@
-#include "../include/AN_taskRmReceive.h"
+ 
 #include "AN_taskRmReceive.h"
-#include "AN_taskRmReceive.h"
+#include "main.h" 
  
 TimerHandle_t xTimerRm;
 AN_taskRmReceive::AN_taskRmReceive(/* args */){}
 AN_taskRmReceive::~AN_taskRmReceive(){}
- 
-static int rmNum = 0;
+
+
+
 static bool timerIsStart = 0;
 void rmTimerCallback(TimerHandle_t xTimerRm){
   _SERIAL_PACK sPack;
@@ -18,17 +19,19 @@ void rmTimerCallback(TimerHandle_t xTimerRm){
     return;
   }    
   Serial1.read(sPack.data, sPack.len);
-  sPack.dir = MSG_DIR_RESPONSE;
+  Serial.println(String(sPack.data));
   timerIsStart = 0;
-  xQueueSend(QueueRmEvent, &sPack, portMAX_DELAY);    
+  AN_taskRmReceive::getDevInfo(String(sPack.data));  
+  free(sPack.data);  
+  vTaskResume(Handle_taskRmReceive);   
 }
 
 void AN_taskRmReceive::initTimer(){
-  xTimerRm = xTimerCreate("rmTimer", 30, pdFALSE, (void * ) 0, rmTimerCallback);
+   xTimerRm = xTimerCreate("rmTimer", 30, pdFALSE, (void * ) 0, rmTimerCallback);
 }
 
-
 void startRmTimer(){
+  // if(xTimerRm == NULL)return;
   xTimerStart(xTimerRm, 20);
 }
 
@@ -40,10 +43,10 @@ void AN_taskRmReceive::fillDevParams(int dataArrLen, String *data){
     for(int i=0; i<dataArrLen; i++){
         if(data[i].indexOf(":")== -1)continue;
 
-        if(data[i].indexOf("MT"  )  != -1){G_lJmrStt.rebMod[rmNum].mc    = data[i].substring(3, data[i].length()).toInt();  }
-        if(data[i].indexOf("SP"  )  != -1){G_lJmrStt.rebMod[rmNum].mask  = data[i].substring(3, data[i].length()).toInt();  }
-        if(data[i].indexOf("VCPU")  != -1){G_lJmrStt.rebMod[rmNum].vcpu  = data[i].substring(5, data[i].length()).toFloat();}
-        if(data[i].indexOf("TEMP")  != -1){G_lJmrStt.rebMod[rmNum].temp  = data[i].substring(5, data[i].length()).toFloat();}
+        if(data[i].indexOf("MT"  )  != -1){G_lJmrStt.rebMod[G_selRm].mc    = data[i].substring(3, data[i].length()).toInt();  }
+        if(data[i].indexOf("SP"  )  != -1){G_lJmrStt.rebMod[G_selRm].mask  = data[i].substring(3, data[i].length()).toInt();  }
+        if(data[i].indexOf("VCPU")  != -1){G_lJmrStt.rebMod[G_selRm].vcpu  = data[i].substring(5, data[i].length()).toFloat();}
+        if(data[i].indexOf("TEMP")  != -1){G_lJmrStt.rebMod[G_selRm].temp  = data[i].substring(5, data[i].length()).toFloat();}
     }      
 }
 
@@ -73,32 +76,83 @@ void AN_taskRmReceive::getDevInfo(String data){
  
 void AN_taskRmReceive::callback(){
   if(timerIsStart){
-    xTimerReset(xTimerRm, 100);
+    xTimerReset(xTimerRm, 30);
   }else{
     startRmTimer();
     timerIsStart = 1;
   }
 }
 
+typedef struct {
+    BYTE rx;
+    BYTE tx;
+}_RM_PINS;
+ 
+_RM_PINS rmSer1;
+_RM_PINS rmSer2;
+_RM_PINS rmRxTx; 
+
+
+static BYTE activeRebMod;
+static int rmSel = 0;
+static int rmNum = 0;
+
+
+void AN_taskRmReceive::send(String str){
+   
+    static BYTE activeRebMod = 0; 
+    if(activeRebMod != rmSel){
+        activeRebMod = rmSel;
+        rmRxTx = (activeRebMod == 0) ? rmSer1 : rmSer2;
+        if(!activeRebMod) Serial1.begin(9600, SERIAL_8N1, UART_RM_RX1, UART_RM_TX1); 
+        else              Serial1.begin(9600, SERIAL_8N1, UART_RM_RX2, UART_RM_TX2); 
+    }    
+ 
+    Serial.println("rx-> "+String(rmRxTx.rx)+" tx-> "+String(rmRxTx.tx));
+    vTaskDelay(5);
+    Serial1.println(str);
+    Serial. println(str);
+}
+
 void AN_taskRmReceive::run(void *param){
   _SERIAL_PACK sPack;
+  AN_shiftDataArr sft;
+  _RM_AUT rmAut;
+  int code;
+  rmSer1.rx = 34;
+  rmSer1.tx = 32;
+  rmSer2.rx = 35;
+  rmSer2.tx = 33;
   initTimer();
   for(;;){
-    if (xQueueReceive(QueueRmEvent, &sPack, (TickType_t)portMAX_DELAY)) {
-        if(sPack.dir == MSG_DIR_RESPONSE){
-
-        }else{
-
-        }
-        Serial.println(" - - data from RM - - -");
-        Serial.write(sPack.data, sPack.len);
-        free(sPack.data);
-      
+    xQueueReceive(QueueRmEvent, &rmAut, (TickType_t)portMAX_DELAY);
+    Serial.println("------ QueueRmEvent  ---------"); 
+    if(rmAut.swtchActDev)G_selRm = 0;
+    if(rmAut.rmSel)rmSel = rmAut.rmSel-1;
+    for(int i=0; i<rmAut.opCodeQty; i++){
+      Serial.println("------ stt 1 ---------"); 
+      timerIsStart = 0;
+      code = rmAut.opCodeList[i];
+      if(code == CMD_RM_AT       )  send("AT\n\r");   
+      if(code == CMD_RM_GET_ATBT )  send("ATBT\n\r"); 
+      if(code == CMD_RM_GET_ATC  )  send("ATC\n\r");  
+      if(code == CMD_RM_GET_ATI  )  send("ATI\n\r");  
+      if(code == CMD_RM_ATZ      )  send("ATZ\n\r");  
+      if(code == CMD_RM_SET_ATW  )  send("AT&W\n\r");       
+      if(code == CMD_RM_SET_ATC  ){
+          String str = "ATC="+String(G_lJmrStt.rebMod[rmSel].mc)+
+                                    ","+String(G_lJmrStt.rebMod[rmSel].mask)+"\n\r"; 
+                                    send(str);      
+      }
+      G_rebModAut_tm = 0; 
+      Serial.println("------ stt 2 ---------");                    
+      vTaskSuspend(NULL);
+      if(rmAut.swtchActDev)rmSel = (rmSel == 0) ? 1 : 0;
     }
   }
 }
 
-
+ 
 
 
 

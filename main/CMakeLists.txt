@@ -20,7 +20,7 @@ set(SOURCES main.cpp
             AN_taskPwrAut.cpp
             AN_taskCmd.cpp
             AN_taskBt.cpp
-            AN_taskRmAut.cpp
+            AN_btCb.cpp
             AN_taskPrefs.cpp
 
 )

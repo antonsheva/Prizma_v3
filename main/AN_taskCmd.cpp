@@ -13,11 +13,11 @@ void AN_taskCmd::init()
 
 void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	switch (msg->cmd){
-		case CMD_RM_AT			: sendCmdToRm(CMD_RM_AT,         msg->mask1);  break;
-		case CMD_RM_GET_ATBT: sendCmdToRm(CMD_RM_GET_ATBT,	 msg->mask1);  break;
-		case CMD_RM_GET_ATC	: sendCmdToRm(CMD_RM_GET_ATC,		 msg->mask1);  break;
-		case CMD_RM_GET_ATI	: sendCmdToRm(CMD_RM_GET_ATI,		 msg->mask1);  break;
-
+		case CMD_RM_AT			: sendCmdToRm(CMD_RM_AT,         msg->mask1);	break;
+		case CMD_RM_GET_ATBT: sendCmdToRm(CMD_RM_GET_ATBT,	 msg->mask1);	break;
+		case CMD_RM_GET_ATC	: sendCmdToRm(CMD_RM_GET_ATC,		 msg->mask1);	break;
+		case CMD_RM_GET_ATI	: sendCmdToRm(CMD_RM_GET_ATI,		 msg->mask1);	break;
+		case CMD_RM_GET_INFO: getRmInfo();  															break;
 		/**
 		 * @brief preferences commands
 		 * saving data to preference such as: addresses, ID, group...
@@ -68,7 +68,7 @@ void AN_taskCmd::getRmInfo(){
 	rmAut.opCodeList[5] = CMD_RM_GET_ATBT;
 	rmAut.opCodeQty   = 6;
 	rmAut.swtchActDev = true;
-	xQueueSend(QueueRebModAut, &rmAut, portMAX_DELAY); 
+	xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY); 
 }
 
 void AN_taskCmd::test(){
@@ -236,7 +236,7 @@ void AN_taskCmd::sendCmdToRm(int cmd, int sel){
 		case CMD_RM_SET_ATW  : Serial1.print ("AT&W\n\r");  break;             
 		case CMD_GET_STATE   : Serial1.print ("\n\r");  break;
 		case CMD_SET_STATE   : Serial1.print (" \n\r");  break;
-		case CMD_GET_INFO    : Serial1.print (" \n\r");  break;
+		// case CMD_GET_INFO    : Serial1.print (" \n\r");  break;
 	}
    
 	// xQueueSend(QueueRmSend, &p, portMAX_DELAY);

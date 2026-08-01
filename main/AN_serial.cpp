@@ -88,7 +88,7 @@ void AN_serial::processingReceivedData(){
   std::string crcStr =  getCrcString(dataPackStr);
   dataPackStr.clear();
 
- 
+  Serial.println(dataPackStr.c_str());
   
   if(dataSrc == SERIAL_SRC_485){
     if(!checkCrc(crcStr, dataStr)){

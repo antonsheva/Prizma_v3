@@ -1,4 +1,4 @@
-#include "../include/AN_rs485.h"
+#include "AN_rs485.h"
 #include "FastCRC.h" 
 
 void AN_rs485::processMsg(_MSG_PACK *msg)
@@ -85,9 +85,11 @@ void AN_rs485::sendMsgToBt(_MSG_PACK *msg){
                 ESP_LOGE("UART", "serializeJmmrList: malloc failed");
                 return;
             }
-            len =  serialConv.serializeJmmrList(G_jmmrsList, sPack.data);
-            sPack.len = len;
-            transmitdataToBt(&sPack);
+
+            sPack.len = serialConv.serializeJmmrList(G_jmmrsList, sPack.data);
+            sPack.cmd = CMD_BT_SEND;  
+            xQueueSend(QueueBt, &sPack, portMAX_DELAY);
+            
         break; 
 		
         case CMD_SET_JMMR_LIST: sendBtResponse(msg->cmdType, 1); break;

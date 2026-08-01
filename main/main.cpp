@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../include/main.h"
+#include "main.h"
 
  // Check if Bluetooth is available
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
@@ -25,7 +25,6 @@ TaskHandle_t Handle_taskPwrAut        = NULL;
 TaskHandle_t Handle_taskCmd           = NULL;
 TaskHandle_t Handle_taskBt            = NULL;
 TaskHandle_t Handle_taskRs485Send     = NULL;
-TaskHandle_t Handle_taskRmAut         = NULL;
 TaskHandle_t Handle_taskPrefs         = NULL;
 
 
@@ -41,7 +40,7 @@ AN_taskLeds           taskLeds        ;
 AN_taskPwrAut         taskPwrAut      ;
 AN_taskCmd            taskCmd         ;
 AN_taskBt             taskBt          ;
-AN_taskRmAut          taskRmAut       ;
+ 
 AN_taskPrefs          taskPrefs       ;
 
 void initserial(){
@@ -51,36 +50,74 @@ void initserial(){
 
   Serial .begin(115200);
   Serial2.begin(115200, SERIAL_8N1, UART_RS485_RX, UART_RS485_TX, true);
-
-  Serial1.setTimeout(100);  
   Serial1.begin(9600, SERIAL_8N1, UART_RM_RX1, UART_RM_TX1); 
 
   Serial.onReceive (usb.callback);
   Serial1.onReceive(rm.callback);
   Serial2.onReceive(rs485.callback);
 
+  SerialBT.register_callback(AN_btCb::callback);
+
 }
-void initPins(){
-  pinMode(PIN_PWR_HOLD_DRV, OUTPUT);
-  pinMode(PIN_PWR_BUTTON, INPUT_PULLUP);
-  pinMode(PIN_RS485_DIR_DRV, OUTPUT);
-  pinMode(PIN_FAN, OUTPUT); 
+// void initPins(){
+//   pinMode(PIN_PWR_HOLD_DRV, OUTPUT);
+//   pinMode(PIN_PWR_BUTTON, INPUT_PULLUP);
+//   pinMode(PIN_RS485_DIR_DRV, OUTPUT);
+//   pinMode(PIN_FAN, OUTPUT); 
 
-  pinMode(PIN_CN1, INPUT);
-  pinMode(PIN_CN2, INPUT);
+//   pinMode(PIN_CN1, INPUT);
+//   pinMode(PIN_CN2, INPUT);
   
-  pinMode(LED_1, OUTPUT);
-  pinMode(LED_2, OUTPUT);
-  pinMode(LED_3, OUTPUT);
-  pinMode(LED_4, OUTPUT);
-  pinMode(LED_5, OUTPUT);
-  pinMode(LED_6, OUTPUT);
+//   pinMode(LED_1, OUTPUT);
+//   pinMode(LED_2, OUTPUT);
+//   pinMode(LED_3, OUTPUT);
+//   pinMode(LED_4, OUTPUT);
+//   pinMode(LED_5, OUTPUT);
+//   pinMode(LED_6, OUTPUT);
   
+
    
-  pinMode(PIN_JMMR_ON_DRV_1, OUTPUT);
-  pinMode(PIN_JMMR_ON_DRV_2, OUTPUT);
+//   pinMode(PIN_JMMR_ON_DRV_1, OUTPUT);
+//   pinMode(PIN_JMMR_ON_DRV_2, OUTPUT);
 
-  digitalWrite(PIN_PWR_HOLD_DRV , 1); 
+//   digitalWrite(PIN_PWR_HOLD_DRV , 1); 
+// }
+
+void initPins(){
+  gpio_set_direction(UART_USB_TX, GPIO_MODE_OUTPUT);
+  gpio_set_direction(UART_RS485_TX, GPIO_MODE_OUTPUT);
+  gpio_set_direction(UART_RM_TX1, GPIO_MODE_OUTPUT);
+  gpio_set_direction(UART_RM_TX2, GPIO_MODE_OUTPUT);  
+
+  gpio_set_direction(UART_RM_RX1, GPIO_MODE_INPUT);
+  gpio_set_direction(UART_RM_RX2, GPIO_MODE_INPUT); 
+  gpio_set_pull_mode(UART_RM_RX1, GPIO_PULLUP_ONLY);    
+  gpio_set_pull_mode(UART_RM_RX2, GPIO_PULLUP_ONLY);   
+  
+  gpio_set_direction(PIN_PWR_HOLD_DRV, GPIO_MODE_OUTPUT);
+  gpio_set_direction(PIN_PWR_BUTTON, GPIO_MODE_INPUT);
+  gpio_set_pull_mode(PIN_PWR_BUTTON, GPIO_PULLUP_ONLY);
+
+  gpio_set_direction(PIN_RS485_DIR_DRV, GPIO_MODE_OUTPUT);
+  gpio_set_direction(PIN_FAN, GPIO_MODE_OUTPUT); 
+
+  gpio_set_direction(PIN_CN1, GPIO_MODE_INPUT);
+  gpio_set_pull_mode(PIN_CN1, GPIO_PULLUP_ONLY);  
+  gpio_set_direction(PIN_CN2, GPIO_MODE_INPUT);
+  gpio_set_pull_mode(PIN_CN2, GPIO_PULLUP_ONLY);  
+  
+  gpio_set_direction(LED_1, GPIO_MODE_OUTPUT);
+  gpio_set_direction(LED_2, GPIO_MODE_OUTPUT);
+  gpio_set_direction(LED_3, GPIO_MODE_OUTPUT);
+  gpio_set_direction(LED_4, GPIO_MODE_OUTPUT);
+  gpio_set_direction(LED_5, GPIO_MODE_OUTPUT);
+  gpio_set_direction(LED_6, GPIO_MODE_OUTPUT);
+   
+  gpio_set_direction(PIN_JMMR_ON_DRV_1, GPIO_MODE_OUTPUT);
+  gpio_set_direction(PIN_JMMR_ON_DRV_2, GPIO_MODE_OUTPUT);
+
+  gpio_set_level(PIN_PWR_HOLD_DRV , 1); 
+
 }
 
 extern "C" void app_main(void)
@@ -89,19 +126,18 @@ extern "C" void app_main(void)
   initPins();
   initserial();
 
+  xTaskCreate(taskRmReceive.run,    "t2_taskRmReceive",    1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRmReceive    );
   xTaskCreate(taskUsb.run,          "t1_taskUsb",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskUsb          );
-  xTaskCreate(taskRmReceive.run,    "t2_taskUsbEvent",     2048,   NULL, tskIDLE_PRIORITY, &Handle_taskRmReceive    );
   xTaskCreate(taskRs485Poll.run,    "t3_taskRs485Poll",    1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Poll    );
   xTaskCreate(taskRs485Receive.run, "t4_taskRs485Receive", 1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Receive );
   xTaskCreate(taskButton.run,       "t5_taskButton",       2048,   NULL, tskIDLE_PRIORITY, &Handle_taskButton       );
   xTaskCreate(taskAnalog.run,       "t6_taskAnalog",       2048,   NULL, tskIDLE_PRIORITY, &Handle_taskAnalog       );
-  xTaskCreate(taskMonitor.run,      "t7_taskMonitor",      2048,   NULL, tskIDLE_PRIORITY, &Handle_taskMonitor      );
   xTaskCreate(taskLeds.run,         "t8_taskLeds",         2048,   NULL, tskIDLE_PRIORITY, &Handle_taskLeds         ); 
   xTaskCreate(taskPwrAut.run,       "t9_taskPwrAut",       1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskPwrAut       );    
   xTaskCreate(taskCmd.run,          "t10_taskCmd",         1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskCmd          );    
   xTaskCreate(taskBt.run,           "t11_taskBt",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskBt           );
   xTaskCreate(taskRs485Send.run,    "t12_taskRs485Send",   1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Send    );
-  xTaskCreate(taskRmAut.run,        "t13_taskRmAut",       1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRmAut        );
+  xTaskCreate(taskMonitor.run,      "t7_taskMonitor",      2048,   NULL, tskIDLE_PRIORITY, &Handle_taskMonitor      );
   xTaskCreate(taskPrefs.run,        "t14_taskPrefs",       1024*2, NULL, tskIDLE_PRIORITY, &Handle_taskPrefs        );  
   
 }

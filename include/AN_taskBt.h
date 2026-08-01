@@ -2,7 +2,7 @@
 #define _AN_BT_
 
 #include "Arduino.h"
-#include <BluetoothSerial.h> 
+ 
 #include "AN_objects.h"
 #include "AN_serial.h"
 

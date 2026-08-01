@@ -1,7 +1,7 @@
 #include "../include/AN_objects.h"
 
 JammerState G_lJmrStt;
- 
+BluetoothSerial SerialBT;  
 
 QueueHandle_t QueueBt            = NULL;
  
@@ -45,6 +45,8 @@ _RS485_data RS485_data;
 _MSG_PACK G_rm_msg;
 _MSG_PACK G_485_msg;
   
+uint8_t G_selRm = 0;
+
 BYTE G_subscribersQty = 0;  
 
 char G_txtJsonBuff[3968];
@@ -71,7 +73,7 @@ bool G_btStart      = false;
 
 bool G_pwrMode      = false;
  
-int G_rebModAut_tm = 0;  
+int G_rebModAut_tm = 102;  
 int G_msgTxtDataLen;
 
 char G_msgTxtData[TXT_BUFF_LEN];
@@ -113,7 +115,7 @@ void initObjects()
     QueueRs485Event      = xQueueCreate(4, sizeof(uart_event_t));  
     QueueRs485           = xQueueCreate(4, sizeof(_SERIAL_PACK));
 
-    QueueRmEvent         = xQueueCreate(32, sizeof(_SERIAL_PACK));  
+    QueueRmEvent         = xQueueCreate(32, sizeof(_RM_AUT));  
     QueueRmSend          = xQueueCreate(4, sizeof(_RM_PACK)); 
   
     

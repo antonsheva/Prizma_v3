@@ -1,4 +1,5 @@
-#include "../include/AN_taskMonitor.h"
+#include "AN_taskMonitor.h"
+#include "main.h"
 
 AN_taskMonitor::AN_taskMonitor(/* args */)
 {
@@ -23,15 +24,16 @@ void AN_taskMonitor::run(void *param){
   for(;;){
 
     switch(aut){
-        case 0: ledsCode[0]=1;
-                xQueueSend(QueueLeds, ledsCode, 10); break;
-        case 10:  msg.cmd = CMD_GET_INFO;
+        case 0:   ledsCode[0]=1;
+                  xQueueSend(QueueLeds, ledsCode, 10); break;
+
+        case 20 :  msg.cmd = CMD_APLAY_PWR;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
-        case 20:  msg.cmd = CMD_APLAY_PWR;
+        case 200:  msg.cmd = CMD_RM_GET_INFO;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
-                   
+
     }
-    if(aut < 30) aut++;
+    if(aut < 230) aut++;
 
 
 
@@ -47,11 +49,10 @@ void AN_taskMonitor::run(void *param){
 
 //////////////////////////////////////////////////
     /**todo enamble the RM */
-    // if(G_rebModAut_tm < 300)G_rebModAut_tm++;
-    // else if(rmCtrl->isBusy){
-    //     G_rebModAut_tm = 0;
-    //     vTaskResume(TaskHandle_rebModAut);
-    // }
+    if(G_rebModAut_tm < 102)G_rebModAut_tm++;
+    if(G_rebModAut_tm == 100){
+        vTaskResume(Handle_taskRmReceive);
+    }
 
     // if(G_pauseRmDataCnt)G_pauseRmDataCnt--;
     // if(G_pauseRmDataCnt == 2){
@@ -80,7 +81,6 @@ void AN_taskMonitor::run(void *param){
         ledsCode[0]=6;
         ledsCode[1]=pwrOutVal;
         xQueueSend(QueueLeds, ledsCode, 10);        
-
       }
 
     }    
