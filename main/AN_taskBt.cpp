@@ -53,10 +53,14 @@ void AN_taskBt::send(_SERIAL_PACK sPack){
 
 void AN_taskBt::receive(){
   _SERIAL_PACK sPack;
-  sPack.len = SerialBT.available();
-  sPack.data = static_cast<char *>(malloc(sPack.len)); 
+  sPack.len = 0;
+  sPack.data = static_cast<char *>(malloc(128)); 
+  memset(sPack.data, 0, 128);
+  while(SerialBT.available()){
+    sPack.data[sPack.len++] = SerialBT.read();
+    if(sPack.len >120)break;
+  }
  
-  for(int i=0; i<sPack.len; i++)sPack.data[i] = SerialBT.read();
   serial.dataSrc = SERIAL_SRC_BT; 
   G_waitBtPackCnt = 0;   
   
