@@ -93,6 +93,6 @@ void AN_taskMonitor::run(void *param){
     //   memccpy(sPack.data, d.c_str(), 0, 128);
     //   xQueueSend(QueueBt, &sPack, portMAX_DELAY);
     // }
-    vTaskDelay(50/portTICK_PERIOD_MS);
+    vTaskDelay(10/portTICK_PERIOD_MS);
   }  
 }

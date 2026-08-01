@@ -33,6 +33,8 @@ typedef struct{
     int    sender      = 0;
     int    response    = 0; 
     
+    int    rmNum       = 0;
+
     int    addrEsp32   = 0;
     int    modCode1    = 0;
     int    modCode2    = 0;   
@@ -108,9 +110,9 @@ extern _MSG_PACK G_485_msg;
  
 extern JammerState G_lJmrStt;
 
+extern QueueHandle_t QueueBt;
 
-
-extern QueueHandle_t QueueBt        ;
+extern QueueHandle_t QueueBtSend        ;
 extern QueueHandle_t QueueBtReceive     ;
 
 extern QueueHandle_t QueueRs485Send     ;

@@ -95,7 +95,7 @@ void AN_taskBt::callback(esp_spp_cb_event_t event, esp_spp_cb_param_t * param){
 void AN_taskBt::run(void *data){
     _SERIAL_PACK sPack;
     for(;;){
-    if(xQueueReceive(QueueBt, &sPack, portMAX_DELAY)){
+      if(xQueueReceive(QueueBt, &sPack, portMAX_DELAY)){
         switch(sPack.cmd){
           case CMD_BT_START   : start();        break;
           case CMD_BT_STOP    : stop();         break;
@@ -104,6 +104,6 @@ void AN_taskBt::run(void *data){
  
         }
  
-    }
+      }
     }
 }

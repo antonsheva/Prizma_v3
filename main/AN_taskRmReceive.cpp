@@ -2,11 +2,36 @@
 #include "AN_taskRmReceive.h"
 #include "AN_taskRmReceive.h"
  
-
+TimerHandle_t xTimerRm;
 AN_taskRmReceive::AN_taskRmReceive(/* args */){}
 AN_taskRmReceive::~AN_taskRmReceive(){}
+ 
+static int rmNum = 0;
+static bool timerIsStart = 0;
+void rmTimerCallback(TimerHandle_t xTimerRm){
+  _SERIAL_PACK sPack;
+  configASSERT(xTimerRm);
+  sPack.len = Serial1.available();
+  sPack.data = static_cast<char *>(malloc(sPack.len));
+  if(sPack.data == NULL) {
+    ESP_LOGE("UART", "Malloc failed");
+    return;
+  }    
+  Serial1.read(sPack.data, sPack.len);
+  sPack.dir = MSG_DIR_RESPONSE;
+  timerIsStart = 0;
+  xQueueSend(QueueRmEvent, &sPack, portMAX_DELAY);    
+}
 
-static int rmNum;
+void AN_taskRmReceive::initTimer(){
+  xTimerRm = xTimerCreate("rmTimer", 30, pdFALSE, (void * ) 0, rmTimerCallback);
+}
+
+
+void startRmTimer(){
+  xTimerStart(xTimerRm, 20);
+}
+
 void AN_taskRmReceive::fillDevParams(int dataArrLen, String *data){
     int tmpCnt = 0;
  
@@ -45,23 +70,19 @@ void AN_taskRmReceive::getDevInfo(String data){
     }
     else  fillDevParams(strCnt, strArr); 
 }
-
+ 
 void AN_taskRmReceive::callback(){
-  _SERIAL_PACK sPack;
-  int len = Serial1.available();
-  sPack.data = static_cast<char *>(malloc(len));
-  if(sPack.data == NULL) {
-        ESP_LOGE("UART", "Malloc failed");
-    return;
+  if(timerIsStart){
+    xTimerReset(xTimerRm, 100);
+  }else{
+    startRmTimer();
+    timerIsStart = 1;
   }
-  Serial1.read(sPack.data, len);
-  sPack.len = len;
-  sPack.dir = MSG_DIR_RESPONSE;
-  xQueueSend(QueueRmEvent, &sPack, portMAX_DELAY);
 }
 
 void AN_taskRmReceive::run(void *param){
   _SERIAL_PACK sPack;
+  initTimer();
   for(;;){
     if (xQueueReceive(QueueRmEvent, &sPack, (TickType_t)portMAX_DELAY)) {
         if(sPack.dir == MSG_DIR_RESPONSE){
@@ -69,7 +90,7 @@ void AN_taskRmReceive::run(void *param){
         }else{
 
         }
-        // Serial.println(" - - data from RM - - -");
+        Serial.println(" - - data from RM - - -");
         Serial.write(sPack.data, sPack.len);
         free(sPack.data);
       

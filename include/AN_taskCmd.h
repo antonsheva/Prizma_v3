@@ -24,6 +24,7 @@ private:
   static  void setJmmrData(_MSG_PACK *msg);
   static  void init();
   static  void processingCmd(_MSG_PACK *msg);
+  static  void getRmInfo();
   static  void test();
   static  void btInit();
   static  void btStop();

@@ -50,7 +50,7 @@ void AN_taskPwrAut::eventBtOn(){
   JMMR_2_OFF
   msg.cmd = CMD_BT_START;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY);            
-  G_waitBtConnect = 600; //x 10mSec; if don't connect to bluetooth during this time - turn off the power
+  G_waitBtConnect = 3000; //x 10mSec; if don't connect to bluetooth during this time - turn off the power
   ledsCode[0]=2;
   xQueueSend(QueueLeds, ledsCode, portMAX_DELAY); 
 }

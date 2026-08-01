@@ -11,6 +11,8 @@ public:
   ~AN_taskRmReceive();
 
   static void getDevInfo(String data);
+ 
+  static void initTimer();
   static void fillDevParams(int dataArrLen, String *data);
   static void callback();
 

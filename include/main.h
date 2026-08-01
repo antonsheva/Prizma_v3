@@ -22,6 +22,8 @@
 #include "AN_taskPwrAut.h"
 #include "AN_taskCmd.h"
 #include "AN_taskBt.h"
+#include "AN_taskRmAut.h"
+#include "AN_taskPrefs.h"
 
 
 

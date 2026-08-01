@@ -61,7 +61,7 @@ void AN_rs485::sendBtJmmrData(_MSG_PACK *msg){
 
 int AN_rs485::transmitdataToBt(_SERIAL_PACK *sPack){
     if(G_btConnect){
-        xQueueSend(QueueBt, sPack, portMAX_DELAY);      
+        // xQueueSend(QueueBt, sPack, portMAX_DELAY);      
         return 0;
     }
     free(sPack->data);

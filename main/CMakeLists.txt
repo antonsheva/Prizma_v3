@@ -12,7 +12,6 @@ set(SOURCES main.cpp
             AN_taskRs485Poll.cpp
             AN_taskRs485Send.cpp
             AN_rs485.cpp
-            AN_pref.cpp
             AN_taskAnalog.cpp
             AN_taskButton.cpp
             AN_taskRs485Poll.cpp
@@ -21,6 +20,9 @@ set(SOURCES main.cpp
             AN_taskPwrAut.cpp
             AN_taskCmd.cpp
             AN_taskBt.cpp
+            AN_taskRmAut.cpp
+            AN_taskPrefs.cpp
+
 )
 
 idf_component_register(SRCS ${SOURCES}

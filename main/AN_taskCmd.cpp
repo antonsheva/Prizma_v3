@@ -1,5 +1,6 @@
  
 #include "../include/AN_taskCmd.h"
+#include "AN_taskCmd.h"
 
 
 #define MAX_JMMR_QTY 10
@@ -55,6 +56,19 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
  
 	}
 	G_serialBusy = 0;
+}
+
+void AN_taskCmd::getRmInfo(){
+	_RM_AUT rmAut;
+	rmAut.opCodeList[0] = CMD_RM_GET_ATI ;
+	rmAut.opCodeList[1] = CMD_RM_GET_ATI ;
+	rmAut.opCodeList[2] = CMD_RM_GET_ATC ;
+	rmAut.opCodeList[3] = CMD_RM_GET_ATC ;
+	rmAut.opCodeList[4] = CMD_RM_GET_ATBT;
+	rmAut.opCodeList[5] = CMD_RM_GET_ATBT;
+	rmAut.opCodeQty   = 6;
+	rmAut.swtchActDev = true;
+	xQueueSend(QueueRebModAut, &rmAut, portMAX_DELAY); 
 }
 
 void AN_taskCmd::test(){
@@ -210,22 +224,22 @@ void AN_taskCmd::sendCmdToRm(int cmd, int sel){
 	// selectRmModule(sel);
 	vTaskDelay(10/portTICK_PERIOD_MS);
 	switch (cmd)	{
-		case CMD_RM_AT       : sprintf(p.data, "AT\r\n");  break;            
-		case CMD_RM_GET_ATBT : sprintf(p.data, "ATBT\r\n");  break;            
-		case CMD_RM_GET_ATC  : sprintf(p.data, "ATC\r\n");  break;            
-		case CMD_RM_SET_ATC  : sprintf(p.data, "ATC\r\n");  break;  // - send data
-		case CMD_RM_SET_ATE0 : sprintf(p.data, "ATE0\r\n");  break;             
-		case CMD_RM_SET_ATE1 : sprintf(p.data, "ATE1\r\n");  break;             
-		case CMD_RM_GET_ATI  : sprintf(p.data, "ATI\r\n");  break;            
-		case CMD_RM_ATZ      : sprintf(p.data, "ATZ\r\n");  break;            
-		case CMD_RM_GET_ATW  : sprintf(p.data, " \n\r");  break;            
-		case CMD_RM_SET_ATW  : sprintf(p.data, "AT&W\n\r");  break;             
-		case CMD_GET_STATE   : sprintf(p.data, "\n\r");  break;
-		case CMD_SET_STATE   : sprintf(p.data, " \n\r");  break;
-		case CMD_GET_INFO    : sprintf(p.data, " \n\r");  break;
+		case CMD_RM_AT       : Serial1.print ("AT\r\n");  break;            
+		case CMD_RM_GET_ATBT : Serial1.print ("ATBT\r\n");  break;            
+		case CMD_RM_GET_ATC  : Serial1.print ("ATC\r\n");  break;            
+		case CMD_RM_SET_ATC  : Serial1.print ("ATC\r\n");  break;   
+		case CMD_RM_SET_ATE0 : Serial1.print ("ATE0\r\n");  break;             
+		case CMD_RM_SET_ATE1 : Serial1.print ("ATE1\r\n");  break;             
+		case CMD_RM_GET_ATI  : Serial1.print ("ATI\r\n");  break;            
+		case CMD_RM_ATZ      : Serial1.print ("ATZ\r\n");  break;            
+		case CMD_RM_GET_ATW  : Serial1.print (" \n\r");  break;            
+		case CMD_RM_SET_ATW  : Serial1.print ("AT&W\n\r");  break;             
+		case CMD_GET_STATE   : Serial1.print ("\n\r");  break;
+		case CMD_SET_STATE   : Serial1.print (" \n\r");  break;
+		case CMD_GET_INFO    : Serial1.print (" \n\r");  break;
 	}
-	p.len = sizeof(p.data);
-	xQueueSend(QueueRmSend, &p, portMAX_DELAY);
+   
+	// xQueueSend(QueueRmSend, &p, portMAX_DELAY);
 }
 
 void AN_taskCmd::selectRmModule(int sel, bool firstInit){

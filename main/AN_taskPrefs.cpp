@@ -1,7 +1,9 @@
-#include "../include/AN_pref.h"
- 
- 
-void AN_pref::init(){
+#include "AN_taskPrefs.h"
+
+
+
+
+void AN_taskPrefs::init(){
  
 	nvs_handle_t nvsHandle;
   
@@ -102,7 +104,7 @@ void AN_pref::init(){
 }
  
 
-void AN_pref::setParam(char* param, BYTE val){
+void AN_taskPrefs::setParam(char* param, BYTE val){
 	nvs_handle_t nvsHandle;
 	ESP_ERROR_CHECK(nvs_open("prefData", NVS_READWRITE, &nvsHandle));
 	ESP_ERROR_CHECK(nvs_set_u8(nvsHandle, param, val));
@@ -112,7 +114,7 @@ void AN_pref::setParam(char* param, BYTE val){
 
  
 
-void AN_pref::setParam(char* param, uint64_t val){
+void AN_taskPrefs::setParam(char* param, uint64_t val){
 	nvs_handle_t nvsHandle;
 	ESP_ERROR_CHECK(nvs_open("prefData", NVS_READWRITE, &nvsHandle));
 	ESP_ERROR_CHECK(nvs_set_u64(nvsHandle, param, val));
@@ -121,7 +123,7 @@ void AN_pref::setParam(char* param, uint64_t val){
 }
 
 
-void AN_pref::setGroupId(BYTE groupId){
+void AN_taskPrefs::setGroupId(BYTE groupId){
 	char param[] = PARAM_GROUP_ID;
 	if((groupId > 0) && (groupId < 127)){
 		G_lJmrStt.groupId = groupId;
@@ -129,7 +131,7 @@ void AN_pref::setGroupId(BYTE groupId){
 	}
 }
 
-void AN_pref::setDevId(uint64_t id){
+void AN_taskPrefs::setDevId(uint64_t id){
 	char param[] = PARAM_DEV_ID;
 	if((id > 0) && (id < 0x7FFFFFFFFFFFFFFF)){
 		G_lJmrStt.devId = id;
@@ -137,14 +139,14 @@ void AN_pref::setDevId(uint64_t id){
 	}
 }
 
-void AN_pref::setDevType(BYTE type){
+void AN_taskPrefs::setDevType(BYTE type){
 	char param[] = PARAM_DEV_TYPE;
   BYTE tp = (type == DEV_TYPE_B) ? DEV_TYPE_B : DEV_TYPE_A;
 	G_lJmrStt.devType = type;
   setParam(param, tp);
 }
 
-void AN_pref::setDevRange(BYTE range){
+void AN_taskPrefs::setDevRange(BYTE range){
 	char param[] = PARAM_DEV_RANGE;
 	if((range > 0) &&(range < 13)){
 		G_lJmrStt.devRange = range;
@@ -152,7 +154,7 @@ void AN_pref::setDevRange(BYTE range){
 	}
 }
 
-void AN_pref::setAddrEsp(BYTE addr){
+void AN_taskPrefs::setAddrEsp(BYTE addr){
 	char param[] = PARAM_ADDR_ESP;	
 	if((addr > 0) && (addr < 127)){
 		G_lJmrStt.esp32Addr = addr;
@@ -160,7 +162,7 @@ void AN_pref::setAddrEsp(BYTE addr){
 	}
 }
 
-void AN_pref::setAddrRm(BYTE addrRm1, BYTE addrRm2){
+void AN_taskPrefs::setAddrRm(BYTE addrRm1, BYTE addrRm2){
 	nvs_handle_t nvsHandle;
 	ESP_ERROR_CHECK(nvs_open("prefData", NVS_READWRITE, &nvsHandle));
 
@@ -178,7 +180,7 @@ void AN_pref::setAddrRm(BYTE addrRm1, BYTE addrRm2){
  
 }
 
-void AN_pref::setPwr(BYTE pwr1, BYTE pwr2){
+void AN_taskPrefs::setPwr(BYTE pwr1, BYTE pwr2){
 	nvs_handle_t nvsHandle;	
 	BYTE p1 = pwr1 == PWR_OFF ? PWR_OFF : PWR_ON;
 	BYTE p2 = pwr2 == PWR_OFF ? PWR_OFF : PWR_ON;
@@ -197,24 +199,67 @@ void AN_pref::setPwr(BYTE pwr1, BYTE pwr2){
 		
 }
 
-void AN_pref::printAddresses(){
+void AN_taskPrefs::printAddresses(){
 	char data[64];
   sprintf(data, "{\"ad_esp\":%d, \"ad_rm1\":%d, \"ad_rm2\":%d}", G_lJmrStt.esp32Addr,G_lJmrStt.rebMod[0].address,G_lJmrStt.rebMod[1].address);
-	AN_print(data);
+	Serial.println(data);
 }
 
-void AN_pref::getDevParam(){
+void AN_taskPrefs::getDevParam(){
 
 	char devId[32];
   sprintf(devId,  "%" PRIx64, G_lJmrStt.devId);
 
-	AN_print("   Параметры устройства   ");
-	AN_print("devId   ->  "+std::string(devId));
-	AN_print("groupId ->  "+std::to_string(G_lJmrStt.groupId));
-	AN_print("devType ->  "+std::to_string(G_lJmrStt.devType));
-	AN_print("devRange->  "+std::to_string(G_lJmrStt.devRange));
+	Serial.println("   Параметры устройства   ");
+	Serial.println("devId   ->  "+String(devId));
+	Serial.println("groupId ->  "+String(G_lJmrStt.groupId));
+	Serial.println("devType ->  "+String(G_lJmrStt.devType));
+	Serial.println("devRange->  "+String(G_lJmrStt.devRange));
 	
 }
+
+
+
+
+
+void AN_taskPrefs::run(void *param){
+
+  _MSG_PACK msg;
+  init();
+  for(;;){
+    xQueueReceive(QueuePrefs, &msg, portMAX_DELAY);
+      
+    switch (msg.cmd){
+        case CMD_SET_ADDR_ESP   :  setAddrEsp     (msg.addrEsp32);                break;
+        case CMD_SET_ADDR_RM    :  setAddrRm      (msg.addrRm1, msg.addrRm2);     break;
+        case CMD_SET_PWR        :  setPwr         (msg.pwr1, msg.pwr2);           break;         
+        case CMD_SET_DEV_ID     :  setDevId       (msg.devId);                    break;
+        case CMD_SET_GROUP_ID   :  setGroupId     (msg.groupId);                  break;
+        case CMD_SET_DEV_TYPE   :  setDevType     (msg.devType);                  break;
+        case CMD_SET_DEV_RANGE  :  setDevRange    (msg.devRange);                 break;
+        case CMD_GET_DEV_PARAM  :  getDevParam    ();                             break;
+        case CMD_PRINT_ADDRESSES:  printAddresses ();                             break;
+    }  
+  }
+}
+
+AN_taskPrefs::AN_taskPrefs(/* args */)
+{
+  
+}
+
+AN_taskPrefs::~AN_taskPrefs()
+{
+}
+
+
+
+
+
+
+
+
+
 
 
 

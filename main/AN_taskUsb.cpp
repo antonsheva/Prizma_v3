@@ -24,7 +24,6 @@ void AN_taskUsb::run(void *param){
       xQueueReceive(QueueUsb, &sPack, portMAX_DELAY); 
 
       serial.processingSerialData(sPack);
-      Serial.println(" - - data from USB - - -");
       Serial.write(sPack.data, sPack.len);
       // Serial1.write(sPack.data, sPack.len);
       // free(sPack.data); 

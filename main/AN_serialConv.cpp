@@ -124,6 +124,8 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   if(par.find(PARAM_MASK_2    ) != -1)msg->mask2     = atoi(val);     
   if(par.find(PARAM_PWR_1     ) != -1)msg->pwr1      = atoi(val);  
   if(par.find(PARAM_PWR_2     ) != -1)msg->pwr2      = atoi(val);   
+  if(par.find(PARAM_RM_NUM    ) != -1)msg->rmNum     = atoi(val);   
+  
   
   if(par.find(PARAM_JMMR_LIST_LEN) != -1)msg->jmmrListLen = atoi(val);   
 
