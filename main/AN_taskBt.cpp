@@ -36,15 +36,11 @@ AN_taskBt::~AN_taskBt(){
 }
 
 void AN_taskBt::start(){
-  // std::string devName;
-  // if(G_lJmrStt.devType == DEV_TYPE_A)devName = "Prizma_JMR_A_"+std::to_string(G_lJmrStt.esp32Addr);
-  // else                               devName = "Prizma_JMR_A_"+std::to_string(G_lJmrStt.esp32Addr);
-
-  Serial.println("start bt");
-  String devName = "Prizma_JMR_A_"+String(G_lJmrStt.esp32Addr);
+  String devName;
+  if(G_lJmrStt.devType == DEV_TYPE_A)devName = "Prizma_JMR_A_"+String(G_lJmrStt.esp32Addr);
+  else                               devName = "Prizma_JMR_A_"+String(G_lJmrStt.esp32Addr);
   SerialBT.begin(devName); 
 
-  // SerialBT.begin(devName.c_str());
 }
 
 void AN_taskBt::stop(){

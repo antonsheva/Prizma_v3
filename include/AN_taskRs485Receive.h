@@ -10,9 +10,10 @@ public:
   AN_taskRs485Receive(/* args */);
   ~AN_taskRs485Receive();
 
+
+
   static void callback();
   static void run(void *param);
-
 
 };
 

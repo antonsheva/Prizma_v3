@@ -10,6 +10,8 @@ public:
   AN_taskRmReceive(/* args */);
   ~AN_taskRmReceive();
 
+  static void getDevInfo(String data);
+  static void fillDevParams(int dataArrLen, String *data);
   static void callback();
 
   static void run(void *param);
