@@ -1,0 +1,92 @@
+#include "../include/AN_taskLeds.h"
+ 
+
+
+AN_taskLeds::AN_taskLeds(/* args */)
+{
+}
+
+AN_taskLeds::~AN_taskLeds()
+{
+}
+
+void AN_taskLeds::setState(BYTE stt){
+  if(stt & (1<<0))gpio_set_level(LED_1, 1);
+  else            gpio_set_level(LED_1, 0);
+
+  if(stt & (1<<1))gpio_set_level(LED_2, 1);
+  else            gpio_set_level(LED_2, 0);
+
+  if(stt & (1<<2))gpio_set_level(LED_3, 1);
+  else            gpio_set_level(LED_3, 0);
+
+  if(stt & (1<<3))gpio_set_level(LED_4, 1);
+  else            gpio_set_level(LED_4, 0);
+
+  if(stt & (1<<4))gpio_set_level(LED_5, 1);
+  else            gpio_set_level(LED_5, 0);
+
+  if(stt & (1<<5))gpio_set_level(LED_6, 1);
+  else            gpio_set_level(LED_6, 0);
+    
+}
+
+void AN_taskLeds::run(void *param){
+    BYTE code[4] = {0};
+    BYTE stt = 0;
+    BYTE startStt = 0;
+    BYTE signalValStt = 0;
+    BYTE blinkBits = 0;
+   
+    for(;;){
+        xQueueReceive(QueueLeds, code, portMAX_DELAY);
+        if(!startStt){
+            if(code[0] != 6)stt &= 0x30;
+            switch(code[0]){
+                case 0 :setState(0);                   break;
+                case 1 :startStt = 1;
+                        for(int i=0; i<12; i++){
+                            setState(1 << (i < 6 ? i : i-6));
+                            vTaskDelay(200/portTICK_PERIOD_MS);        
+                        } 
+                        startStt = 0; 
+                        setState(0x01);                 break;
+
+                case 2 :stt |= 0x03;
+                        while(1){
+                            setState(stt);
+                            blinkBits ^= 0x02;
+                            stt &= ~(1<<1);
+                            stt |= blinkBits;
+                            if(G_btConnect)break;
+                            vTaskDelay(300/portTICK_PERIOD_MS); 
+                        }                                   break;
+                
+                case 3 :stt |= 0x03;
+                        setState(stt);                  break;
+                        
+                case 4 :stt |= (code[1] & 0x0F);             
+                        setState(stt);                  break;
+            
+                case 5 :stt |= 0x01;
+                        G_led_ccl_5 = 1;
+                        while(1){
+                            setState(stt);
+                            blinkBits ^= 0x01;
+                            stt &= ~(1<<0);
+                            stt |= blinkBits;
+                            if(!G_led_ccl_5)break;
+                            vTaskDelay(300/portTICK_PERIOD_MS); 
+                        }                                   break;  
+                        
+                case 6 :signalValStt = (code[1]<<4);  
+                        stt &= 0xCF;
+                        stt |= signalValStt;
+                        setState(stt);                  break; 
+
+                default:stt = code[1];             
+                        setState(stt);                  break;                     
+            }
+        }
+    }
+}

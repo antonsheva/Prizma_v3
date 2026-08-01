@@ -148,19 +148,20 @@ void AN_serial::checkPauseControl(){
     }  
 }
 
-void AN_serial::processingSerialData(_SERIAL_PACK dataPack)
+void AN_serial::processingSerialData(_SERIAL_PACK sPack)
 {
     AN_shiftDataArr sft;
     _MSG_PACK msg;
     AN_serialConv  serialConv;
     
     checkPauseControl();
-    char *data = static_cast<char *>(malloc(dataPack.len)); 
+    char *data = static_cast<char *>(malloc(sPack.len)); 
     if (data == NULL) {
         ESP_LOGE("SERIAL", "processingSerialData : Malloc failed");
         return;
     }
-    memccpy(data, dataPack.data, 0, dataPack.len);
+    memccpy(data, sPack.data, 0, sPack.len);
+    free(sPack.data);
     std::string start = "start";
     waitTimer = 0;
     if(std::string(data).substr(0, start.length()) == start){

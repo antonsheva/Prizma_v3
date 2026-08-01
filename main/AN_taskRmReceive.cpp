@@ -20,7 +20,6 @@ void AN_taskRmReceive::callback(){
 }
 
 void AN_taskRmReceive::run(void *param){
-  uart_event_t event;
   _SERIAL_PACK sPack;
   for(;;){
     if (xQueueReceive(QueueRmEvent, &sPack, (TickType_t)portMAX_DELAY)) {

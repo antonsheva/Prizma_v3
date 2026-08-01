@@ -3,8 +3,8 @@
 JammerState G_lJmrStt;
  
 
-QueueHandle_t QueueBtSend     = NULL;
-QueueHandle_t QueueBtReceive  = NULL;
+QueueHandle_t QueueBt            = NULL;
+ 
  
 QueueHandle_t QueueRs485Send     = NULL;
 QueueHandle_t QueueRs485Receive  = NULL;
@@ -94,12 +94,12 @@ void AN_print(std::string str, int len){
 
 void initObjects()
 { 
-    QueueBtSend          = xQueueCreate(4, sizeof(_SERIAL_PACK));
+ 
     QueueRs485Send       = xQueueCreate(2, sizeof(_MSG_PACK));
     QueueRs485Receive    = xQueueCreate(2, 1024);
     QueuePrefs           = xQueueCreate(2,  sizeof(_MSG_PACK));
     QueueRebModAut       = xQueueCreate(2,  sizeof(_RM_AUT));
-    QueuePwrAut          = xQueueCreate(4, sizeof(_MSG_INTERNAL));
+    QueuePwrAut          = xQueueCreate(4, sizeof(_SERIAL_PACK));
     QueueLeds            = xQueueCreate(4,  4);
       
     QueueCmd             = xQueueCreate(4, sizeof(_MSG_PACK)); 
@@ -117,9 +117,8 @@ void initObjects()
     QueueRmSend          = xQueueCreate(4, sizeof(_RM_PACK)); 
   
     
-    QueueBtSend          = xQueueCreate(16, sizeof(_SERIAL_PACK));  
-    QueueBtReceive       = xQueueCreate(16, sizeof(_SERIAL_PACK));    
-
+    QueueBt              = xQueueCreate(8, sizeof(_SERIAL_PACK));  
+     
     SemaphorePollRs485 = xSemaphoreCreateBinary();
  
     SemaphoreCbUsb     = xSemaphoreCreateBinary();

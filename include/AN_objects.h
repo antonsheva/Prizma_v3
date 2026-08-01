@@ -84,6 +84,7 @@ typedef struct {
     int  len=0;
     char *data;
     BYTE dir=0;
+    BYTE cmd=0;
 } _SERIAL_PACK;
 
 typedef struct {
@@ -109,7 +110,7 @@ extern JammerState G_lJmrStt;
 
 
 
-extern QueueHandle_t QueueBtSend        ;
+extern QueueHandle_t QueueBt        ;
 extern QueueHandle_t QueueBtReceive     ;
 
 extern QueueHandle_t QueueRs485Send     ;
