@@ -101,6 +101,7 @@ typedef struct{
     BYTE opCodeList [16]  = {0};
     BYTE opCodeQty        = 0;
     BYTE rmSel            = 0;
+    BYTE cmd              = 0;
     bool swtchActDev      = 0;
 }_RM_AUT;
 
@@ -198,11 +199,12 @@ extern int G_serialDataSrc   ;
  
 extern DWORD G_wait485PackCnt;
 extern DWORD G_waitBtPackCnt;
-
-extern DWORD G_pauseRmDataCnt;   
 extern DWORD G_waitBtConnect;
 
-extern int G_rebModAut_tm;
+extern DWORD G_pauseRmDataCnt;  
+extern int G_rebModAut_tm; 
+
+
 extern int G_msgTxtDataLen;
 extern int G_pauseBtDataCnt;
 

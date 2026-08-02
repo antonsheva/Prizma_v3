@@ -18,13 +18,12 @@ void AN_taskPwrAut::eventPwrOff(){
 
 void AN_taskPwrAut::eventAplayChanges(){
   _MSG_PACK msg;  
-  msg.cmd = CMD_BT_STOP;
-  xQueueSend(QueueCmd, &msg, portMAX_DELAY); 
+
   btEnSwch = 0;
   G_btConnect = 0;
   G_pwrMode = 0;
- 
-  xQueueSend(QueueCmd, &msg, portMAX_DELAY);  
+  ledsCode[0]=1;
+  xQueueSend(QueueLeds, ledsCode, 100);
 }
 void AN_taskPwrAut::eventDisconnect(){
   AN_print("BT disconnect");

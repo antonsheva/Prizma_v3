@@ -39,8 +39,7 @@ void AN_taskLeds::run(void *param){
     BYTE blinkBits = 0;
    
     for(;;){
-        xQueueReceive(QueueLeds, code, portMAX_DELAY);
-        if(!startStt){
+        xQueueReceive(QueueLeds, code, 100);
             if(code[0] != 6)stt &= 0x30;
             switch(code[0]){
                 case 0 :setState(0);                   break;
@@ -83,10 +82,10 @@ void AN_taskLeds::run(void *param){
                         stt &= 0xCF;
                         stt |= signalValStt;
                         setState(stt);                  break; 
+                        
 
                 default:stt = code[1];             
                         setState(stt);                  break;                     
             }
         }
-    }
 }

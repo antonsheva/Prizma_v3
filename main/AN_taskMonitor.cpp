@@ -33,45 +33,23 @@ void AN_taskMonitor::run(void *param){
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
 
     }
-    if(aut < 230) aut++;
+    if(aut < 40) aut++;
 
 
 
 
 //////////////////////////////////////////////////
-    /**TODO send msg to taskPref */
-    // if(G_updatePref){
-    //     cCmd->setPwr();
-    //     G_updatePref = false;
-    // }
-//////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////////
-    /**todo enamble the RM */
-    if(G_rebModAut_tm < 102)G_rebModAut_tm++;
-    if(G_rebModAut_tm == 100){
-        vTaskResume(Handle_taskRmReceive);
-    }
 
     if(G_pauseRmDataCnt)G_pauseRmDataCnt--;
     if(G_pauseRmDataCnt == 2){
         vTaskResume(Handle_taskRmReceive);
 
     }
-///////////////////////////////////////////////////////
-
-    // if(G_pauseBtDataCnt)G_pauseBtDataCnt--;
-    // if(G_pauseBtDataCnt == 2){
-    //     _SERIAL_PACK sPack;
-    //     sPack.cmd = CMD_BT_RECEIVE;
-    //     xQueueSend(QueueBt, &sPack, portMAX_DELAY);
-    //     // vTaskResume(Handle_taskRmReceive);
-
-    // }
-///////////////////////////////////////////////////////
-
-
+    if(G_rebModAut_tm < 100)G_rebModAut_tm++;
+    if(G_rebModAut_tm == 95){
+        vTaskResume(Handle_taskRmReceive);
+    }
 
     if(G_wait485PackCnt < 10)G_wait485PackCnt++;
     if(G_waitBtPackCnt  < 10)G_waitBtPackCnt++;

@@ -38,6 +38,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		 */
 		case CMD_GET_JMMR_LIST 	: getJammList();  			break;
 		case CMD_SET_JMMR_LIST 	: setJmmrList();				break;
+		case CMD_SEARCH_DEVICES	: searchDevices(msg); break;
 		/**
 		 * @brief BT functions
 		 * 
@@ -59,6 +60,21 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	G_serialBusy = 0;
 }
 
+int AN_taskCmd::searchDevices(_MSG_PACK *msg){
+	AN_shiftDataArr sft;
+	Serial.println(" -> Search device cmd");
+	msg->direction  = MSG_DIR_RESPONSE;
+	msg->addrEsp32  = msg->sender;
+	if(msg->response == RESP_GET_JMMR_DATA){
+		memset(msg->txt, 0, TXT_INFO_LEN);
+		memcpy(msg->txt, G_lJmrStt.info, G_lJmrStt.infoLen);
+		msg->txtLen = G_lJmrStt.infoLen;
+	}
+	sft.loadJmmrStateToMsg(msg, &G_lJmrStt);
+	xQueueSend(QueueRs485Send, msg, portMAX_DELAY);
+	return 0;   
+} 
+
 void AN_taskCmd::rmGetState(){
 	_RM_AUT rmAut;
 	rmAut.opCodeList[0] = CMD_RM_GET_ATI ;
@@ -71,7 +87,6 @@ void AN_taskCmd::rmGetState(){
 	rmAut.swtchActDev = true;
 	xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY); 
 }
-
 
 void AN_taskCmd::rmSetState(_MSG_PACK *msg){
 	AN_shiftDataArr sft;
@@ -92,9 +107,12 @@ void AN_taskCmd::rmSetState(_MSG_PACK *msg){
 	
 	rmAut.opCodeQty = 7;
 	rmAut.swtchActDev = true;
- 	
-	aplayPwr();
+ 	rmAut.cmd = CMD_RESTART_ESP;
+
   msg->cmd = CMD_SET_PWR;
+
+	btStop(); 
+	aplayPwr();
 	xQueueSend(QueuePrefs, msg, portMAX_DELAY);
   xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY);
 	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 

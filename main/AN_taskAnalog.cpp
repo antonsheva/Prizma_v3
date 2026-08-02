@@ -44,7 +44,7 @@ void AN_taskAnalog::run(void *param){
     ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_3, &aTemper));
     
 
-    AN_print("ch_1 VAL -> "+std::to_string(a24)+" ;   ch_2 VAL -> "+std::to_string(aTemper));
+    // AN_print("ch_1 VAL -> "+std::to_string(a24)+" ;   ch_2 VAL -> "+std::to_string(aTemper));
 
 
     if((aTemper < A_TEMPERATURE_ON_FAN)&&(!fanEn)){

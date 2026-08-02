@@ -130,13 +130,13 @@ extern "C" void app_main(void)
   initPins();
   initserial();
 
+  xTaskCreate(taskLeds.run,         "t8_taskLeds",         2048,   NULL, tskIDLE_PRIORITY, &Handle_taskLeds         ); 
   xTaskCreate(taskRmReceive.run,    "t2_taskRmReceive",    1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRmReceive    );
   xTaskCreate(taskUsb.run,          "t1_taskUsb",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskUsb          );
   xTaskCreate(taskRs485Poll.run,    "t3_taskRs485Poll",    1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Poll    );
   xTaskCreate(taskRs485Receive.run, "t4_taskRs485Receive", 1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Receive );
   xTaskCreate(taskButton.run,       "t5_taskButton",       2048,   NULL, tskIDLE_PRIORITY, &Handle_taskButton       );
   xTaskCreate(taskAnalog.run,       "t6_taskAnalog",       2048,   NULL, tskIDLE_PRIORITY, &Handle_taskAnalog       );
-  xTaskCreate(taskLeds.run,         "t8_taskLeds",         2048,   NULL, tskIDLE_PRIORITY, &Handle_taskLeds         ); 
   xTaskCreate(taskPwrAut.run,       "t9_taskPwrAut",       1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskPwrAut       );    
   xTaskCreate(taskCmd.run,          "t10_taskCmd",         1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskCmd          );    
   // xTaskCreate(taskBt.run,           "t11_taskBt",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskBt           );

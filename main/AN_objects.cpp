@@ -57,9 +57,11 @@ BYTE G_serialBusy = 0;
 
 DWORD G_wait485PackCnt  = 0;
 DWORD G_waitBtPackCnt  = 0;
+DWORD G_waitBtConnect  = 0;
 
 DWORD G_pauseRmDataCnt = 0;
-DWORD G_waitBtConnect  = 0;
+int G_rebModAut_tm = 0; 
+
 
 int G_serialWaitTm    = 0;
 int G_serialEndOfPack = 0;
@@ -72,7 +74,6 @@ bool G_btStart      = false;
 
 bool G_pwrMode      = false;
  
-int G_rebModAut_tm = 102;  
 int G_msgTxtDataLen;
 
 char G_msgTxtData[TXT_BUFF_LEN];

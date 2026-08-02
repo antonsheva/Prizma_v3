@@ -110,6 +110,8 @@ void AN_serial::processingReceivedData(){
     if(dataSrc == SERIAL_SRC_BT)Serial.println(dataStr.c_str()) ;
 
     if(msg.addrEsp32 == G_lJmrStt.esp32Addr){ 
+        Serial.println("--target msg---");
+        Serial.println(dataPackStr.c_str());
         xQueueSend(QueueCmd, &msg, 100);
         G_serialBusy = 0; 
     }

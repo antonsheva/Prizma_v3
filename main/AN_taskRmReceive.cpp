@@ -80,7 +80,7 @@ void AN_taskRmReceive::readData(){
 }
 
 void AN_taskRmReceive::callback(){
-    G_pauseRmDataCnt = 40;
+    G_pauseRmDataCnt = 10;
 }
  
 
@@ -123,13 +123,15 @@ void AN_taskRmReceive::run(void *param){
       if(code == CMD_RM_SET_ATC  ){
           String str = "ATC="+String(G_lJmrStt.rebMod[rmSel].mc)+
                                     ","+String(G_lJmrStt.rebMod[rmSel].mask)+"\n\r"; 
-                                    send(str);      
+                                    send(str);   
+
       }
       G_rebModAut_tm = 0;
       vTaskSuspend(NULL);    
       readData();
       if(rmAut.swtchActDev)rmSel = (rmSel == 0) ? 1 : 0;
     }
+    // if(rmAut.cmd = CMD_RESTART_ESP)esp_restart();
     sft.printJmmrData(&G_lJmrStt);
   }
 }
