@@ -27,6 +27,7 @@ TaskHandle_t Handle_taskBt            = NULL;
 TaskHandle_t Handle_taskRs485Send     = NULL;
 TaskHandle_t Handle_taskPrefs         = NULL;
 
+ 
 
 AN_taskUsb            taskUsb;
 AN_taskRmReceive      taskRmReceive   ;
@@ -39,9 +40,12 @@ AN_taskMonitor        taskMonitor     ;
 AN_taskLeds           taskLeds        ;
 AN_taskPwrAut         taskPwrAut      ;
 AN_taskCmd            taskCmd         ;
-AN_taskBt             taskBt          ;
+// AN_taskBt             taskBt          ;
  
 AN_taskPrefs          taskPrefs       ;
+
+AN_taskBtReceive      taskBtReceive;
+AN_taskBtSend         taskBtSend;
 
 void initserial(){
   AN_taskUsb usb;
@@ -56,7 +60,7 @@ void initserial(){
   Serial1.onReceive(rm.callback);
   Serial2.onReceive(rs485.callback);
 
-  SerialBT.register_callback(AN_btCb::callback);
+  // SerialBT.register_callback(AN_btCb::callback);
 
 }
 // void initPins(){
@@ -135,9 +139,13 @@ extern "C" void app_main(void)
   xTaskCreate(taskLeds.run,         "t8_taskLeds",         2048,   NULL, tskIDLE_PRIORITY, &Handle_taskLeds         ); 
   xTaskCreate(taskPwrAut.run,       "t9_taskPwrAut",       1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskPwrAut       );    
   xTaskCreate(taskCmd.run,          "t10_taskCmd",         1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskCmd          );    
-  xTaskCreate(taskBt.run,           "t11_taskBt",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskBt           );
-  xTaskCreate(taskRs485Send.run,    "t12_taskRs485Send",   1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Send    );
-  xTaskCreate(taskMonitor.run,      "t7_taskMonitor",      2048,   NULL, tskIDLE_PRIORITY, &Handle_taskMonitor      );
-  xTaskCreate(taskPrefs.run,        "t14_taskPrefs",       1024*2, NULL, tskIDLE_PRIORITY, &Handle_taskPrefs        );  
+  // xTaskCreate(taskBt.run,           "t11_taskBt",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskBt           );
+  xTaskCreate(taskRs485Send.run,    "t11_taskRs485Send",   1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Send    );
+  xTaskCreate(taskMonitor.run,      "t12_taskMonitor",      2048,   NULL, tskIDLE_PRIORITY, &Handle_taskMonitor      );
+  xTaskCreate(taskPrefs.run,        "t13_taskPrefs",       1024*2, NULL, tskIDLE_PRIORITY, &Handle_taskPrefs        ); 
+  
+  xTaskCreate(taskBtReceive.run,    "t14_taskBtReceive",    1024*8, NULL, tskIDLE_PRIORITY, 0        );  
+  xTaskCreate(taskBtSend.run,       "t15_taskBtRSend",      1024*8, NULL, tskIDLE_PRIORITY, 0        );  
+  
   
 }

@@ -1,10 +1,12 @@
 #include "../include/AN_objects.h"
 
 _JMMR_STATE G_lJmrStt;
-BluetoothSerial SerialBT;  
-
-QueueHandle_t QueueBt            = NULL;
  
+
+QueueHandle_t QueueBt         = NULL;
+
+QueueHandle_t QueueBtSend     = NULL;
+QueueHandle_t QueueBtReceive  = NULL; 
  
 QueueHandle_t QueueRs485Send     = NULL;
 QueueHandle_t QueueRs485Receive  = NULL;
@@ -42,7 +44,7 @@ _RS485_data RS485_data;
 _MSG_PACK G_rm_msg;
 _MSG_PACK G_485_msg;
   
-
+int G_pauseBtDataCnt = 0;
 
 BYTE G_subscribersQty = 0;  
 
@@ -117,7 +119,8 @@ void initObjects()
   
     
     QueueBt              = xQueueCreate(8, sizeof(_SERIAL_PACK));  
-     
+    QueueBtSend          = xQueueCreate(16, sizeof(_SERIAL_PACK));  
+    QueueBtReceive       = xQueueCreate(16, sizeof(_SERIAL_PACK));   
  
   
     SemaphoreCbBt      = xSemaphoreCreateBinary();

@@ -61,6 +61,17 @@ void AN_taskMonitor::run(void *param){
     }
 ///////////////////////////////////////////////////////
 
+    // if(G_pauseBtDataCnt)G_pauseBtDataCnt--;
+    // if(G_pauseBtDataCnt == 2){
+    //     _SERIAL_PACK sPack;
+    //     sPack.cmd = CMD_BT_RECEIVE;
+    //     xQueueSend(QueueBt, &sPack, portMAX_DELAY);
+    //     // vTaskResume(Handle_taskRmReceive);
+
+    // }
+///////////////////////////////////////////////////////
+
+
 
     if(G_wait485PackCnt < 10)G_wait485PackCnt++;
     if(G_waitBtPackCnt  < 10)G_waitBtPackCnt++;

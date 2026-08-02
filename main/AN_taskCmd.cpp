@@ -94,6 +94,8 @@ void AN_taskCmd::rmSetState(_MSG_PACK *msg){
 	rmAut.swtchActDev = true;
  	
 	aplayPwr();
+  msg->cmd = CMD_SET_PWR;
+	xQueueSend(QueuePrefs, msg, portMAX_DELAY);
   xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY);
 	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 
 	// cRebMod->cmdAfterAutFinish = CMD_RESTART_ESP;
@@ -113,12 +115,13 @@ void AN_taskCmd::test(){
 
 void AN_taskCmd::btInit(){
 	_SERIAL_PACK sPack;
-	sPack.cmd = CMD_BT_START;
-	xQueueSend(QueueBt, &sPack, portMAX_DELAY);
+	AN_bt bt;
+	bt.init();
 }
 
 void AN_taskCmd::btStop(){
-  
+	AN_bt bt;
+	bt.end();  
 }
 
 void AN_taskCmd::addJmmr(_MSG_PACK *msg){

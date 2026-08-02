@@ -18,10 +18,11 @@ set(SOURCES main.cpp
             AN_taskLeds.cpp  
             AN_taskPwrAut.cpp
             AN_taskCmd.cpp
-            AN_taskBt.cpp
-            AN_btCb.cpp
+    
             AN_taskPrefs.cpp
-
+            AN_taskBtReceive.cpp
+            AN_taskBtSend.cpp
+            AN_bt.cpp
 )
 
 idf_component_register(SRCS ${SOURCES}

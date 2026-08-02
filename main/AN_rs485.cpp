@@ -95,8 +95,14 @@ void AN_rs485::sendMsgToBt(_MSG_PACK *msg){
             }
 
             sPack.len = serialConv.serializeJmmrList(G_jmmrsList, sPack.data);
-            sPack.cmd = CMD_BT_SEND;  
-            xQueueSend(QueueBt, &sPack, portMAX_DELAY);
+
+            if(G_btConnect){
+                xQueueSend(QueueBtSend, &sPack, portMAX_DELAY);      
+                return;
+            }
+            free(sPack.data);
+            // sPack.cmd = CMD_BT_SEND;  
+            // xQueueSend(QueueBt, &sPack, portMAX_DELAY);
             
         break; 
 		

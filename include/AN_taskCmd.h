@@ -5,6 +5,7 @@
 #include "AN_objects.h"
 #include "AN_macro.h"
 #include "AN_shiftDataArr.h"
+#include "AN_bt.h"
 
 class AN_taskCmd {
 private:

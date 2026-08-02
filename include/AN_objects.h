@@ -27,6 +27,12 @@ typedef struct{
     size_t  infoLen = 0;
 }struct_rebMod;
 
+typedef struct{
+    uint32_t      status    = 0;         /*!< status */
+    uint32_t      sppClient = 0;         /*!< The connection handle */
+    esp_bd_addr_t rem_bda;       
+}_bt_param;
+
 typedef struct{ 
 
     DDWORD devId;      
@@ -38,6 +44,7 @@ typedef struct{
     BYTE   infoLen = 0;
      
     struct_rebMod rebMod[2];
+    _bt_param bt;
 }_JMMR_STATE;
 
 
@@ -159,7 +166,8 @@ extern QueueHandle_t QueueRs485Event    ;
 extern QueueHandle_t QueueRs485         ;
 extern QueueHandle_t QueueRmEvent       ; 
 
- 
+extern QueueHandle_t QueueBtSend        ;
+extern QueueHandle_t QueueBtReceive     ; 
 
 
   
@@ -196,6 +204,7 @@ extern DWORD G_waitBtConnect;
 
 extern int G_rebModAut_tm;
 extern int G_msgTxtDataLen;
+extern int G_pauseBtDataCnt;
 
 extern char G_msgTxtData[512];
  
