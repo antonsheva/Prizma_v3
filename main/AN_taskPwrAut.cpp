@@ -23,7 +23,7 @@ void AN_taskPwrAut::eventAplayChanges(){
   btEnSwch = 0;
   G_btConnect = 0;
   G_pwrMode = 0;
-  msg.cmd = CMD_APLAY_PWR;
+ 
   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  
 }
 void AN_taskPwrAut::eventDisconnect(){

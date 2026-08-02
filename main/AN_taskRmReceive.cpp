@@ -89,18 +89,14 @@ void AN_taskRmReceive::callback(){
 
 
 void AN_taskRmReceive::send(String str){
-   
- 
     if(activeRebMod != rmSel){
         activeRebMod = rmSel;
-     
         if(!activeRebMod) Serial1.begin(9600, SERIAL_8N1, UART_RM_RX1, UART_RM_TX1); 
         else              Serial1.begin(9600, SERIAL_8N1, UART_RM_RX2, UART_RM_TX2); 
     }    
- 
-    
     vTaskDelay(5);
     Serial1.println(str);
+    Serial.println(str);    
 }
 
 void AN_taskRmReceive::run(void *param){

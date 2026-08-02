@@ -77,8 +77,10 @@ void AN_taskCmd::rmSetState(_MSG_PACK *msg){
 	AN_shiftDataArr sft;
 	if(msg != NULL) sft.loadMsgToJmrStt(msg, &G_lJmrStt);
 	G_updatePref = true;
-	DWORD eventCode = EVENT_APPLY_CHANGES;
-	
+	  _SERIAL_PACK sPack;
+	sPack.cmd = EVENT_APPLY_CHANGES;
+	      Serial.println("tp - 2");
+
 	_RM_AUT rmAut;	
 	rmAut.opCodeList[0] = CMD_RM_SET_ATC ;
 	rmAut.opCodeList[1] = CMD_RM_SET_ATC ;
@@ -91,8 +93,9 @@ void AN_taskCmd::rmSetState(_MSG_PACK *msg){
 	rmAut.opCodeQty = 7;
 	rmAut.swtchActDev = true;
  	
-  xQueueSend(QueueRebModAut, &rmAut, portMAX_DELAY);
-	xQueueSend(QueuePwrAut, &eventCode, portMAX_DELAY); 
+	aplayPwr();
+  xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY);
+	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 
 	// cRebMod->cmdAfterAutFinish = CMD_RESTART_ESP;
  
 }
@@ -105,7 +108,7 @@ void AN_taskCmd::test(){
 	memccpy(sPack.data, data, 0, sizeof(data));
 	sPack.len = sizeof(data);
   selectRmModule(UART_SELECT_RM1);
-	xQueueSend(QueueRmSend, &sPack, portMAX_DELAY);
+  
 }
 
 void AN_taskCmd::btInit(){
@@ -264,7 +267,7 @@ void AN_taskCmd::sendCmdToRm(int cmd, int sel){
 		// case CMD_GET_INFO    : Serial1.print (" \n\r");  break;
 	}
    
-	// xQueueSend(QueueRmSend, &p, portMAX_DELAY);
+ 
 }
 
 void AN_taskCmd::selectRmModule(int sel, bool firstInit){

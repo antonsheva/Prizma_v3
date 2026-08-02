@@ -35,10 +35,15 @@ void AN_taskBt::receive(){
   memset(sPack.data, 0, 128);
   memset(sPack.data, 0, 128); 
   while(SerialBT.available()){
-    sPack.data[sPack.len++] = SerialBT.read();
+    sPack.data[sPack.len] = SerialBT.read();
+    sPack.len++;
     if(sPack.len >120)break;
   }
-
+  sPack.data[sPack.len] = SerialBT.read();
+  sPack.len++;  
+  Serial.println(" --  BT DATA ----");  
+  Serial.write(sPack.data, sPack.len);
+  Serial.println(" -- END BT DATA ----");    
   serial.dataSrc = SERIAL_SRC_BT; 
   G_waitBtPackCnt = 0;   
   

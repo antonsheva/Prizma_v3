@@ -147,7 +147,7 @@ extern QueueHandle_t QueueRs485Receive  ;
 
 extern QueueHandle_t QueuePrefs   ;
 extern QueueHandle_t QueuePwrAut        ;
-extern QueueHandle_t QueueRebModAut     ;
+
 extern QueueHandle_t QueueLeds          ;
 extern QueueHandle_t QueueCmd           ;
 extern QueueHandle_t QueueRs485Pool     ;
@@ -158,12 +158,11 @@ extern QueueHandle_t QueueUsb           ;
 extern QueueHandle_t QueueRs485Event    ; 
 extern QueueHandle_t QueueRs485         ;
 extern QueueHandle_t QueueRmEvent       ; 
-extern QueueHandle_t QueueRmSend            ;
+
  
 
 
-extern SemaphoreHandle_t SemaphorePollRs485;
-extern SemaphoreHandle_t SemaphoreCbUsb    ;
+  
 extern SemaphoreHandle_t SemaphoreCbBt     ;
 extern SemaphoreHandle_t SemaphoreCbRm     ; 
 

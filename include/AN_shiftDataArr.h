@@ -11,7 +11,8 @@ private:
 public:
     AN_shiftDataArr(/* args */);
     ~AN_shiftDataArr();
-    void loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr);
+    void loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr, bool rmOnly = 0);
+ 
     void loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr);
     void copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2);
     void printJmmrData(_JMMR_STATE *jmmr);

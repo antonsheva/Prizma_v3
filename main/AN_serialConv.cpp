@@ -1,4 +1,4 @@
-#include "../include/AN_serialConv.h"
+#include "AN_serialConv.h"
 
  
 AN_serialConv::AN_serialConv(/* args */){

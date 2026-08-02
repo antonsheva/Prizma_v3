@@ -105,8 +105,10 @@ void AN_serial::processingReceivedData(){
  
     waitTimer = 0;
     resetDataPackProcess();
-    // AN_shiftDataArr sft;
-    // sft.printMsg(&msg);
+    AN_shiftDataArr sft;
+    
+    if(dataSrc == SERIAL_SRC_BT)Serial.println(dataStr.c_str()) ;
+
     if(msg.addrEsp32 == G_lJmrStt.esp32Addr){ 
         xQueueSend(QueueCmd, &msg, 100);
         G_serialBusy = 0; 

@@ -22,14 +22,11 @@ QueueHandle_t QueueRs485Event    = NULL;
 QueueHandle_t QueueRs485         = NULL;
 
 QueueHandle_t QueueRmEvent       = NULL; 
-QueueHandle_t QueueRmSend        = NULL;
-QueueHandle_t QueueRebModAut     = NULL;
-
+ 
  
 
-SemaphoreHandle_t SemaphorePollRs485 = NULL;
- 
-SemaphoreHandle_t SemaphoreCbUsb   = NULL;
+  
+  
 SemaphoreHandle_t SemaphoreCbBt    = NULL;
 SemaphoreHandle_t SemaphoreCbRm    = NULL;
 
@@ -100,7 +97,7 @@ void initObjects()
     QueueRs485Send       = xQueueCreate(2, sizeof(_MSG_PACK));
     QueueRs485Receive    = xQueueCreate(2, 1024);
     QueuePrefs           = xQueueCreate(2,  sizeof(_MSG_PACK));
-    QueueRebModAut       = xQueueCreate(2,  sizeof(_RM_AUT));
+ 
     QueuePwrAut          = xQueueCreate(4, sizeof(_SERIAL_PACK));
     QueueLeds            = xQueueCreate(4,  4);
       
@@ -116,14 +113,13 @@ void initObjects()
     QueueRs485           = xQueueCreate(4, sizeof(_SERIAL_PACK));
 
     QueueRmEvent         = xQueueCreate(32, sizeof(_RM_AUT));  
-    QueueRmSend          = xQueueCreate(4, sizeof(_RM_PACK)); 
+ 
   
     
     QueueBt              = xQueueCreate(8, sizeof(_SERIAL_PACK));  
      
-    SemaphorePollRs485 = xSemaphoreCreateBinary();
  
-    SemaphoreCbUsb     = xSemaphoreCreateBinary();
+  
     SemaphoreCbBt      = xSemaphoreCreateBinary();
     SemaphoreCbRm      = xSemaphoreCreateBinary();
     SemaphoreTxDone    = xSemaphoreCreateBinary(); 

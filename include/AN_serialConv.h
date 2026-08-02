@@ -7,6 +7,7 @@
 #include "AN_objects.h"
 #include "define.h"
 #include "AN_shiftDataArr.h"
+ 
 
 class AN_serialConv{
 private:

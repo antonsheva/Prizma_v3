@@ -1,6 +1,7 @@
 #include "AN_rs485.h"
 #include "FastCRC.h" 
 
+#define LOAD_RM_ONLY 1
 void AN_rs485::processMsg(_MSG_PACK *msg)
 {
 
@@ -13,16 +14,23 @@ void AN_rs485::processMsg(_MSG_PACK *msg)
 
 void AN_rs485::prepMsg(_MSG_PACK *msg, BYTE iterNum)
 {
+  AN_shiftDataArr sft;
   switch(msg->cmdType){
     case CMD_GET_JMMR_LIST: msg->addrEsp32 = iterNum+1; 
                             msg->cmd       = CMD_SEARCH_DEVICES;
                             msg->direction = MSG_DIR_REQUEST;
                             msg->response  = RESP_GET_JMMR_LIST;                                     
                             break;
-    case CMD_SET_JMMR_LIST: msg->cmd        = CMD_RM_SET_STATE;                  
-                            msg->direction  = MSG_DIR_REQUEST;
-                            msg->addrEsp32  = G_jmmrsList[iterNum].esp32Addr;
-                            loadJmmrStateToMsg(msg, &G_jmmrsList[iterNum]); 
+    case CMD_SET_JMMR_LIST: 
+                            if(iterNum == G_lJmrStt.esp32Addr){
+                              sft.loadMsgToJmrStt(msg, &G_lJmrStt, LOAD_RM_ONLY);  
+                            }else{
+                              msg->cmd        = CMD_RM_SET_STATE;                  
+                              msg->direction  = MSG_DIR_REQUEST;
+                              msg->addrEsp32  = G_jmmrsList[iterNum].esp32Addr;
+                              loadJmmrStateToMsg(msg, &G_jmmrsList[iterNum]); 
+                            }
+
                             break;                                
     case CMD_GET_JMMR_DATA: msg->cmd       = CMD_SEARCH_DEVICES;
                             msg->direction = MSG_DIR_REQUEST;   
@@ -92,8 +100,8 @@ void AN_rs485::sendMsgToBt(_MSG_PACK *msg){
             
         break; 
 		
-        case CMD_SET_JMMR_LIST: sendBtResponse(msg->cmdType, 1); break;
-        case CMD_GET_JMMR_DATA: sendBtJmmrData(msg);        break;
+    case CMD_SET_JMMR_LIST: sendBtResponse(msg->cmdType, 1); break;
+    case CMD_GET_JMMR_DATA: sendBtJmmrData(msg);        break;
 	}
 	msg->cmdType = 0; 
 }

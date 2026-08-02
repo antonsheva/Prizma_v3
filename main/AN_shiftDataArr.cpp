@@ -1,5 +1,6 @@
 #include "../include/AN_shiftDataArr.h"
 #include<string>
+#include "AN_shiftDataArr.h"
 
 AN_shiftDataArr::AN_shiftDataArr(/* args */)
 {
@@ -9,24 +10,30 @@ AN_shiftDataArr::~AN_shiftDataArr()
 {
 }
 
-void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr){
-	jmmr->devId							= msg->devId;      
-	jmmr->groupId						= msg->groupId; 
-	jmmr->devType						= msg->devType;  	
+void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr, bool rmOnly){
+	if(!rmOnly){
+		jmmr->devId							= msg->devId;      
+		jmmr->groupId						= msg->groupId; 
+		jmmr->devType						= msg->devType; 		
+		jmmr->infoLen						= msg->txtLen;		
+
+		memset(jmmr->info, 0, TXT_INFO_LEN);
+		memccpy(jmmr->info, msg->txt, '\0', TXT_INFO_LEN);
+		
+		if(msg->addrRm1 && msg->addrRm1 < 128)jmmr->rebMod[0].address = msg->addrRm1;
+		if(msg->addrRm2 && msg->addrRm2 < 128)jmmr->rebMod[1].address = msg->addrRm2;		
+	}
+ 	
 	jmmr->rebMod[0].mc      = msg->modCode1;
 	jmmr->rebMod[1].mc      = msg->modCode2;
 	jmmr->rebMod[0].mask    = msg->mask1;
 	jmmr->rebMod[1].mask    = msg->mask2;
 	jmmr->rebMod[0].pwr     = msg->pwr1;
 	jmmr->rebMod[1].pwr     = msg->pwr2;
-	jmmr->infoLen						= msg->txtLen;
-
-	memset(jmmr->info, 0, TXT_INFO_LEN);
-	memccpy(jmmr->info, msg->txt, '\0', TXT_INFO_LEN);
-  
-  if(msg->addrRm1 && msg->addrRm1 < 128)jmmr->rebMod[0].address = msg->addrRm1;
-  if(msg->addrRm2 && msg->addrRm2 < 128)jmmr->rebMod[1].address = msg->addrRm2;
 }
+
+
+
 
 void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	msg->devId      = jmmr->devId;        
@@ -56,7 +63,6 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2){
 	memset(jmmr1->info, 0, TXT_INFO_LEN);
   memccpy(jmmr1->info, jmmr2->info, '\0', TXT_INFO_LEN);
   
-
 	for(int i=0; i<2; i++){
 		jmmr1->rebMod[i].mc          	= jmmr2->rebMod[i].mc         ;    			
 		jmmr1->rebMod[i].mask        	= jmmr2->rebMod[i].mask       ;      				
@@ -64,13 +70,13 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2){
 		jmmr1->rebMod[i].echo        	= jmmr2->rebMod[i].echo       ;      				
 		jmmr1->rebMod[i].pwr         	= jmmr2->rebMod[i].pwr        ;     				
 		jmmr1->rebMod[i].vcpu        	= jmmr2->rebMod[i].vcpu       ;      					
-		jmmr1->rebMod[i].temp        	= jmmr2->rebMod[i].temp       ;      					
-		// jmmr1->rebMod[i].infoLen 			= jmmr2->rebMod[i].infoLen		; 
-		
-		// memset(jmmr1->rebMod[i].info, 0, TXT_INFO_LEN);	
-		// memccpy(jmmr1->rebMod[i].info, jmmr2->rebMod[i].info, '\0', TXT_INFO_LEN);	
-		 
+		jmmr1->rebMod[i].temp        	= jmmr2->rebMod[i].temp       ;  
+		jmmr1->rebMod[i].infoLen 			= jmmr2->rebMod[i].infoLen		; 
 
+		if(jmmr1->rebMod[i].infoLen){
+			memset(jmmr1->rebMod[i].info, 0, TXT_INFO_LEN);	
+			memccpy(jmmr1->rebMod[i].info, jmmr2->rebMod[i].info, '\0', TXT_INFO_LEN);	
+		}
 	}
 }
 
@@ -112,7 +118,7 @@ void AN_shiftDataArr::printMsg(_MSG_PACK *msg){
 	AN_print("msk1      -> "+std::to_string(msg->mask1)   );
 	AN_print("msk2      -> "+std::to_string(msg->mask2)   );
 	AN_print("pwr1      -> "+std::to_string(msg->pwr1)   );
-	AN_print("pwr2      -> "+std::to_string(msg->pwr1)   );
+	AN_print("pwr2      -> "+std::to_string(msg->pwr2)   );
 	AN_print("txt_len   -> "+std::to_string(msg->txtLen)   );
 	AN_print("txt       -> "+std::string(msg->txt)   );	
 }
