@@ -3,7 +3,7 @@
 
 #include "main.h"
 #include "sdkconfig.h"
-// #include <esp_adc/adc_oneshot.h>
+#include <esp_adc/adc_oneshot.h>
 
 class AN_taskAnalog{
 private:

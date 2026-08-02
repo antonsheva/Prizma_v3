@@ -18,21 +18,21 @@ void AN_taskAnalog::run(void *param){
   int a24_d;
   BYTE a24_tmp;
   
-    // adc_oneshot_unit_handle_t adc_handle;
+    adc_oneshot_unit_handle_t adc_handle;
 
-    // // Initialize ADC Oneshot Mode Driver on the ADC Unit
-    // adc_oneshot_unit_init_cfg_t init_config; 
-    // init_config.unit_id = ADC_UNIT_1;
-    // init_config.clk_src = ADC_RTC_CLK_SRC_DEFAULT;
-    // ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config, &adc_handle));
+    // Initialize ADC Oneshot Mode Driver on the ADC Unit
+    adc_oneshot_unit_init_cfg_t init_config; 
+    init_config.unit_id = ADC_UNIT_1;
+    init_config.clk_src = ADC_RTC_CLK_SRC_DEFAULT;
+    ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config, &adc_handle));
 
  
-    // adc_oneshot_chan_cfg_t config;
-    // config.bitwidth = ADC_BITWIDTH_12;
-    // config.atten    = ADC_ATTEN_DB_12;
+    adc_oneshot_chan_cfg_t config;
+    config.bitwidth = ADC_BITWIDTH_12;
+    config.atten    = ADC_ATTEN_DB_12;
 
-    // ESP_ERROR_CHECK(adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_0, &config));
-    // ESP_ERROR_CHECK(adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_3, &config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_0, &config));
+    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_3, &config));
     
  
  
@@ -40,11 +40,11 @@ void AN_taskAnalog::run(void *param){
     // if(G_pwrMode)return; //the BT connection mode is enable
  
   
-    // ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_0, &a24));
-    // ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_3, &aTemper));
+    ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_0, &a24));
+    ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_3, &aTemper));
     
 
-    // AN_print("ch_1 VAL -> "+std::to_string(a24)+" ;   ch_2 VAL -> "+std::to_string(aTemper));
+    AN_print("ch_1 VAL -> "+std::to_string(a24)+" ;   ch_2 VAL -> "+std::to_string(aTemper));
 
 
     if((aTemper < A_TEMPERATURE_ON_FAN)&&(!fanEn)){
