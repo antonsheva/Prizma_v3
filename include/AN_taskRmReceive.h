@@ -1,7 +1,9 @@
 #ifndef _AN_TASK_RM_RECEIVE_
 #define _AN_TASK_RM_RECEIVE_
 
-#include "main.h"
+#include "Arduino.h"
+#include "AN_objects.h"
+#include "AN_shiftDataArr.h"
 
 class AN_taskRmReceive{
 private:
@@ -11,9 +13,9 @@ public:
   ~AN_taskRmReceive();
 
   static void getDevInfo(String data);
- 
-  static void initTimer();
+  
   static void fillDevParams(int dataArrLen, String *data);
+  static void readData();
   static void callback();
   static void send(String str);
  

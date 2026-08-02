@@ -1,6 +1,6 @@
 #include "../include/AN_objects.h"
 
-JammerState G_lJmrStt;
+_JMMR_STATE G_lJmrStt;
 BluetoothSerial SerialBT;  
 
 QueueHandle_t QueueBt            = NULL;
@@ -37,7 +37,7 @@ SemaphoreHandle_t SemaphoreTxDone  = NULL;
 EventGroupHandle_t EventGroupSpp   = NULL;
 EventGroupHandle_t EventGroupBt    = NULL; 
 
-std::vector<JammerState> G_jmmrsList;
+std::vector<_JMMR_STATE> G_jmmrsList;
 
 _RS485_data RS485_data;
 
@@ -45,7 +45,7 @@ _RS485_data RS485_data;
 _MSG_PACK G_rm_msg;
 _MSG_PACK G_485_msg;
   
-uint8_t G_selRm = 0;
+
 
 BYTE G_subscribersQty = 0;  
 

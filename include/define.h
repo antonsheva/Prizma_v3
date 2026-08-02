@@ -28,8 +28,8 @@
 #define CMD_RM_ATZ          8             
 #define CMD_RM_GET_ATW      9             
 #define CMD_RM_SET_ATW      10             
-#define CMD_GET_STATE       11
-#define CMD_SET_STATE       12
+#define CMD_RM_GET_STATE    11
+#define CMD_RM_SET_STATE    12
 #define CMD_RM_GET_INFO     13
 #define CMD_PRINT_ADDRESSES 14
 #define CMD_GET_JMMR_DATA   15

@@ -160,6 +160,7 @@ void AN_serial::processingSerialData(_SERIAL_PACK sPack)
         ESP_LOGE("SERIAL", "processingSerialData : Malloc failed");
         return;
     }
+    memset(data, 0, sPack.len);
     memccpy(data, sPack.data, 0, sPack.len);
     free(sPack.data);
     std::string start = "start";

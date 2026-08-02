@@ -25,20 +25,20 @@ public:
   int saveMsgParam(char *param, char *val, _MSG_PACK *msg);
  
 
-  int saveJmmrParam(char *param, char *val, JammerState *jmmr);
+  int saveJmmrParam(char *param, char *val, _JMMR_STATE *jmmr);
 
  
   int getParam(std::string *str, char *param, char *val);
 
-  int deserializeDataPack(JammerState *jmmr, _MSG_PACK *msg, char *data);
+  int deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *data);
 
   int serializeRs485Data(_MSG_PACK *msg, char *data);
 
   int serializeMsgData(_MSG_PACK *msg, char *data);
 
-  int serializeJmmrData(JammerState *jmmr, char *data);
+  int serializeJmmrData(_JMMR_STATE *jmmr, char *data);
 
-  int serializeJmmrList(std::vector<JammerState> jmmrsList, char *data);
+  int serializeJmmrList(std::vector<_JMMR_STATE> jmmrsList, char *data);
 
  
 };

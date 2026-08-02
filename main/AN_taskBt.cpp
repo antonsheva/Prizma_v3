@@ -1,29 +1,6 @@
-#include "../include/AN_taskBt.h"
+#include "AN_taskBt.h"
  
  
-  
- 
-
-
-
- 
-
-  
-
- 
-
-// void AN_bt::saveConnectionData(esp_spp_cb_param_t *param){
-//     memccpy(G_lJmrStt.bt.rem_bda, param->open.rem_bda, 0, ESP_BD_ADDR_LEN);
-//     G_lJmrStt.bt.sppClient = param->open.handle;
-//     G_lJmrStt.bt.status = SPP_CONNECTED;
-//     G_btConnect = true;
-// }
-
-// void AN_bt::clearConnectionData(){
-//     memset(G_lJmrStt.bt.rem_bda, 0, ESP_BD_ADDR_LEN);
-//     G_lJmrStt.bt.sppClient = 0;
-//     G_lJmrStt.bt.status = SPP_DISCONNECTED;
-// } 
 
 
 AN_serial serial;
@@ -56,11 +33,12 @@ void AN_taskBt::receive(){
   sPack.len = 0;
   sPack.data = static_cast<char *>(malloc(128)); 
   memset(sPack.data, 0, 128);
+  memset(sPack.data, 0, 128); 
   while(SerialBT.available()){
     sPack.data[sPack.len++] = SerialBT.read();
     if(sPack.len >120)break;
   }
- 
+
   serial.dataSrc = SERIAL_SRC_BT; 
   G_waitBtPackCnt = 0;   
   

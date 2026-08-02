@@ -6,7 +6,7 @@
 #include "AN_macro.h"
 #include "AN_shiftDataArr.h"
 
-class AN_taskCmd{
+class AN_taskCmd {
 private:
 
     
@@ -24,7 +24,9 @@ private:
   static  void setJmmrData(_MSG_PACK *msg);
   static  void init();
   static  void processingCmd(_MSG_PACK *msg);
-  static  void getRmInfo();
+  static  void rmGetState();
+  static  void rmSetState(_MSG_PACK *msg);
+ 
   static  void test();
   static  void btInit();
   static  void btStop();
@@ -35,7 +37,7 @@ private:
   static  void updateLocalData(_MSG_PACK *msg);
   static  void generateTestData();
   static  void addJmmr(_MSG_PACK *msg);
-  static  void addJmmr(JammerState *jmmr); 
+  static  void addJmmr(_JMMR_STATE *jmmr); 
   static  void selectRmModule(int sel, bool firstInit = 0);
   static  void sendCmdToRm(int cmd, int sel);  
 public:

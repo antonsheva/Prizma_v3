@@ -29,7 +29,7 @@ void AN_taskMonitor::run(void *param){
 
         case 20 :  msg.cmd = CMD_APLAY_PWR;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
-        case 200:  msg.cmd = CMD_RM_GET_INFO;
+        case 30:  msg.cmd = CMD_RM_GET_STATE;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
 
     }
@@ -54,11 +54,11 @@ void AN_taskMonitor::run(void *param){
         vTaskResume(Handle_taskRmReceive);
     }
 
-    // if(G_pauseRmDataCnt)G_pauseRmDataCnt--;
-    // if(G_pauseRmDataCnt == 2){
-    //     vTaskResume(TaskHandle_rebModAut);
+    if(G_pauseRmDataCnt)G_pauseRmDataCnt--;
+    if(G_pauseRmDataCnt == 2){
+        vTaskResume(Handle_taskRmReceive);
 
-    // }
+    }
 ///////////////////////////////////////////////////////
 
 

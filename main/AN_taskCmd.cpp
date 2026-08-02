@@ -1,5 +1,4 @@
  
-#include "../include/AN_taskCmd.h"
 #include "AN_taskCmd.h"
 
 
@@ -13,11 +12,13 @@ void AN_taskCmd::init()
 
 void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	switch (msg->cmd){
-		case CMD_RM_AT			: sendCmdToRm(CMD_RM_AT,         msg->mask1);	break;
-		case CMD_RM_GET_ATBT: sendCmdToRm(CMD_RM_GET_ATBT,	 msg->mask1);	break;
-		case CMD_RM_GET_ATC	: sendCmdToRm(CMD_RM_GET_ATC,		 msg->mask1);	break;
-		case CMD_RM_GET_ATI	: sendCmdToRm(CMD_RM_GET_ATI,		 msg->mask1);	break;
-		case CMD_RM_GET_INFO: getRmInfo();  															break;
+		case CMD_RM_AT			 : sendCmdToRm(CMD_RM_AT,         msg->mask1);	break;
+		case CMD_RM_GET_ATBT : sendCmdToRm(CMD_RM_GET_ATBT,	 	msg->mask1);	break;
+		case CMD_RM_GET_ATC	 : sendCmdToRm(CMD_RM_GET_ATC,		msg->mask1);	break;
+		case CMD_RM_GET_ATI	 : sendCmdToRm(CMD_RM_GET_ATI,		msg->mask1);	break;
+		case CMD_RM_GET_STATE: rmGetState();  															break;
+		case CMD_RM_SET_STATE: rmSetState(msg);  														break;
+		
 		/**
 		 * @brief preferences commands
 		 * saving data to preference such as: addresses, ID, group...
@@ -58,7 +59,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	G_serialBusy = 0;
 }
 
-void AN_taskCmd::getRmInfo(){
+void AN_taskCmd::rmGetState(){
 	_RM_AUT rmAut;
 	rmAut.opCodeList[0] = CMD_RM_GET_ATI ;
 	rmAut.opCodeList[1] = CMD_RM_GET_ATI ;
@@ -70,6 +71,32 @@ void AN_taskCmd::getRmInfo(){
 	rmAut.swtchActDev = true;
 	xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY); 
 }
+
+
+void AN_taskCmd::rmSetState(_MSG_PACK *msg){
+	AN_shiftDataArr sft;
+	if(msg != NULL) sft.loadMsgToJmrStt(msg, &G_lJmrStt);
+	G_updatePref = true;
+	DWORD eventCode = EVENT_APPLY_CHANGES;
+	
+	_RM_AUT rmAut;	
+	rmAut.opCodeList[0] = CMD_RM_SET_ATC ;
+	rmAut.opCodeList[1] = CMD_RM_SET_ATC ;
+  rmAut.opCodeList[2] = CMD_RM_SET_ATW ;
+	rmAut.opCodeList[3] = CMD_RM_SET_ATW ;
+	rmAut.opCodeList[4] = CMD_RM_ATZ     ;
+	rmAut.opCodeList[5] = CMD_RM_ATZ     ;
+	rmAut.opCodeList[6] = CMD_RM_GET_ATI ;
+	
+	rmAut.opCodeQty = 7;
+	rmAut.swtchActDev = true;
+ 	
+  xQueueSend(QueueRebModAut, &rmAut, portMAX_DELAY);
+	xQueueSend(QueuePwrAut, &eventCode, portMAX_DELAY); 
+	// cRebMod->cmdAfterAutFinish = CMD_RESTART_ESP;
+ 
+}
+
 
 void AN_taskCmd::test(){
 	_SERIAL_PACK sPack;
@@ -92,15 +119,15 @@ void AN_taskCmd::btStop(){
 }
 
 void AN_taskCmd::addJmmr(_MSG_PACK *msg){
-	JammerState jmmr; 
+	_JMMR_STATE jmmr; 
   AN_shiftDataArr sft;
 	jmmr.esp32Addr = msg->sender;
 	sft.loadMsgToJmrStt(msg, &jmmr);
 	G_jmmrsList.push_back(jmmr);
 }
 
-void AN_taskCmd::addJmmr(JammerState *jmmr){
-	JammerState j; 
+void AN_taskCmd::addJmmr(_JMMR_STATE *jmmr){
+	_JMMR_STATE j; 
   AN_shiftDataArr sft;
 	sft.copyJmmr(&j, jmmr); 
 	G_jmmrsList.push_back(j);
@@ -234,8 +261,6 @@ void AN_taskCmd::sendCmdToRm(int cmd, int sel){
 		case CMD_RM_ATZ      : Serial1.print ("ATZ\r\n");  break;            
 		case CMD_RM_GET_ATW  : Serial1.print (" \n\r");  break;            
 		case CMD_RM_SET_ATW  : Serial1.print ("AT&W\n\r");  break;             
-		case CMD_GET_STATE   : Serial1.print ("\n\r");  break;
-		case CMD_SET_STATE   : Serial1.print (" \n\r");  break;
 		// case CMD_GET_INFO    : Serial1.print (" \n\r");  break;
 	}
    

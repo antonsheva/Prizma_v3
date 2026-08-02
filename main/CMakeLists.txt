@@ -2,7 +2,6 @@ set(SOURCES main.cpp
             AN_taskUsb.cpp
             AN_objects.cpp
             AN_serial.cpp
-            JammerState.cpp
             FastCRCsw.cpp
             FastCRChw.cpp
             AN_serialConv.cpp

@@ -18,6 +18,7 @@ void AN_taskRs485Poll::run(void *param){
     // ASetOccurredEvent(Event_finishLoadConfig);
     rs485.sendMsgToBt(&msg);
     AN_print("JMMR_LIST_LEN -> "+std::to_string(G_jmmrsList.size())); 
+    sft.printJmmrList();
   }
 }
 

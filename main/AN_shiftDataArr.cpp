@@ -9,7 +9,7 @@ AN_shiftDataArr::~AN_shiftDataArr()
 {
 }
 
-void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, JammerState *jmmr){
+void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	jmmr->devId							= msg->devId;      
 	jmmr->groupId						= msg->groupId; 
 	jmmr->devType						= msg->devType;  	
@@ -28,7 +28,7 @@ void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, JammerState *jmmr){
   if(msg->addrRm2 && msg->addrRm2 < 128)jmmr->rebMod[1].address = msg->addrRm2;
 }
 
-void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, JammerState *jmmr){
+void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	msg->devId      = jmmr->devId;        
 	msg->groupId    = jmmr->groupId;             
 	msg->devType    = jmmr->devType;  	
@@ -44,7 +44,7 @@ void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, JammerState *jmmr){
 	msg->pwr2      	= jmmr->rebMod[1].pwr;         
 }
 
-void AN_shiftDataArr::copyJmmr(JammerState *jmmr1, JammerState *jmmr2){
+void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2){
  
 	jmmr1->devId   								= jmmr2->devId								;
 	jmmr1->groupId 								= jmmr2->groupId							;
@@ -74,7 +74,7 @@ void AN_shiftDataArr::copyJmmr(JammerState *jmmr1, JammerState *jmmr2){
 	}
 }
 
-void AN_shiftDataArr::printJmmrData(JammerState *jmmr){
+void AN_shiftDataArr::printJmmrData(_JMMR_STATE *jmmr){
 		AN_print("----------------");
 		AN_print("devId   ->  "+std::to_string(jmmr->devId));
 		AN_print("groupId ->  "+std::to_string(jmmr->groupId));
@@ -88,6 +88,10 @@ void AN_shiftDataArr::printJmmrData(JammerState *jmmr){
 		AN_print("mask2   ->  "+std::to_string(jmmr->rebMod[1].mask));	
 		AN_print("pwr1    ->  "+std::to_string(jmmr->rebMod[0].pwr));	
 		AN_print("pwr2    ->  "+std::to_string(jmmr->rebMod[1].pwr));	
+		// Serial.println(" -- info RM1 --");
+		// if(jmmr->rebMod[0].infoLen)Serial.println(jmmr->rebMod[0].info);
+		// Serial.println(" -- info RM2 --");
+		// if(jmmr->rebMod[1].infoLen)Serial.println(jmmr->rebMod[1].info);
 }
 
 void AN_shiftDataArr::printMsg(_MSG_PACK *msg){

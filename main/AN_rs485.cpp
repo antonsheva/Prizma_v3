@@ -6,7 +6,7 @@ void AN_rs485::processMsg(_MSG_PACK *msg)
 
   switch(msg->cmd){
       // case CMD_GET_JMMR_LIST: msg->cmd = CMD_SEARCH_DEVICES; break;
-      case CMD_SET_STATE : loadMsgToJmrStt(msg, &G_lJmrStt);         break;
+      case CMD_RM_SET_STATE : loadMsgToJmrStt(msg, &G_lJmrStt);         break;
   }
   xQueueSend(QueueCmd, &msg, 100);
 }
@@ -19,7 +19,7 @@ void AN_rs485::prepMsg(_MSG_PACK *msg, BYTE iterNum)
                             msg->direction = MSG_DIR_REQUEST;
                             msg->response  = RESP_GET_JMMR_LIST;                                     
                             break;
-    case CMD_SET_JMMR_LIST: msg->cmd        = CMD_SET_STATE;                  
+    case CMD_SET_JMMR_LIST: msg->cmd        = CMD_RM_SET_STATE;                  
                             msg->direction  = MSG_DIR_REQUEST;
                             msg->addrEsp32  = G_jmmrsList[iterNum].esp32Addr;
                             loadJmmrStateToMsg(msg, &G_jmmrsList[iterNum]); 
@@ -28,7 +28,7 @@ void AN_rs485::prepMsg(_MSG_PACK *msg, BYTE iterNum)
                             msg->direction = MSG_DIR_REQUEST;   
                             msg->response  = RESP_GET_JMMR_DATA;                             
                             break;
-    case CMD_SET_JMMR_DATA: msg->cmd        = CMD_SET_STATE;                  
+    case CMD_SET_JMMR_DATA: msg->cmd        = CMD_RM_SET_STATE;                  
                             msg->direction  = MSG_DIR_REQUEST;
                             msg->response   = RESP_SET_JMMR_DATA;   
                             break; 

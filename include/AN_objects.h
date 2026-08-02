@@ -9,12 +9,38 @@
 #include "driver/uart.h"
   
 #include <BluetoothSerial.h>
-#include "JammerState.h"
+ 
 #include "define.h"
-
+#include "define_types.h"
 #include <string>
 
  
+typedef struct{
+    BYTE   mc;
+    DWORD  mask;
+    BYTE   address;
+    BYTE   echo;
+    BYTE   pwr;
+    float  vcpu;
+    float  temp;
+    char   info[TXT_INFO_LEN] = {0};
+    size_t  infoLen = 0;
+}struct_rebMod;
+
+typedef struct{ 
+
+    DDWORD devId;      
+    BYTE   groupId;
+    BYTE   devType;   // 1 - A; 2 - B
+    BYTE   devRange;
+    BYTE   esp32Addr;
+    char   info[TXT_INFO_LEN] = {0};
+    BYTE   infoLen = 0;
+     
+    struct_rebMod rebMod[2];
+}_JMMR_STATE;
+
+
 
 typedef struct{
     BYTE dataLen = 0;
@@ -103,13 +129,13 @@ typedef struct {
 
 extern BluetoothSerial SerialBT;  
 
-extern std::vector<JammerState> G_jmmrsList;
+extern std::vector<_JMMR_STATE> G_jmmrsList;
  
 extern _MSG_PACK G_rm_msg;
 extern _MSG_PACK G_485_msg;
  
  
-extern JammerState G_lJmrStt;
+extern _JMMR_STATE G_lJmrStt;
 
 extern QueueHandle_t QueueBt;
 
@@ -146,7 +172,7 @@ extern EventGroupHandle_t EventGroupSpp   ;
 extern EventGroupHandle_t EventGroupBt    ;  
  
 extern BYTE G_subscribersQty;
-extern uint8_t G_selRm;
+
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];
 

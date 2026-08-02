@@ -25,7 +25,7 @@ int AN_serialConv::getJmmrList(char * data){
       len = posEnd - posStart;
       G_jmmrsList.clear();
       while(1){
-        JammerState jmmr;
+        _JMMR_STATE jmmr;
         memset(substr, 0, TXT_BUFF_LEN);
         for(localCnt=0; localCnt< TXT_BUFF_LEN; localCnt++){
           if( data[localCnt+posStart+cnt] == '}')break;
@@ -134,7 +134,7 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   return 0;
 }
 
-int AN_serialConv::saveJmmrParam(char *param, char *val, JammerState *jmmr){
+int AN_serialConv::saveJmmrParam(char *param, char *val, _JMMR_STATE *jmmr){
   // std::string str = "param -> "+std::string(param)+" : val -> "+std::string(val);
  
   std::string par = std::string(param); 
@@ -186,7 +186,7 @@ int AN_serialConv::getParam(std::string *str, char *param, char *val){
 
 
 
-int AN_serialConv::deserializeDataPack(JammerState *jmmr, _MSG_PACK *msg, char *data){
+int AN_serialConv::deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *data){
   char strBuff  [TXT_BUFF_LEN];
   char paramBuff[MAX_STR_LEN ];
   char valBuff  [TXT_BUFF_LEN];
@@ -249,7 +249,7 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
     str.append("\"dev_range\":" +std::to_string(msg->devRange)+",");
   }
 
-  if((msg->cmd == CMD_SET_STATE)||(msg->direction == MSG_DIR_RESPONSE)){
+  if((msg->cmd == CMD_RM_SET_STATE)||(msg->direction == MSG_DIR_RESPONSE)){
     str.append("\"mc1\":"       +std::to_string(msg->modCode1)+",");
     str.append("\"mc2\":"       +std::to_string(msg->modCode2)+",");
     str.append("\"msk1\":"      +std::to_string(msg->mask1)+",");
@@ -302,7 +302,7 @@ int AN_serialConv::serializeMsgData(_MSG_PACK *msg, char *data){
   return str.length();
 }
 
-int AN_serialConv::serializeJmmrData(JammerState *jmmr, char *data){
+int AN_serialConv::serializeJmmrData(_JMMR_STATE *jmmr, char *data){
   std::string str = "{";
   
   str.append("\"dev_id\":"   +std::to_string(jmmr->devId)+",");
@@ -325,7 +325,7 @@ int AN_serialConv::serializeJmmrData(JammerState *jmmr, char *data){
   return str.length();
 }
 
-int AN_serialConv::serializeJmmrList(std::vector<JammerState> jmmrsList, char *data)
+int AN_serialConv::serializeJmmrList(std::vector<_JMMR_STATE> jmmrsList, char *data)
 {
   std::string str = "start___{\"cmd\":"+std::to_string(CMD_GET_JMMR_LIST)+",\"sender\":"+std::to_string(G_lJmrStt.esp32Addr)+",\"jmmr_list\":[";
   char tmpBuff[TXT_BUFF_LEN] = {'\0'};

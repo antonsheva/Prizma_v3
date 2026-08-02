@@ -11,10 +11,10 @@ private:
 public:
     AN_shiftDataArr(/* args */);
     ~AN_shiftDataArr();
-    void loadMsgToJmrStt(_MSG_PACK *msg, JammerState *jmmr);
-    void loadJmmrStateToMsg(_MSG_PACK *msg, JammerState *jmmr);
-    void copyJmmr(JammerState *jmmr1, JammerState *jmmr2);
-    void printJmmrData(JammerState *jmmr);
+    void loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr);
+    void loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr);
+    void copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2);
+    void printJmmrData(_JMMR_STATE *jmmr);
     void printMsg(_MSG_PACK *msg);
     void printJmmrList();
 
