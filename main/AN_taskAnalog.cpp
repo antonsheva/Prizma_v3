@@ -17,7 +17,7 @@ void AN_taskAnalog::run(void *param){
   int aTemper = 0;
   int a24_d;
   BYTE a24_tmp;
-  
+ 
     adc_oneshot_unit_handle_t adc_handle;
 
     // Initialize ADC Oneshot Mode Driver on the ADC Unit
@@ -46,7 +46,7 @@ void AN_taskAnalog::run(void *param){
 
     // AN_print("ch_1 VAL -> "+std::to_string(a24)+" ;   ch_2 VAL -> "+std::to_string(aTemper));
 
-
+    G_analogTemp = aTemper;
     if((aTemper < A_TEMPERATURE_ON_FAN)&&(!fanEn)){
       fanEn = 1;
       gpio_set_level(PIN_FAN,1);
@@ -58,9 +58,10 @@ void AN_taskAnalog::run(void *param){
     }
 
     if(a24 < A24_CRITICAL_VAL){
-        ledsCode[0]=5;
+      G_analogVolt = 0;
+      // ledsCode[0]=5;
         if(!critPwrLatch){
-            if(!G_pwrMode)xQueueSend(QueueLeds, ledsCode, portMAX_DELAY);           
+            // if(!G_pwrMode)xQueueSend(QueueLeds, ledsCode, portMAX_DELAY);           
             critPwrLatch = 1;
         }
     }else{
@@ -69,11 +70,15 @@ void AN_taskAnalog::run(void *param){
         a24_d   = (A24_NORMAL_VAL - A24_CRITICAL_VAL)/5;
         a24_tmp = (BYTE)(5-(A24_NORMAL_VAL - a24)/a24_d);
         
-        ledsCode[0] = 4;
-        ledsCode[1] = 0;
-        for(int i=0; i<a24_tmp;i++)ledsCode[1] |= (1<<i);
-        ledsCode[1] &= 0x0F;               
-        if(!G_pwrMode)xQueueSend(QueueLeds, ledsCode, portMAX_DELAY);                 
+        // ledsCode[0] = 4;
+        // ledsCode[1] = 0;
+        // for(int i=0; i<a24_tmp;i++)ledsCode[1] |= (1<<i);
+        // ledsCode[1] &= 0x0F; 
+        G_analogVolt = 0;
+        for(int i=0; i<a24_tmp;i++)G_analogVolt |= (1<<i);
+        G_analogVolt &= 0x0F; 
+
+        // if(!G_pwrMode)xQueueSend(QueueLeds, ledsCode, portMAX_DELAY);                 
     }
 
 

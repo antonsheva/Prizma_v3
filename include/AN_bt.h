@@ -43,6 +43,7 @@ static void clearConnectionData();
 
   // static bool _spp_send_buffer();
   static void spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param);
+  static void processEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param);
   static void gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param);
   static bool _stop_bt();
   // static esp_err_t _spp_queue_packet(uint8_t *data, size_t len);

@@ -72,8 +72,12 @@ bool G_led_ccl_5    = false;
 bool G_btConnect    = false;
 bool G_btStart      = false;
 
-bool G_pwrMode      = false;
- 
+BYTE G_pwrMode      = false;
+
+BYTE G_analogVolt   = 0;  
+BYTE G_analogTemp   = 0;
+BYTE G_ledsStste[2] = {0};
+
 int G_msgTxtDataLen;
 
 char G_msgTxtData[TXT_BUFF_LEN];

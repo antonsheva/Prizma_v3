@@ -181,6 +181,10 @@ extern EventGroupHandle_t EventGroupBt    ;
  
 extern BYTE G_subscribersQty;
 
+extern BYTE G_analogVolt;  
+extern BYTE G_analogTemp;
+extern BYTE G_ledsStste[2];
+
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];
 
@@ -188,8 +192,8 @@ extern bool G_updatePref;
 extern bool G_led_ccl_5;
 extern bool G_btConnect;
 extern bool G_btStart;
-extern bool G_pwrMode;
 
+extern BYTE G_pwrMode;
 extern BYTE G_waitResponse;
 extern BYTE G_serialBusy;
  

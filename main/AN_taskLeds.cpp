@@ -27,8 +27,7 @@ void AN_taskLeds::setState(BYTE stt){
   else            gpio_set_level(LED_5, 0);
 
   if(stt & (1<<5))gpio_set_level(LED_6, 1);
-  else            gpio_set_level(LED_6, 0);
-    
+  else            gpio_set_level(LED_6, 0);    
 }
 
 void AN_taskLeds::run(void *param){
@@ -37,55 +36,61 @@ void AN_taskLeds::run(void *param){
     BYTE startStt = 0;
     BYTE signalValStt = 0;
     BYTE blinkBits = 0;
-   
+    bool swch  = 0; 
+    BYTE cntTm = 0;
     for(;;){
-        xQueueReceive(QueueLeds, code, 100);
-            if(code[0] != 6)stt &= 0x30;
-            switch(code[0]){
-                case 0 :setState(0);                   break;
-                case 1 :startStt = 1;
-                        for(int i=0; i<12; i++){
-                            setState(1 << (i < 6 ? i : i-6));
-                            vTaskDelay(200/portTICK_PERIOD_MS);        
-                        } 
-                        startStt = 0; 
-                        setState(0x01);                 break;
+      switch(G_ledsStste[0]){
+        case 0: if(!G_ledsStste[1])setState(0);
+                G_ledsStste[1] = 1;
+        break;
 
-                case 2 :stt |= 0x03;
-                        while(1){
-                            setState(stt);
-                            blinkBits ^= 0x02;
-                            stt &= ~(1<<1);
-                            stt |= blinkBits;
-                            if(G_btConnect)break;
-                            vTaskDelay(300/portTICK_PERIOD_MS); 
-                        }                                   break;
-                
-                case 3 :stt |= 0x03;
-                        setState(stt);                  break;
-                        
-                case 4 :stt |= (code[1] & 0x0F);             
-                        setState(stt);                  break;
-            
-                case 5 :stt |= 0x01;
-                        G_led_ccl_5 = 1;
-                        while(1){
-                            setState(stt);
-                            blinkBits ^= 0x01;
-                            stt &= ~(1<<0);
-                            stt |= blinkBits;
-                            if(!G_led_ccl_5)break;
-                            vTaskDelay(300/portTICK_PERIOD_MS); 
-                        }                                   break;  
-                        
-                case 6 :signalValStt = (code[1]<<4);  
-                        stt &= 0xCF;
-                        stt |= signalValStt;
-                        setState(stt);                  break; 
-                        
+        case 1: if(!G_ledsStste[1]){
+                if(cntTm < 4)cntTm++;
+                else{
+                    cntTm = 0;
+                    setState(1 << (stt < 6 ? stt : stt-6));
+                    stt++;
+                    if(stt>=12){
+                      G_ledsStste[0] = 0;
+                      G_ledsStste[1] = 2;
+                      cntTm = 0;
+                      setState(0);
+                    }
+                }          
+              }
+        break;
+      
+        case 2: if(cntTm < 4)cntTm++;
+                else{
+                    cntTm = 0;
+                    swch = !swch;
+                    stt &= 0x30; 
+                    stt |= swch ? 0x01 : 0x00;
+                    setState(stt);          
+                }          
+        break; 
 
-                default:stt = code[1];             
-                        setState(stt);                  break;                     
-            }
-        }
+        case 3: stt |= (G_analogVolt & 0xC0);
+                setState(G_analogVolt); break;
+
+        case 4: if(cntTm < 4)cntTm++;
+                else{
+                    cntTm = 0;
+                    swch = !swch;
+                    stt &= 0x30; 
+                    stt |= swch ? 0x09 : 0x00;
+                    setState(stt);
+                }          
+        break; 
+        
+        case 5: stt &= 0x30;
+                stt |= 0x09;
+                setState(stt);
+        break;
+        case 6:  break;
+        case 7:  break;
+      }
+
+      vTaskDelay(50);
+    }
 }

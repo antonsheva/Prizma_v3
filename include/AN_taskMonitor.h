@@ -10,6 +10,8 @@ public:
   AN_taskMonitor(/* args */);
   ~AN_taskMonitor();
 
+  static void checkAnalog();
+
   static void run(void *param);
 };
 

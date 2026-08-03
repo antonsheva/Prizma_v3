@@ -1,4 +1,5 @@
 #include "../include/AN_bt.h"
+#include "AN_bt.h"
 
 
  
@@ -55,50 +56,53 @@ void AN_bt::clearConnectionData(){
  
  
 void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
-    _SERIAL_PACK dataPack;
+    _SERIAL_PACK sPack;
 
     AN_print("ESP_SPP_EVT ->  "+std::to_string(event));
+
     switch (event) {
-    case ESP_SPP_INIT_EVT:
-        AN_print("ESP_SPP_INIT_EVT");
-        esp_spp_start_srv(ESP_SPP_SEC_NONE, ESP_SPP_ROLE_SLAVE, 0, "SPP_LED_Server");
-        xEventGroupSetBits(EventGroupSpp, SPP_RUNNING);
-    break;
+      case ESP_SPP_INIT_EVT:
+          AN_print("ESP_SPP_INIT_EVT");
+          esp_spp_start_srv(ESP_SPP_SEC_NONE, ESP_SPP_ROLE_SLAVE, 0, "SPP_LED_Server");
+          xEventGroupSetBits(EventGroupSpp, SPP_RUNNING);
+      break;
 
-    case ESP_SPP_DISCOVERY_COMP_EVT:
-            ESP_LOGI(TAG, "Search of devices is finish");
-    break;
+      case ESP_SPP_DISCOVERY_COMP_EVT:
+              ESP_LOGI(TAG, "Search of devices is finish");
+      break;
 
-    case ESP_SPP_OPEN_EVT:
-            ESP_LOGI(TAG, "Bluetooth connect  с %s", param->open.rem_bda);
+      case ESP_SPP_OPEN_EVT:
+        ESP_LOGI(TAG, "Bluetooth connect  с %s", param->open.rem_bda);
 
-            xEventGroupClearBits(EventGroupSpp, SPP_DISCONNECTED);
-            xEventGroupSetBits(EventGroupSpp, SPP_CONNECTED);
-            xEventGroupSetBits(EventGroupSpp, SPP_CONGESTED);
-    break;
+        xEventGroupClearBits(EventGroupSpp, SPP_DISCONNECTED);
+        xEventGroupSetBits(EventGroupSpp, SPP_CONNECTED);
+        xEventGroupSetBits(EventGroupSpp, SPP_CONGESTED);
+      break;
 
-    case ESP_SPP_CLOSE_EVT:
-            ESP_LOGI(TAG, "Bluetooth connectin close");
+      case ESP_SPP_CLOSE_EVT:
+        ESP_LOGI(TAG, "Bluetooth connectin close!!!---");
 
-            // memset(receive_buffer, 0, sizeof(receive_buffer));
-            memset(G_lJmrStt.bt.rem_bda, 0, ESP_BD_ADDR_LEN);
-            G_lJmrStt.bt.sppClient = 0;
-            G_lJmrStt.bt.status = SPP_DISCONNECTED;
-            G_btConnect = 0;
-                xEventGroupSetBits(EventGroupSpp,    SPP_DISCONNECTED);
-                xEventGroupSetBits(EventGroupSpp,    SPP_CONGESTED);
-                xEventGroupSetBits(EventGroupSpp,    SPP_CLOSED);
-                xEventGroupClearBits(EventGroupSpp,  SPP_CONNECTED);
+        memset(G_lJmrStt.bt.rem_bda, 0, ESP_BD_ADDR_LEN);
+        G_lJmrStt.bt.sppClient = 0;
+        G_lJmrStt.bt.status = SPP_DISCONNECTED;
+        G_btConnect = 0;
+        // sPack.cmd = EVENT_BT_DISCONNECT;                
+        // xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
+        
+        xEventGroupSetBits(EventGroupSpp,    SPP_DISCONNECTED);
+        xEventGroupSetBits(EventGroupSpp,    SPP_CONGESTED);
+        xEventGroupSetBits(EventGroupSpp,    SPP_CLOSED);
+        xEventGroupClearBits(EventGroupSpp,  SPP_CONNECTED);
 
-    break;
+      break;
 
     case ESP_SPP_CONG_EVT://connection congestion status changed
-          if(param->cong.cong){
-              xEventGroupClearBits(EventGroupSpp, SPP_CONGESTED);
-          } else {
-              xEventGroupSetBits(EventGroupSpp, SPP_CONGESTED);
-          }
-          AN_print("ESP_SPP_CONG_EVT");
+      if(param->cong.cong){
+          xEventGroupClearBits(EventGroupSpp, SPP_CONGESTED);
+      } else {
+          xEventGroupSetBits(EventGroupSpp, SPP_CONGESTED);
+      }
+      AN_print("ESP_SPP_CONG_EVT");
     break;
     
     case ESP_SPP_START_EVT:
@@ -106,24 +110,22 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
     break;
 
     case ESP_SPP_DATA_IND_EVT:
-            AN_print(std::string((char*)param->data_ind.data).c_str());
- 
-            
-            dataPack.data = static_cast<char *>(malloc(param->data_ind.len));
-            if (dataPack.data == NULL) {
-                ESP_LOGE("UART", "Malloc failed");
-        break;
-            }
-            dataPack.len = param->data_ind.len;
-            memccpy(dataPack.data, param->data_ind.data, 0, param->data_ind.len);
-            xQueueSend(QueueBtReceive, &dataPack, portMAX_DELAY);
+            // AN_print(std::string((char*)param->data_ind.data).c_str());
+            // sPack.data = static_cast<char *>(malloc(param->data_ind.len));
+            // if (sPack.data == NULL) {
+            //     ESP_LOGE("UART", "Malloc failed");
+            //     break;
+            // }
+            // sPack.len = param->data_ind.len;
+            // memccpy(sPack.data, param->data_ind.data, 0, param->data_ind.len);
+            // xQueueSend(QueueBtReceive, &sPack, portMAX_DELAY);
 
     break;
 
     case ESP_SPP_WRITE_EVT:
           if (param->write.status == ESP_SPP_SUCCESS) {
               if(param->write.cong){
-                  xEventGroupClearBits(EventGroupSpp, SPP_CONGESTED);
+                xEventGroupClearBits(EventGroupSpp, SPP_CONGESTED);
               }
               AN_print("ESP_SPP_WRITE_EVT");
           } else {
@@ -136,7 +138,9 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
             if (param->srv_open.status == ESP_SPP_SUCCESS) {  
               if (!G_btConnect && !G_lJmrStt.bt.sppClient){
                 AN_print(" --- CONNECCTTT  _____----");
-                G_btConnect = true;
+                // G_btConnect = true;
+                // sPack.cmd = EVENT_BT_CONNECT;                
+                // xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
                 saveConnectionData(param);
                 xEventGroupClearBits(EventGroupSpp, SPP_DISCONNECTED);
                 xEventGroupSetBits(EventGroupSpp, SPP_CONNECTED);
@@ -148,12 +152,43 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
 
             
 
-        default:
-            ESP_LOGD(TAG, "SPP event: %d", event);
-            break;
-    }
+    default:
+        ESP_LOGD(TAG, "SPP event: %d", event);
+        break;
+  }
+    processEvent(event, param);
 }
  
+void AN_bt::processEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
+    _SERIAL_PACK sPack;
+    if(event == 27){
+      Serial.println("BT disconnect --- ");
+      G_lJmrStt.bt.sppClient = 0;
+      G_lJmrStt.bt.status = SPP_DISCONNECTED;
+      G_btConnect = false;
+      sPack.cmd = EVENT_BT_DISCONNECT;                
+      xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
+    }
+    if(event == 34){
+      Serial.println("BT connect --- ");
+      G_btConnect = true;
+      sPack.cmd = EVENT_BT_CONNECT;                
+      xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
+    }
+    if(event == 30){
+      Serial.println("BT data --- ");      
+      AN_print(std::string((char*)param->data_ind.data).c_str());
+        sPack.data = static_cast<char *>(malloc(param->data_ind.len));
+        if (sPack.data == NULL) {
+            ESP_LOGE("UART", "Malloc failed");
+        }
+        sPack.len = param->data_ind.len;
+        memccpy(sPack.data, param->data_ind.data, 0, param->data_ind.len);
+        xQueueSend(QueueBtReceive, &sPack, portMAX_DELAY);
+    }
+
+}
+
 void AN_bt::gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 {
       AN_print("ESP_BT_GAP_EVT ->  "+std::to_string(event));
@@ -265,8 +300,6 @@ bool AN_bt::_stop_bt()
        
     }
     G_lJmrStt.bt.sppClient = 0;
- 
-    G_btStart = false;
     G_btStart = false;
     return true;
 }

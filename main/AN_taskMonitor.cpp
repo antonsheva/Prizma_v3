@@ -9,6 +9,21 @@ AN_taskMonitor::~AN_taskMonitor()
 {
 }
 
+void AN_taskMonitor::checkAnalog(){
+    static bool wschEnAnalogCheck = 0;
+    if(!wschEnAnalogCheck){
+      if(G_ledsStste[1]==2)wschEnAnalogCheck = 1;
+    }else{
+      if(!G_analogVolt){
+        G_ledsStste[0]=2;
+        G_ledsStste[1]=0;
+      }else{
+        G_ledsStste[0]=3;
+        G_ledsStste[1]=0;        
+      }
+    }
+}
+
 void AN_taskMonitor::run(void *param){
   _MSG_PACK      msg;
   _MSG_INTERNAL  msg1;
@@ -17,26 +32,34 @@ void AN_taskMonitor::run(void *param){
   int cnt = 0;
   BYTE pwrOutVal = 0;
   BYTE prevPwrOutVal = 0;
-  
+
   BYTE ledsCode[4] = {0};
  
   vTaskDelay(100/portTICK_PERIOD_MS);
   for(;;){
 
     switch(aut){
-        case 0:   ledsCode[0]=1;
+        case 0:   G_ledsStste[0]=1;
+                  G_ledsStste[1]=0;
                   xQueueSend(QueueLeds, ledsCode, 10); break;
 
         case 20 :  msg.cmd = CMD_APLAY_PWR;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
         case 30:  msg.cmd = CMD_RM_GET_STATE;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
-
     }
     if(aut < 40) aut++;
 
-
-
+    if(G_pwrMode == 0)checkAnalog();
+    if(G_pwrMode == 1){
+      G_ledsStste[0] = 4;
+      G_ledsStste[1] = 0;
+    }
+    if(G_pwrMode == 2){
+      G_ledsStste[0] = 5;
+      G_ledsStste[1] = 0;
+    }
+    
 
 //////////////////////////////////////////////////
 

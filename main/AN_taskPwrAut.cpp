@@ -27,13 +27,15 @@ void AN_taskPwrAut::eventAplayChanges(){
 }
 void AN_taskPwrAut::eventDisconnect(){
   AN_print("BT disconnect");
-  G_waitBtConnect = 600;
+  G_pwrMode = 1; 
+  G_waitBtConnect = 3000;
   ledsCode[0]=2;
   xQueueSend(QueueLeds, &ledsCode, portMAX_DELAY);
 }
 
 void AN_taskPwrAut::eventConnect(){
   AN_print("BT connect");
+  G_pwrMode = 2; 
   G_waitBtConnect = 0;
   ledsCode[0]=3;
   xQueueSend(QueueLeds, ledsCode, portMAX_DELAY); 
