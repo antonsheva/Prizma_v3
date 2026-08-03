@@ -86,6 +86,8 @@ typedef struct{
     int    jmmrListLen    = 0;
     int    subscribersQty = 0;
 
+    bool   updtLocalJmmr = 1;
+
     int    txtLen   = 0;
     char   txt[TXT_BUFF_LEN-128] = {0};
 
@@ -133,9 +135,7 @@ typedef struct {
     int  len;
     char data[32];
 } _RM_PACK;
-
-
-extern BluetoothSerial SerialBT;  
+  
 
 extern std::vector<_JMMR_STATE> G_jmmrsList;
  

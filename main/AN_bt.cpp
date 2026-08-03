@@ -58,11 +58,11 @@ void AN_bt::clearConnectionData(){
 void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
     _SERIAL_PACK sPack;
 
-    AN_print("ESP_SPP_EVT ->  "+std::to_string(event));
+    ////Serial.println("ESP_SPP_EVT ->  "+std::to_string(event));
 
     switch (event) {
       case ESP_SPP_INIT_EVT:
-          AN_print("ESP_SPP_INIT_EVT");
+          ////Serial.println("ESP_SPP_INIT_EVT");
           esp_spp_start_srv(ESP_SPP_SEC_NONE, ESP_SPP_ROLE_SLAVE, 0, "SPP_LED_Server");
           xEventGroupSetBits(EventGroupSpp, SPP_RUNNING);
       break;
@@ -102,7 +102,7 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
       } else {
           xEventGroupSetBits(EventGroupSpp, SPP_CONGESTED);
       }
-      AN_print("ESP_SPP_CONG_EVT");
+      ////Serial.println("ESP_SPP_CONG_EVT");
     break;
     
     case ESP_SPP_START_EVT:
@@ -110,7 +110,7 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
     break;
 
     case ESP_SPP_DATA_IND_EVT:
-            // AN_print(std::string((char*)param->data_ind.data).c_str());
+            // ////Serial.println(std::string((char*)param->data_ind.data).c_str());
             // sPack.data = static_cast<char *>(malloc(param->data_ind.len));
             // if (sPack.data == NULL) {
             //     ESP_LOGE("UART", "Malloc failed");
@@ -127,9 +127,9 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
               if(param->write.cong){
                 xEventGroupClearBits(EventGroupSpp, SPP_CONGESTED);
               }
-              AN_print("ESP_SPP_WRITE_EVT");
+              ////Serial.println("ESP_SPP_WRITE_EVT");
           } else {
-              AN_print("ESP_SPP_WRITE_EVT failed!");
+              ////Serial.println("ESP_SPP_WRITE_EVT failed!");
           }
           xSemaphoreGive(SemaphoreTxDone);//we can try to send another packet
     break;
@@ -137,7 +137,7 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
     case ESP_SPP_SRV_OPEN_EVT://Server connection open
             if (param->srv_open.status == ESP_SPP_SUCCESS) {  
               if (!G_btConnect && !G_lJmrStt.bt.sppClient){
-                AN_print(" --- CONNECCTTT  _____----");
+                ////Serial.println(" --- CONNECCTTT  _____----");
                 // G_btConnect = true;
                 // sPack.cmd = EVENT_BT_CONNECT;                
                 // xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
@@ -146,7 +146,7 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
                 xEventGroupSetBits(EventGroupSpp, SPP_CONNECTED);
               }
             }else{
-                AN_print("Connect error");
+                ////Serial.println("Connect error");
             } 
     break;
 
@@ -162,7 +162,7 @@ void AN_bt::spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
 void AN_bt::processEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
     _SERIAL_PACK sPack;
     if(event == 27){
-      Serial.println("BT disconnect --- ");
+      //Serial.println("BT disconnect --- ");
       G_lJmrStt.bt.sppClient = 0;
       G_lJmrStt.bt.status = SPP_DISCONNECTED;
       G_btConnect = false;
@@ -170,14 +170,14 @@ void AN_bt::processEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
       xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
     }
     if(event == 34){
-      Serial.println("BT connect --- ");
+      //Serial.println("BT connect --- ");
       G_btConnect = true;
       sPack.cmd = EVENT_BT_CONNECT;                
       xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
     }
     if(event == 30){
-      Serial.println("BT data --- ");      
-      AN_print(std::string((char*)param->data_ind.data).c_str());
+      //Serial.println("BT data --- ");      
+      ////Serial.println(std::string((char*)param->data_ind.data).c_str());
         sPack.data = static_cast<char *>(malloc(param->data_ind.len));
         if (sPack.data == NULL) {
             ESP_LOGE("UART", "Malloc failed");
@@ -191,7 +191,7 @@ void AN_bt::processEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
 
 void AN_bt::gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 {
-      AN_print("ESP_BT_GAP_EVT ->  "+std::to_string(event));
+      ////Serial.println("ESP_BT_GAP_EVT ->  "+std::to_string(event));
     switch (event) {
         case ESP_BT_GAP_AUTH_CMPL_EVT:
             if (param->auth_cmpl.stat == ESP_BT_STATUS_SUCCESS) {
@@ -216,7 +216,7 @@ void AN_bt::init(void){
     devAddr = std::to_string(G_lJmrStt.esp32Addr);
     devName = "Prizma_JMR_"+devType+"_"+devAddr;
  
-    AN_print("Bluetooth init...");
+    ////Serial.println("Bluetooth init...");
 
 
 
@@ -246,12 +246,12 @@ void AN_bt::init(void){
     }
     if(esp_bt_controller_get_status() == ESP_BT_CONTROLLER_STATUS_INITED){
         if (esp_bt_controller_enable(ESP_BT_MODE_BTDM)) {
-            AN_print("BT Enable failed");
+            ////Serial.println("BT Enable failed");
             return;
         }
     }
     if(esp_bt_controller_get_status() == ESP_BT_CONTROLLER_STATUS_ENABLED){
-        AN_print("BT Enable");
+        ////Serial.println("BT Enable");
     }
 
     
@@ -290,7 +290,7 @@ void AN_bt::init(void){
 
 bool AN_bt::_stop_bt()
 {
-  AN_print("_stop_bt");
+  ////Serial.println("_stop_bt");
     if (G_btStart){
         if(G_lJmrStt.bt.sppClient)
             esp_spp_disconnect(G_lJmrStt.bt.sppClient);
@@ -308,10 +308,10 @@ void AN_bt::end(){
   _stop_bt();
 }
 void AN_bt::sendJmmrList(){
-  AN_serialConv sc;
-  char data[MAX_SERIAL_DATA_LEN];
+ 
+  
   // int len = sc.serializeJmmrList(G_jmmrsList, data);
-  AN_print(data);
+  ////Serial.println(data);
   // SerialBT.write((const BYTE*)data, len);
 }
 

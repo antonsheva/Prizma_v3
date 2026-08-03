@@ -21,7 +21,7 @@ std::string AN_serial::getCrcString(std::string strIn){
   
   int len = stopCrc - startCrc-2;
   crcStr = strIn.substr(startCrc+2, len);
-  // Serial.println("crcStr -> "+ String(crcStr.c_str()));
+  // //Serial.println("crcStr -> "+ String(crcStr.c_str()));
 
   return crcStr;
 }
@@ -61,7 +61,7 @@ int AN_serial::checkCrc(std::string crcExpStr, std::string data){
   int len = data.length();
   int crc16 = crc.modbus((const uint8_t*) data.c_str(), len);
 
-  // // Serial.println("crcExp -> "+String(crcExp, HEX)+" crc16 -> "+String(crc16, HEX));    
+  // // //Serial.println("crcExp -> "+String(crcExp, HEX)+" crc16 -> "+String(crc16, HEX));    
   if(crc16 == crcExp){
       return 1;
   }
@@ -78,17 +78,20 @@ void AN_serial::resetDataPackProcess(){
 void AN_serial::processingReceivedData(){
   _MSG_PACK msg;    
   AN_serialConv serialConv;
-  
+  //Serial.println("------processingReceivedData-- ");
   if(dataPackStr.length() < 20){
     resetDataPackProcess();	
     return;           
   }
 
+  //Serial.println("------processingReceivedData-- 1");
   std::string dataStr = getDataStr(dataPackStr);
   std::string crcStr =  getCrcString(dataPackStr);
   dataPackStr.clear();
 
-  Serial.println(dataPackStr.c_str());
+  //Serial.println(dataStr.c_str());
+  //Serial.println("crc -> "+String(crcStr.c_str())); 
+   
   
   if(dataSrc == SERIAL_SRC_485){
     if(!checkCrc(crcStr, dataStr)){
@@ -101,17 +104,20 @@ void AN_serial::processingReceivedData(){
   
   if(serialConv.unpackData((char*)dataStr.c_str(), &msg)){ //there is error in JSON-data
       resetDataPackProcess();
+       AN_print("error JSON data");
   }else{
  
     waitTimer = 0;
     resetDataPackProcess();
     AN_shiftDataArr sft;
     
-    if(dataSrc == SERIAL_SRC_BT)Serial.println(dataStr.c_str()) ;
+    if(dataSrc == SERIAL_SRC_BT)Serial.println(" -- BT DATA --") ;
+    if(dataSrc == SERIAL_SRC_485)Serial.println(" -- RS485 DATA --") ;
+    Serial.println(dataStr.c_str()) ;
 
     if(msg.addrEsp32 == G_lJmrStt.esp32Addr){ 
-        Serial.println("--target msg---");
-        Serial.println(dataPackStr.c_str());
+        //Serial.println("--target msg---");
+        //Serial.println(dataPackStr.c_str());
         xQueueSend(QueueCmd, &msg, 100);
         G_serialBusy = 0; 
     }
@@ -124,15 +130,16 @@ int AN_serial::processingExternalData(std::string str){
  
 	if(str.length()>120)dataPackStr.append(str.substr(0,120));
 	else				        dataPackStr.append(str);
-  
+  //  //Serial.println("------processingExternalData------");
 	if(dataPackStr.length() > MAX_SERIAL_DATA_LEN){
 		resetDataPackProcess();
+    
     return 0;
 	}
- 
+   //Serial.println(str.c_str());
   int found = dataPackStr.find("stop");
   if(found == -1)return 0;
-
+//Serial.println("------processingExternalData--  1 ");
   processingReceivedData();
   G_serialBusy = 0; 
   return 0;   	
@@ -142,6 +149,7 @@ void AN_serial::checkPauseControl(){
     if(dataSrc == SERIAL_SRC_485){
       if(G_wait485PackCnt > 8){       
         resetDataPackProcess();
+        //Serial.println(" SERIAL_SRC_485 -checkPauseControl- ");
       }
     }
     
@@ -157,7 +165,8 @@ void AN_serial::processingSerialData(_SERIAL_PACK sPack)
     AN_shiftDataArr sft;
     _MSG_PACK msg;
     AN_serialConv  serialConv;
-    
+    //Serial.println(" processingSerialData- ");
+    //Serial.println(sPack.data);
     checkPauseControl();
     char *data = static_cast<char *>(malloc(sPack.len)); 
     if (data == NULL) {
@@ -166,6 +175,9 @@ void AN_serial::processingSerialData(_SERIAL_PACK sPack)
     }
     memset(data, 0, sPack.len);
     memccpy(data, sPack.data, 0, sPack.len);
+
+
+
     free(sPack.data);
     std::string start = "start";
     waitTimer = 0;
@@ -173,6 +185,7 @@ void AN_serial::processingSerialData(_SERIAL_PACK sPack)
         receiveDataPacks = 1;  
     }
     if(receiveDataPacks){
+    //Serial.println(" processingSerialData- 3");
         processingExternalData(std::string(data));
     }else{
         if(serialConv.unpackData(data, &msg)){ //there is error in JSON-data

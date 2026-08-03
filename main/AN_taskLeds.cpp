@@ -38,6 +38,7 @@ void AN_taskLeds::run(void *param){
     BYTE blinkBits = 0;
     bool swch  = 0; 
     BYTE cntTm = 0;
+    BYTE sftCnt = 0;
     for(;;){
       switch(G_ledsStste[0]){
         case 0: if(!G_ledsStste[1])setState(0);
@@ -48,13 +49,13 @@ void AN_taskLeds::run(void *param){
                 if(cntTm < 4)cntTm++;
                 else{
                     cntTm = 0;
-                    setState(1 << (stt < 6 ? stt : stt-6));
-                    stt++;
-                    if(stt>=12){
-                      G_ledsStste[0] = 0;
-                      G_ledsStste[1] = 2;
-                      cntTm = 0;
-                      setState(0);
+                    setState(1 << (sftCnt < 6 ? sftCnt : sftCnt-6));
+                    sftCnt++;
+                    if(sftCnt>=12){                   
+                    sftCnt = 0;
+                    G_ledsStste[1] = 2;
+                    cntTm = 0;
+                    setState(0);
                     }
                 }          
               }
@@ -91,6 +92,6 @@ void AN_taskLeds::run(void *param){
         case 7:  break;
       }
 
-      vTaskDelay(50);
+      vTaskDelay(50/portTICK_PERIOD_MS);
     }
 }

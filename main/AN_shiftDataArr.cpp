@@ -51,15 +51,15 @@ void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	msg->pwr2      	= jmmr->rebMod[1].pwr;         
 }
 
-void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2){
- 
-	jmmr1->devId   								= jmmr2->devId								;
-	jmmr1->groupId 								= jmmr2->groupId							;
-	jmmr1->devType 								= jmmr2->devType							;
-	jmmr1->esp32Addr 							= jmmr2->esp32Addr						;
-	jmmr1->infoLen 					  		= jmmr2->infoLen							;
-	 
+void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2, bool rmDataOnly){
+  if(!rmDataOnly){
+		jmmr1->devId   								= jmmr2->devId								;
+		jmmr1->groupId 								= jmmr2->groupId							;
+		jmmr1->devType 								= jmmr2->devType							;
+		jmmr1->esp32Addr 							= jmmr2->esp32Addr						;		
+	}
 
+	jmmr1->infoLen 					  		= jmmr2->infoLen							  ;
 	memset(jmmr1->info, 0, TXT_INFO_LEN);
   memccpy(jmmr1->info, jmmr2->info, '\0', TXT_INFO_LEN);
   

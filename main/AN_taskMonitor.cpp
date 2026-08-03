@@ -10,10 +10,8 @@ AN_taskMonitor::~AN_taskMonitor()
 }
 
 void AN_taskMonitor::checkAnalog(){
-    static bool wschEnAnalogCheck = 0;
-    if(!wschEnAnalogCheck){
-      if(G_ledsStste[1]==2)wschEnAnalogCheck = 1;
-    }else{
+    static BYTE cnt = 0;
+    if(!(cnt%10)){
       if(!G_analogVolt){
         G_ledsStste[0]=2;
         G_ledsStste[1]=0;
@@ -22,11 +20,38 @@ void AN_taskMonitor::checkAnalog(){
         G_ledsStste[1]=0;        
       }
     }
+    cnt++;
+}
+
+void AN_taskMonitor::setLedsState(){
+    if(G_pwrMode == 0){
+      if(G_ledsStste[0] != 1){
+        G_ledsStste[0] = 1;
+        G_ledsStste[1] = 0;
+      }
+      if(G_ledsStste[1] == 2){
+        G_pwrMode = 1;
+        G_ledsStste[0] = 0;
+        G_ledsStste[1] = 0;
+      }
+    }
+    if(G_pwrMode == 1){
+      checkAnalog();
+    }
+    if(G_pwrMode == 2){
+      G_ledsStste[0] = 4;
+      G_ledsStste[1] = 0;
+    }
+    if(G_pwrMode == 3){
+      
+      G_ledsStste[0] = 5;
+      G_ledsStste[1] = 0;
+    }
+ 
 }
 
 void AN_taskMonitor::run(void *param){
-  _MSG_PACK      msg;
-  _MSG_INTERNAL  msg1;
+  _MSG_PACK msg;
   // RmCtrl *rmCtrl = RmCtrl::getI();
   int aut = 0;
   int cnt = 0;
@@ -39,10 +64,6 @@ void AN_taskMonitor::run(void *param){
   for(;;){
 
     switch(aut){
-        case 0:   G_ledsStste[0]=1;
-                  G_ledsStste[1]=0;
-                  xQueueSend(QueueLeds, ledsCode, 10); break;
-
         case 20 :  msg.cmd = CMD_APLAY_PWR;
                   xQueueSend(QueueCmd, &msg, portMAX_DELAY);  break;
         case 30:  msg.cmd = CMD_RM_GET_STATE;
@@ -50,16 +71,7 @@ void AN_taskMonitor::run(void *param){
     }
     if(aut < 40) aut++;
 
-    if(G_pwrMode == 0)checkAnalog();
-    if(G_pwrMode == 1){
-      G_ledsStste[0] = 4;
-      G_ledsStste[1] = 0;
-    }
-    if(G_pwrMode == 2){
-      G_ledsStste[0] = 5;
-      G_ledsStste[1] = 0;
-    }
-    
+    setLedsState();
 
 //////////////////////////////////////////////////
 
@@ -79,9 +91,10 @@ void AN_taskMonitor::run(void *param){
 
     if(G_waitBtConnect)G_waitBtConnect--;
     if(G_waitBtConnect == 2){
+        _SERIAL_PACK sPack;
         AN_print("G_waitBtConnect---- "); 
-        msg1.code = EVENT_TIMEOUT_BT_CONNECT;
-        xQueueSend(QueuePwrAut, &msg1, portMAX_DELAY);
+        sPack.cmd = EVENT_TIMEOUT_BT_CONNECT;
+        xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
     }
 
     
@@ -96,15 +109,7 @@ void AN_taskMonitor::run(void *param){
       }
 
     }    
-
-    
-    cnt++;
-    // if(!(cnt%20)){
-    //   std::string d = "cnt -> "+std::to_string(cnt);
-    //   sPack.data = static_cast<char *>(malloc(sizeof(d)));  
-    //   memccpy(sPack.data, d.c_str(), 0, 128);
-    //   xQueueSend(QueueBt, &sPack, portMAX_DELAY);
-    // }
+ 
     vTaskDelay(10/portTICK_PERIOD_MS);
   }  
 }

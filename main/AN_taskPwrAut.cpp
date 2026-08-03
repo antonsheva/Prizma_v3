@@ -18,42 +18,36 @@ void AN_taskPwrAut::eventPwrOff(){
 
 void AN_taskPwrAut::eventAplayChanges(){
   _MSG_PACK msg;  
-
+  G_pwrMode = 0;
   btEnSwch = 0;
   G_btConnect = 0;
-  G_pwrMode = 0;
   ledsCode[0]=1;
   xQueueSend(QueueLeds, ledsCode, 100);
 }
 void AN_taskPwrAut::eventDisconnect(){
   AN_print("BT disconnect");
-  G_pwrMode = 1; 
+  G_pwrMode = 2; 
   G_waitBtConnect = 3000;
-  ledsCode[0]=2;
-  xQueueSend(QueueLeds, &ledsCode, portMAX_DELAY);
 }
 
 void AN_taskPwrAut::eventConnect(){
   AN_print("BT connect");
-  G_pwrMode = 2; 
+  G_pwrMode = 3; 
   G_waitBtConnect = 0;
-  ledsCode[0]=3;
-  xQueueSend(QueueLeds, ledsCode, portMAX_DELAY); 
 }
 
 void AN_taskPwrAut::eventBtOn(){
   _MSG_PACK msg;
-  G_pwrMode = 1; 
+  G_pwrMode = 2; 
   if(btEnSwch)return;
   btEnSwch = 1;
   AN_print("BT on");
   JMMR_1_OFF
   JMMR_2_OFF
   msg.cmd = CMD_BT_START;
-  xQueueSend(QueueCmd, &msg, portMAX_DELAY);            
-  G_waitBtConnect = 3000; //x 10mSec; if don't connect to bluetooth during this time - turn off the power
-  ledsCode[0]=2;
-  xQueueSend(QueueLeds, ledsCode, portMAX_DELAY); 
+  xQueueSend(QueueCmd, &msg, portMAX_DELAY);  
+
+  G_waitBtConnect = 3000; 
 }
  
 

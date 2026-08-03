@@ -105,7 +105,7 @@ void initObjects()
     QueueRs485Receive    = xQueueCreate(2, 1024);
     QueuePrefs           = xQueueCreate(2,  sizeof(_MSG_PACK));
  
-    QueuePwrAut          = xQueueCreate(4, sizeof(_SERIAL_PACK));
+    QueuePwrAut          = xQueueCreate(16, sizeof(_SERIAL_PACK));
     QueueLeds            = xQueueCreate(4,  4);
       
     QueueCmd             = xQueueCreate(4, sizeof(_MSG_PACK)); 
@@ -117,7 +117,7 @@ void initObjects()
     QueueUsb             = xQueueCreate(4, sizeof(_SERIAL_PACK));    
 
     QueueRs485Event      = xQueueCreate(4, sizeof(uart_event_t));  
-    QueueRs485           = xQueueCreate(4, sizeof(_SERIAL_PACK));
+    QueueRs485           = xQueueCreate(16, sizeof(_SERIAL_PACK));
 
     QueueRmEvent         = xQueueCreate(32, sizeof(_RM_AUT));  
  

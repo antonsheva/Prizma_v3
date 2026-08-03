@@ -12,6 +12,8 @@ public:
 
   static void checkAnalog();
 
+  static void setLedsState();
+
   static void run(void *param);
 };
 
