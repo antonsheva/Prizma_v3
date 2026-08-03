@@ -142,7 +142,7 @@ extern "C" void app_main(void)
   // xTaskCreate(taskBt.run,           "t11_taskBt",          1024*8, NULL, tskIDLE_PRIORITY, &Handle_taskBt           );
   xTaskCreate(taskRs485Send.run,    "t11_taskRs485Send",   1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskRs485Send    );
   xTaskCreate(taskMonitor.run,      "t12_taskMonitor",      2048,   NULL, tskIDLE_PRIORITY, &Handle_taskMonitor      );
-  xTaskCreate(taskPrefs.run,        "t13_taskPrefs",       1024*2, NULL, tskIDLE_PRIORITY, &Handle_taskPrefs        ); 
+  xTaskCreate(taskPrefs.run,        "t13_taskPrefs",       1024*4, NULL, tskIDLE_PRIORITY, &Handle_taskPrefs        ); 
   
   xTaskCreate(taskBtReceive.run,    "t14_taskBtReceive",    1024*8, NULL, tskIDLE_PRIORITY, 0        );  
   xTaskCreate(taskBtSend.run,       "t15_taskBtRSend",      1024*8, NULL, tskIDLE_PRIORITY, 0        );  

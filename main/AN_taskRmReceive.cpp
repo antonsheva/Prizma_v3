@@ -109,7 +109,7 @@ void AN_taskRmReceive::run(void *param){
 
   for(;;){
     xQueueReceive(QueueRmEvent, &rmAut, (TickType_t)portMAX_DELAY);
-    Serial.println("------ QueueRmEvent  ---------"); 
+    // Serial.println("------ QueueRmEvent  ---------"); 
     if(rmAut.swtchActDev)rmSel = 0;
     if(rmAut.rmSel)rmSel = rmAut.rmSel-1;
     for(int i=0; i<rmAut.opCodeQty; i++){ 

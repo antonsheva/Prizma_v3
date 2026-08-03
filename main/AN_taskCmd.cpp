@@ -62,7 +62,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 
 int AN_taskCmd::searchDevices(_MSG_PACK *msg){
 	AN_shiftDataArr sft;
-	Serial.println(" -> Search device cmd");
+	// Serial.println(" -> Search device cmd");
 	msg->direction  = MSG_DIR_RESPONSE;
 	msg->addrEsp32  = msg->sender;
 	if(msg->response == RESP_GET_JMMR_DATA){
@@ -270,8 +270,6 @@ void AN_taskCmd::run(void *param){
 
 void AN_taskCmd::sendCmdToRm(int cmd, int sel){
  
-	_RM_PACK p;
-	// selectRmModule(sel);
 	vTaskDelay(10/portTICK_PERIOD_MS);
 	switch (cmd)	{
 		case CMD_RM_AT       : Serial1.print ("AT\r\n");  break;            
@@ -291,7 +289,7 @@ void AN_taskCmd::sendCmdToRm(int cmd, int sel){
 }
 
 void AN_taskCmd::selectRmModule(int sel, bool firstInit){
-	int rx, tx;
+ 
  
  
 	 
