@@ -47,6 +47,11 @@ void AN_taskMonitor::setLedsState(){
       G_ledsStste[0] = 5;
       G_ledsStste[1] = 0;
     }
+    if(G_pwrMode == 4){
+      
+      G_ledsStste[0] = 6;
+      G_ledsStste[1] = 0;
+    }    
  
 }
 

@@ -11,8 +11,7 @@ void AN_taskPwrAut::eventPwrOff(){
   Serial.println("EVENT_TIMEOUT_BT_CONNECT");
   msg.cmd = CMD_BT_STOP;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY);
-  ledsCode[0]=0;
-  xQueueSend(QueueLeds, &ledsCode, portMAX_DELAY);      
+  G_pwrMode = 4;       
   for(;;){gpio_set_level(PIN_PWR_HOLD_DRV, 0);}
 }
 

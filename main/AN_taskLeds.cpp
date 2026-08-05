@@ -84,7 +84,10 @@ void AN_taskLeds::run(void *param){
                 stt |= 0x09;
                 setState(stt);
         break;
-        case 6:  break;
+        case 6: stt &= 0x30;
+                stt |= 0x06;
+                setState(stt);
+        break;   
         case 7:  break;
       }
 
