@@ -12,7 +12,7 @@ AN_taskMonitor::~AN_taskMonitor()
 void AN_taskMonitor::checkAnalog(){
     static BYTE cnt = 0;
     if(!(cnt%10)){
-      if(!G_analogVolt){
+      if(!G_voltToLeds){
         G_ledsStste[0]=2;
         G_ledsStste[1]=0;
       }else{
@@ -92,7 +92,6 @@ void AN_taskMonitor::run(void *param){
     if(G_waitBtConnect)G_waitBtConnect--;
     if(G_waitBtConnect == 2){
         _SERIAL_PACK sPack;
-        AN_print("G_waitBtConnect---- "); 
         sPack.cmd = EVENT_TIMEOUT_BT_CONNECT;
         xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
     }

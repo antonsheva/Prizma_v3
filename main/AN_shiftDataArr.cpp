@@ -15,7 +15,11 @@ void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr, bool rm
 		jmmr->devId							= msg->devId;      
 		jmmr->groupId						= msg->groupId; 
 		jmmr->devType						= msg->devType; 		
+		jmmr->devRange					= msg->devRange; 			
 		jmmr->infoLen						= msg->txtLen;		
+
+		jmmr->devBattStt   	    = msg->devBattStt ;	
+		jmmr->devTemper   		  = msg->devTemper  ;
 
 		memset(jmmr->info, 0, TXT_INFO_LEN);
 		memccpy(jmmr->info, msg->txt, '\0', TXT_INFO_LEN);
@@ -39,6 +43,12 @@ void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	msg->devId      = jmmr->devId;        
 	msg->groupId    = jmmr->groupId;             
 	msg->devType    = jmmr->devType;  	
+	msg->devRange   = jmmr->devRange;  	
+	
+
+	msg->devBattStt = jmmr->devBattStt;	
+	msg->devTemper  = jmmr->devTemper ;
+
 
 	msg->addrRm1   	= jmmr->rebMod[0].address;
   msg->modCode1  	= jmmr->rebMod[0].mc;
@@ -56,7 +66,10 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2, bool rmDa
 		jmmr1->devId   								= jmmr2->devId								;
 		jmmr1->groupId 								= jmmr2->groupId							;
 		jmmr1->devType 								= jmmr2->devType							;
+		jmmr1->devRange								= jmmr2->devRange							;		
 		jmmr1->esp32Addr 							= jmmr2->esp32Addr						;		
+		jmmr1->devBattStt   	        = jmmr2->devBattStt           ;	
+		jmmr1->devTemper   		        = jmmr2->devTemper            ;
 	}
 
 	jmmr1->infoLen 					  		= jmmr2->infoLen							  ;
@@ -81,19 +94,24 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2, bool rmDa
 }
 
 void AN_shiftDataArr::printJmmrData(_JMMR_STATE *jmmr){
-		AN_print("----------------");
-		AN_print("devId   ->  "+std::to_string(jmmr->devId));
-		AN_print("groupId ->  "+std::to_string(jmmr->groupId));
-		AN_print("devType ->  "+std::to_string(jmmr->devType));
-		AN_print("ESP addr->  "+std::to_string(jmmr->esp32Addr));
-		AN_print("addrRm1 ->  "+std::to_string(jmmr->rebMod[0].address));
-		AN_print("addrRm2 ->  "+std::to_string(jmmr->rebMod[1].address));
-		AN_print("mc1     ->  "+std::to_string(jmmr->rebMod[0].mc));
-		AN_print("mc2     ->  "+std::to_string(jmmr->rebMod[1].mc));
-		AN_print("mask1   ->  "+std::to_string(jmmr->rebMod[0].mask));
-		AN_print("mask2   ->  "+std::to_string(jmmr->rebMod[1].mask));	
-		AN_print("pwr1    ->  "+std::to_string(jmmr->rebMod[0].pwr));	
-		AN_print("pwr2    ->  "+std::to_string(jmmr->rebMod[1].pwr));	
+		Serial.println("----------------");
+		Serial.println("devId   ->  "+String(jmmr->devId, HEX));
+		Serial.println("groupId ->  "+String(jmmr->groupId));
+		Serial.println("devType ->  "+String(jmmr->devType));
+		Serial.println("devRange->  "+String(jmmr->devRange));		
+		Serial.println("ESP addr->  "+String(jmmr->esp32Addr));
+		Serial.println("addrRm1 ->  "+String(jmmr->rebMod[0].address));
+		Serial.println("addrRm2 ->  "+String(jmmr->rebMod[1].address));
+		Serial.println("mc1     ->  "+String(jmmr->rebMod[0].mc));
+		Serial.println("mc2     ->  "+String(jmmr->rebMod[1].mc));
+		Serial.println("mask1   ->  "+String(jmmr->rebMod[0].mask));
+		Serial.println("mask2   ->  "+String(jmmr->rebMod[1].mask));	
+		Serial.println("pwr1    ->  "+String(jmmr->rebMod[0].pwr));	
+		Serial.println("pwr2    ->  "+String(jmmr->rebMod[1].pwr));	
+		Serial.println("battStt ->  "+String(jmmr->devBattStt));	
+		Serial.println("temper  ->  "+String(jmmr->devTemper));	
+
+
 		// Serial.println(" -- info RM1 --");
 		// if(jmmr->rebMod[0].infoLen)Serial.println(jmmr->rebMod[0].info);
 		// Serial.println(" -- info RM2 --");
@@ -101,32 +119,33 @@ void AN_shiftDataArr::printJmmrData(_JMMR_STATE *jmmr){
 }
 
 void AN_shiftDataArr::printMsg(_MSG_PACK *msg){
-	AN_print(" --- Message  --- ");
-	AN_print("cmd       -> "+std::to_string(msg->cmd)   );
-	AN_print("sender    -> "+std::to_string(msg->sender)   );
-	AN_print("response  -> "+std::to_string(msg->response)   );
-	AN_print("direction -> "+std::to_string(msg->direction)   );
-	AN_print("dev_id    -> "+std::to_string(msg->devId)   );
-	AN_print("group_id  -> "+std::to_string(msg->groupId)   );
-	AN_print("dev_type  -> "+std::to_string(msg->devType)   );
-	AN_print("dev_range -> "+std::to_string(msg->devRange)   );
-	AN_print("ad_esp    -> "+std::to_string(msg->addrEsp32)   );
-	AN_print("ad_rm1    -> "+std::to_string(msg->addrRm1)   );
-	AN_print("ad_rm2    -> "+std::to_string(msg->addrRm2)   );
-	AN_print("mc1       -> "+std::to_string(msg->modCode1)   );
-	AN_print("mc2       -> "+std::to_string(msg->modCode2)   );
-	AN_print("msk1      -> "+std::to_string(msg->mask1)   );
-	AN_print("msk2      -> "+std::to_string(msg->mask2)   );
-	AN_print("pwr1      -> "+std::to_string(msg->pwr1)   );
-	AN_print("pwr2      -> "+std::to_string(msg->pwr2)   );
-	AN_print("txt_len   -> "+std::to_string(msg->txtLen)   );
-	AN_print("txt       -> "+std::string(msg->txt)   );	
+	Serial.println(" --- Message  --- ");
+	Serial.println("dev_id    -> "+String(msg->devId)   );
+	Serial.println("group_id  -> "+String(msg->groupId)   );
+	Serial.println("dev_type  -> "+String(msg->devType)   );
+	Serial.println("dev_range -> "+String(msg->devRange)   );
+	Serial.println("ad_esp    -> "+String(msg->addrEsp32)   );
+	Serial.println("battStt 	->  "+String(msg->devBattStt));	
+	Serial.println("temper  	->  "+String(msg->devTemper));	
+	Serial.println("ad_rm1    -> "+String(msg->addrRm1)   );
+	Serial.println("ad_rm2    -> "+String(msg->addrRm2)   );
+	Serial.println("mc1       -> "+String(msg->modCode1)   );	
+	Serial.println("cmd       -> "+String(msg->cmd)   );
+	Serial.println("sender    -> "+String(msg->sender)   );
+	Serial.println("response  -> "+String(msg->response)   );
+	Serial.println("direction -> "+String(msg->direction)   );
+	Serial.println("mc2       -> "+String(msg->modCode2)   );
+	Serial.println("msk1      -> "+String(msg->mask1)   );
+	Serial.println("msk2      -> "+String(msg->mask2)   );
+	Serial.println("pwr1      -> "+String(msg->pwr1)   );
+	Serial.println("pwr2      -> "+String(msg->pwr2)   );
+	Serial.println("txt_len   -> "+String(msg->txtLen)   );
+	Serial.println("txt       -> "+String(msg->txt)   );	
+
 }
 
 void AN_shiftDataArr::printJmmrList(){
-    AN_print("--------printJmmrList--------");
-
-
+    Serial.println("--------printJmmrList--------");
 		for(int i=0; i<G_jmmrsList.size(); i++){
 			printJmmrData(&G_jmmrsList[i]);		
 		}

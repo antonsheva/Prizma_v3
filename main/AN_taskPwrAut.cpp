@@ -8,7 +8,7 @@ AN_taskPwrAut::~AN_taskPwrAut(){}
 
 void AN_taskPwrAut::eventPwrOff(){
   _MSG_PACK msg;
-  AN_print("EVENT_PWR_OFF_BTTN");
+  Serial.println("EVENT_TIMEOUT_BT_CONNECT");
   msg.cmd = CMD_BT_STOP;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY);
   ledsCode[0]=0;
@@ -22,16 +22,17 @@ void AN_taskPwrAut::eventAplayChanges(){
   btEnSwch = 0;
   G_btConnect = 0;
   ledsCode[0]=1;
+  Serial.println("EVENT_APPLY_CHANGES");
   xQueueSend(QueueLeds, ledsCode, 100);
 }
 void AN_taskPwrAut::eventDisconnect(){
-  AN_print("BT disconnect");
+  Serial.println("EVENT_BT_DISCONNECT");
   G_pwrMode = 2; 
   G_waitBtConnect = 3000;
 }
 
 void AN_taskPwrAut::eventConnect(){
-  AN_print("BT connect");
+  Serial.println("EVENT_BT_CONNECT"); 
   G_pwrMode = 3; 
   G_waitBtConnect = 0;
 }
@@ -41,7 +42,7 @@ void AN_taskPwrAut::eventBtOn(){
   G_pwrMode = 2; 
   if(btEnSwch)return;
   btEnSwch = 1;
-  AN_print("BT on");
+  Serial.println("EVENT_CODE_BTTN_ON"); 
   JMMR_1_OFF
   JMMR_2_OFF
   msg.cmd = CMD_BT_START;
@@ -60,16 +61,11 @@ void AN_taskPwrAut::run(void *param){
         G_led_ccl_5 = 0;
         Serial.println("EVENT_CODE -> "+String(sPack.cmd));   
         switch (sPack.cmd){
-            case EVENT_CODE_BTTN_ON       : eventBtOn();
-                  Serial.println("EVENT_CODE_BTTN_ON");              break;          
-            case EVENT_BT_CONNECT         : eventConnect();
-                  Serial.println("EVENT_BT_CONNECT");           break;          
-            case EVENT_BT_DISCONNECT      : eventDisconnect();
-                  Serial.println("EVENT_BT_DISCONNECT");        break;        
-            case EVENT_TIMEOUT_BT_CONNECT : eventPwrOff();
-                  Serial.println("EVENT_TIMEOUT_BT_CONNECT");           break;        
-            case EVENT_APPLY_CHANGES      : eventAplayChanges();
-                  Serial.println("EVENT_APPLY_CHANGES");      break;
+            case EVENT_CODE_BTTN_ON       : eventBtOn();        break;          
+            case EVENT_BT_CONNECT         : eventConnect();     break;          
+            case EVENT_BT_DISCONNECT      : eventDisconnect();  break;        
+            case EVENT_TIMEOUT_BT_CONNECT : eventPwrOff();      break;        
+            case EVENT_APPLY_CHANGES      : eventAplayChanges();break;
         }
   }
 }

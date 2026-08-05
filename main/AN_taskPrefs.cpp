@@ -202,16 +202,16 @@ void AN_taskPrefs::setPwr(BYTE pwr1, BYTE pwr2){
 void AN_taskPrefs::printAddresses(){
 	char data[64];
   sprintf(data, "{\"ad_esp\":%d, \"ad_rm1\":%d, \"ad_rm2\":%d}", G_lJmrStt.esp32Addr,G_lJmrStt.rebMod[0].address,G_lJmrStt.rebMod[1].address);
-	Serial.println(data);
+	Serial.println("ad_esp ->  "+String(G_lJmrStt.esp32Addr));
+	Serial.println("ad_rm1 ->  "+String(G_lJmrStt.rebMod[0].address));
+	Serial.println("ad_rm2 ->  "+String(G_lJmrStt.rebMod[1].address));
 }
 
 void AN_taskPrefs::getDevParam(){
 
-	char devId[32];
-  sprintf(devId,  "%" PRIx64, G_lJmrStt.devId);
 
 	Serial.println("   Параметры устройства   ");
-	Serial.println("devId   ->  "+String(devId));
+	Serial.println("devId   ->  "+String(G_lJmrStt.devId, HEX));
 	Serial.println("groupId ->  "+String(G_lJmrStt.groupId));
 	Serial.println("devType ->  "+String(G_lJmrStt.devType));
 	Serial.println("devRange->  "+String(G_lJmrStt.devRange));

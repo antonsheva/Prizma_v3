@@ -107,24 +107,27 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   // std::string str = "param -> "+std::string(param)+" : val -> "+std::string(val);
  
   std::string par = std::string(param); 
-  if(par.find(PARAM_CMD       ) != -1)msg->cmd       = atoi(val); 
-  if(par.find(PARAM_SENDER    ) != -1)msg->sender    = atoi(val); 
-  if(par.find(PARAM_RESPONSE  ) != -1)msg->response  = atoi(val); 
-  if(par.find(PARAM_MSG_DIR   ) != -1)msg->direction = atoi(val); 
-  if(par.find(PARAM_DEV_ID    ) != -1)msg->devId     = atoll(val);                  
-  if(par.find(PARAM_GROUP_ID  ) != -1)msg->groupId   = atoi(val);                               
-  if(par.find(PARAM_DEV_TYPE  ) != -1)msg->devType   = atoi(val);              
-  if(par.find(PARAM_DEV_RANGE ) != -1)msg->devRange  = atoi(val);                
-  if(par.find(PARAM_ADDR_ESP  ) != -1)msg->addrEsp32 = atoi(val);        
-  if(par.find(PARAM_ADDR_RM_1 ) != -1)msg->addrRm1   = atoi(val);        
-  if(par.find(PARAM_ADDR_RM_2 ) != -1)msg->addrRm2   = atoi(val);        
-  if(par.find(PARAM_MOD_CODE_1) != -1)msg->modCode1  = atoi(val);     
-  if(par.find(PARAM_MOD_CODE_2) != -1)msg->modCode2  = atoi(val);     
-  if(par.find(PARAM_MASK_1    ) != -1)msg->mask1     = atoi(val);     
-  if(par.find(PARAM_MASK_2    ) != -1)msg->mask2     = atoi(val);     
-  if(par.find(PARAM_PWR_1     ) != -1)msg->pwr1      = atoi(val);  
-  if(par.find(PARAM_PWR_2     ) != -1)msg->pwr2      = atoi(val);   
-  if(par.find(PARAM_RM_NUM    ) != -1)msg->rmNum     = atoi(val);   
+  if(par.find(PARAM_CMD       )   != -1)msg->cmd        = atoi(val); 
+  if(par.find(PARAM_SENDER    )   != -1)msg->sender     = atoi(val); 
+  if(par.find(PARAM_RESPONSE  )   != -1)msg->response   = atoi(val); 
+  if(par.find(PARAM_MSG_DIR   )   != -1)msg->direction  = atoi(val); 
+  if(par.find(PARAM_DEV_ID    )   != -1)msg->devId      = atoll(val);                  
+  if(par.find(PARAM_GROUP_ID  )   != -1)msg->groupId    = atoi(val);                               
+  if(par.find(PARAM_DEV_TYPE  )   != -1)msg->devType    = atoi(val);              
+  if(par.find(PARAM_DEV_RANGE )   != -1)msg->devRange   = atoi(val);                
+  if(par.find(PARAM_ADDR_ESP  )   != -1)msg->addrEsp32  = atoi(val);        
+  if(par.find(PARAM_ADDR_RM_1 )   != -1)msg->addrRm1    = atoi(val);        
+  if(par.find(PARAM_ADDR_RM_2 )   != -1)msg->addrRm2    = atoi(val);        
+  if(par.find(PARAM_MOD_CODE_1)   != -1)msg->modCode1   = atoi(val);     
+  if(par.find(PARAM_MOD_CODE_2)   != -1)msg->modCode2   = atoi(val);     
+  if(par.find(PARAM_MASK_1    )   != -1)msg->mask1      = atoi(val);     
+  if(par.find(PARAM_MASK_2    )   != -1)msg->mask2      = atoi(val);     
+  if(par.find(PARAM_PWR_1     )   != -1)msg->pwr1       = atoi(val);  
+  if(par.find(PARAM_PWR_2     )   != -1)msg->pwr2       = atoi(val);   
+  if(par.find(PARAM_RM_NUM    )   != -1)msg->rmNum      = atoi(val);  
+  if(par.find(PARAM_BATT_STATE)   != -1)msg->devBattStt = atoi(val);
+  if(par.find(PARAM_TEMPERATURE)  != -1)msg->devTemper  = atoi(val);
+       
   
   
   if(par.find(PARAM_JMMR_LIST_LEN) != -1)msg->jmmrListLen = atoi(val);   
@@ -138,19 +141,21 @@ int AN_serialConv::saveJmmrParam(char *param, char *val, _JMMR_STATE *jmmr){
   // std::string str = "param -> "+std::string(param)+" : val -> "+std::string(val);
  
   std::string par = std::string(param); 
-  if(par.find(PARAM_DEV_ID    ) != -1)jmmr->devId               = atoll(val);                  
-  if(par.find(PARAM_GROUP_ID  ) != -1)jmmr->groupId             = atoi(val);                               
-  if(par.find(PARAM_DEV_TYPE  ) != -1)jmmr->devType             = atoi(val);              
-  if(par.find(PARAM_DEV_RANGE ) != -1)jmmr->devRange            = atoi(val);                
-  if(par.find(PARAM_ADDR_ESP  ) != -1)jmmr->esp32Addr           = atoi(val);        
-  if(par.find(PARAM_ADDR_RM_1 ) != -1)jmmr->rebMod[0].address   = atoi(val);        
-  if(par.find(PARAM_ADDR_RM_2 ) != -1)jmmr->rebMod[1].address   = atoi(val);        
-  if(par.find(PARAM_MOD_CODE_1) != -1)jmmr->rebMod[0].mc        = atoi(val);     
-  if(par.find(PARAM_MOD_CODE_2) != -1)jmmr->rebMod[1].mc        = atoi(val);     
-  if(par.find(PARAM_MASK_1    ) != -1)jmmr->rebMod[0].mask      = atoi(val);     
-  if(par.find(PARAM_MASK_2    ) != -1)jmmr->rebMod[1].mask      = atoi(val);     
-  if(par.find(PARAM_PWR_1     ) != -1)jmmr->rebMod[0].pwr       = atoi(val);  
-  if(par.find(PARAM_PWR_2     ) != -1)jmmr->rebMod[1].pwr       = atoi(val);   
+  if(par.find(PARAM_DEV_ID    )   != -1)jmmr->devId               = atoll(val);                  
+  if(par.find(PARAM_GROUP_ID  )   != -1)jmmr->groupId             = atoi(val);                               
+  if(par.find(PARAM_DEV_TYPE  )   != -1)jmmr->devType             = atoi(val);              
+  if(par.find(PARAM_DEV_RANGE )   != -1)jmmr->devRange            = atoi(val);                
+  if(par.find(PARAM_ADDR_ESP  )   != -1)jmmr->esp32Addr           = atoi(val);        
+  if(par.find(PARAM_ADDR_RM_1 )   != -1)jmmr->rebMod[0].address   = atoi(val);        
+  if(par.find(PARAM_ADDR_RM_2 )   != -1)jmmr->rebMod[1].address   = atoi(val);        
+  if(par.find(PARAM_MOD_CODE_1)   != -1)jmmr->rebMod[0].mc        = atoi(val);     
+  if(par.find(PARAM_MOD_CODE_2)   != -1)jmmr->rebMod[1].mc        = atoi(val);     
+  if(par.find(PARAM_MASK_1    )   != -1)jmmr->rebMod[0].mask      = atoi(val);     
+  if(par.find(PARAM_MASK_2    )   != -1)jmmr->rebMod[1].mask      = atoi(val);     
+  if(par.find(PARAM_PWR_1     )   != -1)jmmr->rebMod[0].pwr       = atoi(val);  
+  if(par.find(PARAM_PWR_2     )   != -1)jmmr->rebMod[1].pwr       = atoi(val);  
+  if(par.find(PARAM_BATT_STATE)   != -1)jmmr->devBattStt          = atoi(val);
+  if(par.find(PARAM_TEMPERATURE)  != -1)jmmr->devTemper           = atoi(val); 
   
   if(par.find(PARAM_TXT_LEN   ) != -1)jmmr->infoLen            = atoi(val); 
   else if(par.find(PARAM_TXT  ) != -1)memccpy(jmmr->info, val, 0, 1024);
@@ -247,6 +252,8 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
     str.append("\"group_id\":"  +std::to_string(msg->groupId)+",");
     str.append("\"dev_type\":"  +std::to_string(msg->devType)+",");
     str.append("\"dev_range\":" +std::to_string(msg->devRange)+",");
+    str.append("\"batt_stt\":"  +std::to_string(msg->devBattStt)+",");
+    str.append("\"temper\":"    +std::to_string(msg->devTemper)+",");
   }
 
   if((msg->cmd == CMD_RM_SET_STATE)||(msg->direction == MSG_DIR_RESPONSE)){
@@ -318,6 +325,8 @@ int AN_serialConv::serializeJmmrData(_JMMR_STATE *jmmr, char *data){
   str.append("\"msk2\":"     +std::to_string(jmmr->rebMod[1].mask)+",");
   str.append("\"pwr1\":"     +std::to_string(jmmr->rebMod[0].pwr)+",");
   str.append("\"pwr2\":"     +std::to_string(jmmr->rebMod[1].pwr)+",");
+  str.append("\"batt_stt\":" +std::to_string(jmmr->devBattStt)+",");
+  str.append("\"temper\":"   +std::to_string(jmmr->devTemper)+",");  
   str.append("\"txt_len\":"  +std::to_string(jmmr->infoLen)+",");
   str.append("\"txt\": \""   + std::string(jmmr->info)+"\"");
   str.append("}");

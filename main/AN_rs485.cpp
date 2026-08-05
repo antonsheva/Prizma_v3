@@ -66,7 +66,7 @@ int AN_rs485::transmitdataToBt(_SERIAL_PACK *sPack){
         return 0;
     }
     free(sPack->data);
-    AN_print("Connection is missing");
+    Serial.println("Connection is missing");
     return -1;
 }
 
@@ -76,9 +76,7 @@ void AN_rs485::selectUart(int uart){
 
 void AN_rs485::sendMsgToBt(_MSG_PACK *msg){
     AN_serialConv serialConv;
-	AN_print("--- q1 ---");
     _SERIAL_PACK sPack;
-    int len = 0;
 	switch (msg->cmdType){
 		case CMD_GET_JMMR_LIST: 
             sPack.data =  static_cast<char *>(malloc(MAX_SERIAL_DATA_LEN));

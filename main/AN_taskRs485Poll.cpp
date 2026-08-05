@@ -8,13 +8,9 @@ void AN_taskRs485Poll::run(void *param){
   for(;;){
     xQueueReceive(QueueRs485Pool, &msg, portMAX_DELAY);
     cmdType = msg.cmdType;
- 
-    // sft.printJmmrList();
     for(int i=0; i<msg.subscribersQty; i++){
       rs485.prepMsg(&msg, i);
-      // Serial.println("adEsp -> "+String(msg.addrEsp32)); 
-      if(msg.addrEsp32 != G_lJmrStt.esp32Addr){  
-        // Serial.println("send msg to -> "+String(msg.addrEsp32)); 
+      if(msg.addrEsp32 != G_lJmrStt.esp32Addr){   
         xQueueSend(QueueRs485Send, &msg, portMAX_DELAY);	
       } 
       vTaskDelay(200/portTICK_PERIOD_MS);

@@ -62,39 +62,34 @@
 
 
 
-#define PARAM_CMD               "cmd"
-#define PARAM_MOD_CODE          "mc"
-
-#define PARAM_MASK              "msk"
-
-#define PARAM_RM_NUM            "rm_num"
-#define PARAM_RM_STATE          "rm_stt"
-
-#define PARAM_SENDER            "sender"
-
-#define PARAM_JMMR_LIST         "jmmr_list"
-#define PARAM_JMMR_LIST_LEN     "jmmr_list_len"
-#define PARAM_RESPONSE          "resp"
-#define PARAM_MSG_DIR           "dir"
-#define PARAM_TASK_ID           "task_id"         
-
-
-#define PARAM_DEV_ID            "dev_id"                    
+#define PARAM_CMD               "cmd"                            
+#define PARAM_MOD_CODE          "mc"                            
+#define PARAM_MASK              "msk"                            
+#define PARAM_RM_NUM            "rm_num"                            
+#define PARAM_RM_STATE          "rm_stt"                            
+#define PARAM_SENDER            "sender"                            
+#define PARAM_JMMR_LIST         "jmmr_list"                            
+#define PARAM_JMMR_LIST_LEN     "jmmr_list_len"                            
+#define PARAM_RESPONSE          "resp"                            
+#define PARAM_MSG_DIR           "dir"                            
+#define PARAM_TASK_ID           "task_id"                                     
+#define PARAM_DEV_ID            "dev_id"                                                
 #define PARAM_GROUP_ID          "group_id"             
 #define PARAM_DEV_TYPE          "dev_type"              
 #define PARAM_DEV_RANGE         "dev_range"           
 #define PARAM_ADDR_ESP          "ad_esp"          
 #define PARAM_ADDR_RM_1         "ad_rm1"                    
 #define PARAM_ADDR_RM_2         "ad_rm2"          
-#define PARAM_MOD_CODE_1        "mc1"          
-#define PARAM_MOD_CODE_2        "mc2"          
-#define PARAM_MASK_1            "msk1"          
-#define PARAM_MASK_2            "msk2"          
-#define PARAM_PWR_1             "pwr1"          
-#define PARAM_PWR_2             "pwr2"          
-#define PARAM_TXT               "txt"                    
-#define PARAM_TXT_LEN           "txt_len"          
-
+#define PARAM_MOD_CODE_1        "mc1"                                      
+#define PARAM_MOD_CODE_2        "mc2"                                      
+#define PARAM_MASK_1            "msk1"                                      
+#define PARAM_MASK_2            "msk2"                                      
+#define PARAM_PWR_1             "pwr1"                                      
+#define PARAM_PWR_2             "pwr2"                                      
+#define PARAM_TXT               "txt"                                                
+#define PARAM_TXT_LEN           "txt_len"                              
+#define PARAM_BATT_STATE        "batt_stt"                              
+#define PARAM_TEMPERATURE       "temper"                                                           
 
 
 #define RESP_OK             1

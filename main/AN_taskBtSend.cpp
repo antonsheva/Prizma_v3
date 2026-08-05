@@ -31,27 +31,27 @@ void AN_taskBtSend::init(){
 
 bool AN_taskBtSend::_spp_send_buffer(){
     AN_bt bt;
-    AN_print("_spp_send_buffer--");
+    Serial.println("_spp_send_buffer--");
     if((xEventGroupWaitBits(EventGroupSpp, SPP_CONGESTED, pdFALSE, pdTRUE, SPP_CONGESTED_TIMEOUT) & SPP_CONGESTED) != 0){
         if(!G_lJmrStt.bt.sppClient){
-            AN_print("SPP Client Gone!");
+            Serial.println("SPP Client Gone!");
             return false;
         }
-        AN_print("SPP Write "+std::to_string(_spp_tx_buffer_len));
-        AN_print("data ->  "+std::string((char*)_spp_tx_buffer));        
+        // AN_print("SPP Write "+std::to_string(_spp_tx_buffer_len));
+        // AN_print("data ->  "+std::string((char*)_spp_tx_buffer));        
         esp_err_t err = esp_spp_write(G_lJmrStt.bt.sppClient, _spp_tx_buffer_len, _spp_tx_buffer);
         if(err != ESP_OK){
-            AN_print("SPP Write Failed!");
+            Serial.println("SPP Write Failed!");
             return false;
         }
         _spp_tx_buffer_len = 0;
         if(xSemaphoreTake(SemaphoreTxDone, 1000/portTICK_PERIOD_MS) != pdTRUE){
-            AN_print("SPP Ack Failed!");
+            Serial.println("SPP Ack Failed!");
             return false;
         }
         return true;
     }
-    AN_print("SPP Write Congested!");
+    Serial.println("SPP Write Congested!");
     return false;
 }
 
@@ -65,13 +65,14 @@ void AN_taskBtSend::run(void *param){
 
   for (;;) {
     if(QueueBtSend && xQueueReceive(QueueBtSend, &packet, portMAX_DELAY) == pdTRUE){
+        Serial.println(" ----QueueBtSend ----");
+        Serial.println(packet.data);
         if(packet.len <= (SPP_TX_MAX - _spp_tx_buffer_len)){
-            AN_print("QueueBtSend ->"+std::string(packet.data));
             memcpy(_spp_tx_buffer+_spp_tx_buffer_len, packet.data, packet.len);
             _spp_tx_buffer_len+=packet.len;
-            AN_print("tp - 4");
+            // AN_print("tp - 4");
             free(packet.data);
-            AN_print("tp - 5");
+            // AN_print("tp - 5");
 
             if(SPP_TX_MAX == _spp_tx_buffer_len || uxQueueMessagesWaiting(QueueBtSend) == 0){
                 _spp_send_buffer();
@@ -107,7 +108,7 @@ void AN_taskBtSend::run(void *param){
             free(packet.data);
         }
     } else {
-        AN_print("Something went horribly wrong");
+        Serial.println("Something went horribly wrong");
     }
 }
 vTaskDelete(NULL);

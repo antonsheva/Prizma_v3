@@ -31,7 +31,7 @@ void AN_taskButton::run(void *param){
                 bttnSwch = 0;
                 sPack.cmd = EVENT_CODE_BTTN_ON;
                 xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);   
-                AN_print("stt 2");             
+               
             }
         }  
         vTaskDelay(10/portTICK_PERIOD_MS);

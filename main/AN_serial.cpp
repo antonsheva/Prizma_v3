@@ -96,7 +96,7 @@ void AN_serial::processingReceivedData(){
   if(dataSrc == SERIAL_SRC_485){
     if(!checkCrc(crcStr, dataStr)){
       G_serialBusy = 0; 
-      AN_print("error crc rs485");
+      Serial.println("error crc rs485");
       return;
     }
   } 
@@ -104,7 +104,7 @@ void AN_serial::processingReceivedData(){
   
   if(serialConv.unpackData((char*)dataStr.c_str(), &msg)){ //there is error in JSON-data
       resetDataPackProcess();
-       AN_print("error JSON data");
+       Serial.println("error JSON data");
   }else{
  
     waitTimer = 0;
@@ -189,7 +189,7 @@ void AN_serial::processingSerialData(_SERIAL_PACK sPack)
         processingExternalData(std::string(data));
     }else{
         if(serialConv.unpackData(data, &msg)){ //there is error in JSON-data
-            AN_print("Error JSON data");
+            Serial.println("Error JSON data");
             G_serialBusy = 0; 
         }else{
             G_serialBusy = 0; 

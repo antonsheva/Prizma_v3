@@ -104,8 +104,6 @@ void AN_taskRmReceive::run(void *param){
   AN_shiftDataArr sft;
   _RM_AUT rmAut;
   int code;
-  int tm;
- 
 
   for(;;){
     xQueueReceive(QueueRmEvent, &rmAut, (TickType_t)portMAX_DELAY);

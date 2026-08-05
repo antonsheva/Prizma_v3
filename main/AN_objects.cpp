@@ -74,8 +74,7 @@ bool G_btStart      = false;
 
 BYTE G_pwrMode      = false;
 
-BYTE G_analogVolt   = 0;  
-BYTE G_analogTemp   = 0;
+BYTE G_voltToLeds   = 0;  
 BYTE G_ledsStste[2] = {0};
 
 int G_msgTxtDataLen;

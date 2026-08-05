@@ -31,11 +31,7 @@ void AN_taskLeds::setState(BYTE stt){
 }
 
 void AN_taskLeds::run(void *param){
-    BYTE code[4] = {0};
     BYTE stt = 0;
-    BYTE startStt = 0;
-    BYTE signalValStt = 0;
-    BYTE blinkBits = 0;
     bool swch  = 0; 
     BYTE cntTm = 0;
     BYTE sftCnt = 0;
@@ -71,8 +67,8 @@ void AN_taskLeds::run(void *param){
                 }          
         break; 
 
-        case 3: stt |= (G_analogVolt & 0xC0);
-                setState(G_analogVolt); break;
+        case 3: stt |= (G_voltToLeds & 0xC0);
+                setState(G_voltToLeds); break;
 
         case 4: if(cntTm < 4)cntTm++;
                 else{

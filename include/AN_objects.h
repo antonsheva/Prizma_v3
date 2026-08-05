@@ -42,7 +42,8 @@ typedef struct{
     BYTE   esp32Addr;
     char   info[TXT_INFO_LEN] = {0};
     BYTE   infoLen = 0;
-     
+    WORD   devTemper   = 0;
+    WORD   devBattStt  = 0;
     struct_rebMod rebMod[2];
     _bt_param bt;
 }_JMMR_STATE;
@@ -82,6 +83,8 @@ typedef struct{
     int    groupId     = 0;    
     int    devType     = 0;
     int    devRange    = 0;  
+    WORD   devTemper   = 0;
+    WORD   devBattStt  = 0;
     
     int    jmmrListLen    = 0;
     int    subscribersQty = 0;
@@ -181,8 +184,7 @@ extern EventGroupHandle_t EventGroupBt    ;
  
 extern BYTE G_subscribersQty;
 
-extern BYTE G_analogVolt;  
-extern BYTE G_analogTemp;
+extern BYTE G_voltToLeds;  
 extern BYTE G_ledsStste[2];
 
 extern char G_txtJsonBuff[3968];

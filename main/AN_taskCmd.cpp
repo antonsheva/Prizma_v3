@@ -62,7 +62,6 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 
 int AN_taskCmd::searchDevices(_MSG_PACK *msg){
 	AN_shiftDataArr sft;
-	// Serial.println(" -> Search device cmd");
 	msg->direction  = MSG_DIR_RESPONSE;
 	msg->addrEsp32  = msg->sender;
 	if(msg->response == RESP_GET_JMMR_DATA){
@@ -230,7 +229,7 @@ void AN_taskCmd::getStackSize(_MSG_PACK *msg){
 	// }
 
   // uxHighWaterMark = uxTaskGetStackHighWaterMark(tHandle);
-	AN_print("---------------------"); 
+	// AN_print("---------------------"); 
 	// AN_print("Task "+std::string(msg->mask1)+ " - > "+std::string(uxHighWaterMark));
  
 }
