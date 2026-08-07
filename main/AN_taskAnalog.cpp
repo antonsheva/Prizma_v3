@@ -63,7 +63,6 @@ void AN_taskAnalog::run(void *param){
             critPwrLatch = 1;
         }
     }else{
-        G_led_ccl_5 = 0;
         critPwrLatch = 0;
         a24_d   = (A24_NORMAL_VAL - A24_CRITICAL_VAL)/5;
         a24_tmp = (BYTE)(5-(A24_NORMAL_VAL - a24)/a24_d);

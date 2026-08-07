@@ -57,7 +57,6 @@ void AN_taskPwrAut::run(void *param){
   btEnSwch = 0;
     for(;;){
         xQueueReceive(QueuePwrAut, &sPack, portMAX_DELAY); 
-        G_led_ccl_5 = 0;
         Serial.println("EVENT_CODE -> "+String(sPack.cmd));   
         switch (sPack.cmd){
             case EVENT_CODE_BTTN_ON       : eventBtOn();        break;          

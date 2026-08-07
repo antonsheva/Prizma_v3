@@ -67,8 +67,7 @@ int G_serialWaitTm    = 0;
 int G_serialEndOfPack = 0;
 int G_serialDataSrc   = 0;
  
-bool G_updatePref   = false;
-bool G_led_ccl_5    = false;
+
 bool G_btConnect    = false;
 bool G_btStart      = false;
 

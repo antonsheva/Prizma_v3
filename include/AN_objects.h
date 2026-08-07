@@ -194,8 +194,7 @@ extern BYTE G_ledsStste[2];
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];
 
-extern bool G_updatePref; 
-extern bool G_led_ccl_5;
+
 extern bool G_btConnect;
 extern bool G_btStart;
 

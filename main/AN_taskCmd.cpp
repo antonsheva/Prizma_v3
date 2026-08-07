@@ -131,8 +131,8 @@ void AN_taskCmd::setJmmrData(_MSG_PACK *msg){
 	AN_shiftDataArr sft;
 	 
 	sft.printMsg(msg);
-	if(msg->updtLocalJmmr)sft.loadMsgToJmrStt(msg, &G_lJmrStt);
-	G_updatePref = true;
+	if(msg->updtLocalJmmr)sft.loadMsgToJmrStt(msg, &G_lJmrStt, 1);
+
 	_SERIAL_PACK sPack;
 	sPack.cmd = EVENT_APPLY_CHANGES;
 	      
