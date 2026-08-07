@@ -77,24 +77,24 @@ int AN_serialConv::unpackData(char *data, _MSG_PACK *msg){
 
   char paramCmd[]     = PARAM_CMD;
   char paramSender[]  = PARAM_SENDER;
-  char paramAdEsp[]   = PARAM_ADDR_ESP; 
+  char paramAddressee[]   = PARAM_ADDRESSEE; 
   char paramListLen[] = PARAM_JMMR_LIST_LEN;    
-  DWORD cmd     =  0;
-  DWORD sender  =  0;
-  DWORD adEsp   =  0; 
-  DWORD listLen =  0;    
+  DWORD cmd       =  0;
+  DWORD sender    =  0;
+  DWORD addressee =  0; 
+  DWORD listLen   =  0;    
 
   findParam(data,  paramCmd , &cmd);
   if(cmd == CMD_SET_JMMR_LIST){
     findParam(data, paramSender, &sender);
-    findParam(data, paramAdEsp, &adEsp);
+    findParam(data, paramAddressee, &addressee);
     findParam(data, paramListLen, &listLen);
     
     
     getJmmrList(data);
     msg->sender     = sender;
     msg->cmd        = cmd;
-    msg->addrEsp32  = adEsp;
+    msg->addressee  = addressee;
     msg->jmmrListLen= listLen;
 
   }else{
@@ -163,7 +163,6 @@ int AN_serialConv::saveJmmrParam(char *param, char *val, _JMMR_STATE *jmmr){
   return 0;
 }
 
-
 int AN_serialConv::getParam(std::string *str, char *param, char *val){
   std::string subs1;
   std::string subs2;
@@ -189,8 +188,6 @@ int AN_serialConv::getParam(std::string *str, char *param, char *val){
   }
   return 0;
 }
-
-
 
 int AN_serialConv::deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *data){
   char strBuff  [TXT_BUFF_LEN];
@@ -236,7 +233,6 @@ int AN_serialConv::deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *
 
   return 0;
 }
-
 
 int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
   std::string str = "{";
