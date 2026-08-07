@@ -1,7 +1,7 @@
 {"cmd": 19}
 {"cmd": 26, "ad_esp": 122} CMD_SET_ADDR_ESP
 
-{"cmd": 30, "dev_id": 0x45010100000000015}
+{"cmd": 30, "dev_id": 4972256563105366017}
 
 {"cmd": 32, "group_id": 2} CMD_SET_GROUP_ID
 

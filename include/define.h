@@ -29,20 +29,22 @@
 #define CMD_RM_GET_ATW      9             
 #define CMD_RM_SET_ATW      10             
 #define CMD_RM_GET_STATE    11
-#define CMD_RM_SET_STATE    12
+#define CMD_SET_JMMR_DATA   12
 #define CMD_RM_GET_INFO     13
 #define CMD_PRINT_ADDRESSES 14
-#define CMD_GET_JMMR_DATA   15
+// #define CMD_SEARCH_DEVICES 15
+
 #define CMD_SET_ADDR_RM_1   16
 #define CMD_SET_ADDR_RM_2   17
 #define CMD_RESPONSE_DATA   18
 #define CMD_GET_JMMR_LIST   19
-#define CMD_SEARCH_DEVICES  20
+#define CMD_GET_JMMR_DATA   20
+
 #define CMD_GET_STACK_SIZE  21
 #define CMD_GEN_TEST_DATA   22
 #define CMD_SET_JMMR_LIST   23
 #define CMD_TEST            24     
-#define CMD_SET_JMMR_DATA   25
+// #define CMD_SET_JMMR_DATA   25
 #define CMD_SET_ADDR_ESP    26
 #define CMD_SET_PWR         27
 #define CMD_RESTART_ESP     28
@@ -59,7 +61,8 @@
 #define CMD_BT_STOP         39
 #define CMD_BT_SEND         40
 #define CMD_BT_RECEIVE      41  
-
+#define CMD_PRINT_JMMR_DATA 42  
+#define CMD_PRINT_JMMR_LIST 43 
 
 
 #define PARAM_CMD               "cmd"                            
@@ -89,7 +92,10 @@
 #define PARAM_TXT               "txt"                                                
 #define PARAM_TXT_LEN           "txt_len"                              
 #define PARAM_BATT_STATE        "batt_stt"                              
-#define PARAM_TEMPERATURE       "temper"                                                           
+#define PARAM_TEMPERATURE       "temper"  
+#define PARAM_NEED_BT_OFF       "need_bt_off"  
+#define PARAM_ADDRESSEE         "addressee" 
+                                                         
 
 
 #define RESP_OK             1

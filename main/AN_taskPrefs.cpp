@@ -200,8 +200,6 @@ void AN_taskPrefs::setPwr(BYTE pwr1, BYTE pwr2){
 }
 
 void AN_taskPrefs::printAddresses(){
-	char data[64];
-  sprintf(data, "{\"ad_esp\":%d, \"ad_rm1\":%d, \"ad_rm2\":%d}", G_lJmrStt.esp32Addr,G_lJmrStt.rebMod[0].address,G_lJmrStt.rebMod[1].address);
 	Serial.println("ad_esp ->  "+String(G_lJmrStt.esp32Addr));
 	Serial.println("ad_rm1 ->  "+String(G_lJmrStt.rebMod[0].address));
 	Serial.println("ad_rm2 ->  "+String(G_lJmrStt.rebMod[1].address));

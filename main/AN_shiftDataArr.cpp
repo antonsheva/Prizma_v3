@@ -15,9 +15,9 @@ void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr, bool rm
 		jmmr->devId							= msg->devId;      
 		jmmr->groupId						= msg->groupId; 
 		jmmr->devType						= msg->devType; 		
-		jmmr->devRange					= msg->devRange; 			
+		jmmr->devRange					= msg->devRange; 
+		jmmr->esp32Addr 				= msg->addrEsp32; 
 		jmmr->infoLen						= msg->txtLen;		
-
 		jmmr->devBattStt   	    = msg->devBattStt ;	
 		jmmr->devTemper   		  = msg->devTemper  ;
 
@@ -44,7 +44,7 @@ void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	msg->groupId    = jmmr->groupId;             
 	msg->devType    = jmmr->devType;  	
 	msg->devRange   = jmmr->devRange;  	
-	
+	msg->addrEsp32  = jmmr->esp32Addr;  		
 
 	msg->devBattStt = jmmr->devBattStt;	
 	msg->devTemper  = jmmr->devTemper ;
@@ -94,7 +94,7 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2, bool rmDa
 }
 
 void AN_shiftDataArr::printJmmrData(_JMMR_STATE *jmmr){
-		Serial.println("----------------");
+		Serial.println(" JMMR DATA ");
 		Serial.println("devId   ->  "+String(jmmr->devId, HEX));
 		Serial.println("groupId ->  "+String(jmmr->groupId));
 		Serial.println("devType ->  "+String(jmmr->devType));
@@ -110,6 +110,7 @@ void AN_shiftDataArr::printJmmrData(_JMMR_STATE *jmmr){
 		Serial.println("pwr2    ->  "+String(jmmr->rebMod[1].pwr));	
 		Serial.println("battStt ->  "+String(jmmr->devBattStt));	
 		Serial.println("temper  ->  "+String(jmmr->devTemper));	
+
 
 
 		// Serial.println(" -- info RM1 --");
@@ -146,10 +147,13 @@ void AN_shiftDataArr::printMsg(_MSG_PACK *msg){
 
 void AN_shiftDataArr::printJmmrList(){
     Serial.println("--------printJmmrList--------");
-		for(int i=0; i<G_jmmrsList.size(); i++){
-			printJmmrData(&G_jmmrsList[i]);		
+		if(G_jmmrsList.size() == 0){
+			Serial.println("  JmmrList is empty ");
+		}else{
+			for(int i=0; i<G_jmmrsList.size(); i++){
+				printJmmrData(&G_jmmrsList[i]);		
+			}			
 		}
-
 }
 
 

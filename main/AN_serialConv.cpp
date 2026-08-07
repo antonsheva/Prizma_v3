@@ -109,6 +109,7 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   std::string par = std::string(param); 
   if(par.find(PARAM_CMD       )   != -1)msg->cmd        = atoi(val); 
   if(par.find(PARAM_SENDER    )   != -1)msg->sender     = atoi(val); 
+  if(par.find(PARAM_ADDRESSEE )   != -1)msg->addressee  = atoi(val);   
   if(par.find(PARAM_RESPONSE  )   != -1)msg->response   = atoi(val); 
   if(par.find(PARAM_MSG_DIR   )   != -1)msg->direction  = atoi(val); 
   if(par.find(PARAM_DEV_ID    )   != -1)msg->devId      = atoll(val);                  
@@ -127,7 +128,7 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   if(par.find(PARAM_RM_NUM    )   != -1)msg->rmNum      = atoi(val);  
   if(par.find(PARAM_BATT_STATE)   != -1)msg->devBattStt = atoi(val);
   if(par.find(PARAM_TEMPERATURE)  != -1)msg->devTemper  = atoi(val);
-       
+  if(par.find(PARAM_NEED_BT_OFF)  != -1)msg->needBtOff  = atoi(val);       
   
   
   if(par.find(PARAM_JMMR_LIST_LEN) != -1)msg->jmmrListLen = atoi(val);   
@@ -206,8 +207,6 @@ int AN_serialConv::deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *
   std::string subs2;
   std::string subs3;  
    
-  // int pos1, pos2;
-  // int endOfPack = 0;
   int pos = str.find("{");
   if(pos != -1)str.erase(pos,1);
   pos = str.find("}");
@@ -241,11 +240,14 @@ int AN_serialConv::deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *
 
 int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
   std::string str = "{";
-  str.append("\"cmd\":"       +std::to_string(msg->cmd)+",");
-  str.append("\"sender\":"    +std::to_string(G_lJmrStt.esp32Addr)+",");
-  str.append("\"resp\":"      +std::to_string(msg->response)+",");
-  str.append("\"dir\":"       +std::to_string(msg->direction)+",");
-  str.append("\"ad_esp\":"    +std::to_string(msg->addrEsp32)+",");
+  str.append("\"cmd\":"        +std::to_string(msg->cmd)+",");
+  str.append("\"sender\":"     +std::to_string(G_lJmrStt.esp32Addr)+",");
+  str.append("\"addressee\":"  +std::to_string(msg->addressee)+",");
+  str.append("\"resp\":"       +std::to_string(msg->response)+",");
+  str.append("\"dir\":"        +std::to_string(msg->direction)+",");
+  str.append("\"ad_esp\":"     +std::to_string(msg->addrEsp32)+",");
+  str.append("\"need_bt_off\":"+std::to_string(msg->needBtOff)+","); 
+  
   
   if(msg->direction == MSG_DIR_RESPONSE){
     str.append("\"dev_id\":"    +std::to_string(msg->devId)+",");
@@ -256,7 +258,7 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
     str.append("\"temper\":"    +std::to_string(msg->devTemper)+",");
   }
 
-  if((msg->cmd == CMD_RM_SET_STATE)||(msg->direction == MSG_DIR_RESPONSE)){
+  if((msg->cmd == CMD_SET_JMMR_DATA)||(msg->direction == MSG_DIR_RESPONSE)){
     str.append("\"mc1\":"       +std::to_string(msg->modCode1)+",");
     str.append("\"mc2\":"       +std::to_string(msg->modCode2)+",");
     str.append("\"msk1\":"      +std::to_string(msg->mask1)+",");
@@ -284,26 +286,27 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
 
 int AN_serialConv::serializeMsgData(_MSG_PACK *msg, char *data){
   std::string str = "{";
-  str.append("\"cmd\":"       +std::to_string(msg->cmd)+",");
-  str.append("\"sender\":"    +std::to_string(msg->sender)+",");
-  str.append("\"resp\":"      +std::to_string(msg->response)+",");
-  str.append("\"dir\":"       +std::to_string(msg->direction)+",");
+  str.append("\"cmd\":"        +std::to_string(msg->cmd)+",");
+  str.append("\"sender\":"     +std::to_string(msg->sender)+",");
+  str.append("\"resp\":"       +std::to_string(msg->response)+",");
+  str.append("\"dir\":"        +std::to_string(msg->direction)+",");
+  str.append("\"need_bt_off\":"+std::to_string(msg->needBtOff)+",");  
   
-  str.append("\"dev_id\":"    +std::to_string(msg->devId)+",");
-  str.append("\"group_id\":"  +std::to_string(msg->groupId)+",");
-  str.append("\"dev_type\":"  +std::to_string(msg->devType)+",");
-  str.append("\"dev_range\":" +std::to_string(msg->devRange)+",");
-  str.append("\"ad_esp\":"    +std::to_string(msg->addrEsp32)+",");
-  str.append("\"ad_rm1\":"    +std::to_string(msg->addrRm1)+",");
-  str.append("\"ad_rm2\":"    +std::to_string(msg->addrRm2)+",");
-  str.append("\"mc1\":"       +std::to_string(msg->modCode1)+",");
-  str.append("\"mc2\":"       +std::to_string(msg->modCode2)+",");
-  str.append("\"msk1\":"      +std::to_string(msg->mask1)+",");
-  str.append("\"msk2\":"      +std::to_string(msg->mask2)+",");
-  str.append("\"pwr1\":"      +std::to_string(msg->pwr1)+",");
-  str.append("\"pwr2\":"      +std::to_string(msg->pwr2)+",");
-  str.append("\"txt_len\":"   +std::to_string(msg->txtLen)+",");
-  str.append("\"txt\": \""    +std::string(msg->txt)+"\"");
+  str.append("\"dev_id\":"     +std::to_string(msg->devId)+",");
+  str.append("\"group_id\":"   +std::to_string(msg->groupId)+",");
+  str.append("\"dev_type\":"   +std::to_string(msg->devType)+",");
+  str.append("\"dev_range\":"  +std::to_string(msg->devRange)+",");
+  str.append("\"ad_esp\":"     +std::to_string(msg->addrEsp32)+",");
+  str.append("\"ad_rm1\":"     +std::to_string(msg->addrRm1)+",");
+  str.append("\"ad_rm2\":"     +std::to_string(msg->addrRm2)+",");
+  str.append("\"mc1\":"        +std::to_string(msg->modCode1)+",");
+  str.append("\"mc2\":"        +std::to_string(msg->modCode2)+",");
+  str.append("\"msk1\":"       +std::to_string(msg->mask1)+",");
+  str.append("\"msk2\":"       +std::to_string(msg->mask2)+",");
+  str.append("\"pwr1\":"       +std::to_string(msg->pwr1)+",");
+  str.append("\"pwr2\":"       +std::to_string(msg->pwr2)+",");
+  str.append("\"txt_len\":"    +std::to_string(msg->txtLen)+",");
+  str.append("\"txt\": \""     +std::string(msg->txt)+"\"");
   str.append("}");
   memccpy(data, str.c_str(), 0, 1024);
   return str.length();

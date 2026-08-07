@@ -82,11 +82,6 @@ void AN_taskRmReceive::readData(){
 void AN_taskRmReceive::callback(){
     G_pauseRmDataCnt = 10;
 }
- 
-
-
-
-
 
 void AN_taskRmReceive::send(String str){
     if(activeRebMod != rmSel){
@@ -107,7 +102,6 @@ void AN_taskRmReceive::run(void *param){
 
   for(;;){
     xQueueReceive(QueueRmEvent, &rmAut, (TickType_t)portMAX_DELAY);
-    // Serial.println("------ QueueRmEvent  ---------"); 
     if(rmAut.swtchActDev)rmSel = 0;
     if(rmAut.rmSel)rmSel = rmAut.rmSel-1;
     for(int i=0; i<rmAut.opCodeQty; i++){ 

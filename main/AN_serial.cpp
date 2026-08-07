@@ -60,8 +60,6 @@ int AN_serial::checkCrc(std::string crcExpStr, std::string data){
  
   int len = data.length();
   int crc16 = crc.modbus((const uint8_t*) data.c_str(), len);
-
-  // // //Serial.println("crcExp -> "+String(crcExp, HEX)+" crc16 -> "+String(crc16, HEX));    
   if(crc16 == crcExp){
       return 1;
   }
@@ -78,21 +76,15 @@ void AN_serial::resetDataPackProcess(){
 void AN_serial::processingReceivedData(){
   _MSG_PACK msg;    
   AN_serialConv serialConv;
-  //Serial.println("------processingReceivedData-- ");
   if(dataPackStr.length() < 20){
     resetDataPackProcess();	
     return;           
   }
-
-  //Serial.println("------processingReceivedData-- 1");
+ 
   std::string dataStr = getDataStr(dataPackStr);
   std::string crcStr =  getCrcString(dataPackStr);
   dataPackStr.clear();
-
-  //Serial.println(dataStr.c_str());
-  //Serial.println("crc -> "+String(crcStr.c_str())); 
-   
-  
+ 
   if(dataSrc == SERIAL_SRC_485){
     if(!checkCrc(crcStr, dataStr)){
       G_serialBusy = 0; 
@@ -115,9 +107,7 @@ void AN_serial::processingReceivedData(){
     if(dataSrc == SERIAL_SRC_485)Serial.println(" -- RS485 DATA --") ;
     Serial.println(dataStr.c_str()) ;
 
-    if(msg.addrEsp32 == G_lJmrStt.esp32Addr){ 
-        //Serial.println("--target msg---");
-        //Serial.println(dataPackStr.c_str());
+    if(msg.addressee == G_lJmrStt.esp32Addr){ 
         xQueueSend(QueueCmd, &msg, 100);
         G_serialBusy = 0; 
     }
@@ -130,16 +120,13 @@ int AN_serial::processingExternalData(std::string str){
  
 	if(str.length()>120)dataPackStr.append(str.substr(0,120));
 	else				        dataPackStr.append(str);
-  //  //Serial.println("------processingExternalData------");
 	if(dataPackStr.length() > MAX_SERIAL_DATA_LEN){
 		resetDataPackProcess();
     
     return 0;
 	}
-   //Serial.println(str.c_str());
   int found = dataPackStr.find("stop");
   if(found == -1)return 0;
-//Serial.println("------processingExternalData--  1 ");
   processingReceivedData();
   G_serialBusy = 0; 
   return 0;   	

@@ -17,16 +17,18 @@ private:
   static  int  getATC();
   static  int  getJammList();
   static  int  processingResponseData(_MSG_PACK *msg);
-  static  int  searchDevices(_MSG_PACK *msg);    
-  static  void aplayPwr();
+  static  int  getJmmrData(_MSG_PACK *msg);    
+  static  void applyPwr();
   static  void getDevParam();
-  static  void setPrefData(_MSG_PACK *msg);
-  static  void getJmmrData(_MSG_PACK *msg);
-  static  void setJmmrData(_MSG_PACK *msg);
   static  void init();
   static  void processingCmd(_MSG_PACK *msg);
-  static  void rmGetState();
-  static  void rmSetState(_MSG_PACK *msg);
+  
+ 
+  
+  static void printJmmrList();
+  static void printJmmrData(_MSG_PACK *msg);
+  static void rmGetState();
+  static void setJmmrData(_MSG_PACK *msg);
  
   static  void test();
   static  void btInit();
@@ -36,7 +38,6 @@ private:
  
   static  void setJmmrList();
   static  void updateLocalData(_MSG_PACK *msg);
-  static  void generateTestData();
   static  void addJmmr(_MSG_PACK *msg);
   static  void addJmmr(_JMMR_STATE *jmmr); 
   static  void selectRmModule(int sel, bool firstInit = 0);

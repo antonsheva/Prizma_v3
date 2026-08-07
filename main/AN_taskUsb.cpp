@@ -21,12 +21,10 @@ void AN_taskUsb::run(void *param){
   _SERIAL_PACK sPack;
   AN_serial serial;
   for (;;){
-      xQueueReceive(QueueUsb, &sPack, portMAX_DELAY); 
-
+      xQueueReceive(QueueUsb, &sPack, portMAX_DELAY);
+      serial.dataSrc = SERIAL_SRC_USB; 
       serial.processingSerialData(sPack);
-      Serial.write(sPack.data, sPack.len);
-      // Serial1.write(sPack.data, sPack.len);
-      // free(sPack.data); 
+      Serial.println(sPack.data); 
   }
 }
 

@@ -36,9 +36,7 @@ bool AN_taskBtSend::_spp_send_buffer(){
         if(!G_lJmrStt.bt.sppClient){
             Serial.println("SPP Client Gone!");
             return false;
-        }
-        // AN_print("SPP Write "+std::to_string(_spp_tx_buffer_len));
-        // AN_print("data ->  "+std::string((char*)_spp_tx_buffer));        
+        }       
         esp_err_t err = esp_spp_write(G_lJmrStt.bt.sppClient, _spp_tx_buffer_len, _spp_tx_buffer);
         if(err != ESP_OK){
             Serial.println("SPP Write Failed!");
@@ -65,15 +63,12 @@ void AN_taskBtSend::run(void *param){
 
   for (;;) {
     if(QueueBtSend && xQueueReceive(QueueBtSend, &packet, portMAX_DELAY) == pdTRUE){
-        Serial.println(" ----QueueBtSend ----");
-        Serial.println(packet.data);
+
+        memset(_spp_tx_buffer, 0, SPP_TX_MAX);
         if(packet.len <= (SPP_TX_MAX - _spp_tx_buffer_len)){
             memcpy(_spp_tx_buffer+_spp_tx_buffer_len, packet.data, packet.len);
             _spp_tx_buffer_len+=packet.len;
-            // AN_print("tp - 4");
             free(packet.data);
-            // AN_print("tp - 5");
-
             if(SPP_TX_MAX == _spp_tx_buffer_len || uxQueueMessagesWaiting(QueueBtSend) == 0){
                 _spp_send_buffer();
             }

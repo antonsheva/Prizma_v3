@@ -65,7 +65,10 @@ typedef struct{
     int    cmdType     = 0;
     int    direction   = 0;
     int    sender      = 0;
+    int    addressee   = 0;
     int    response    = 0; 
+    int    cmdSrc      = 0; 
+    
     
     int    rmNum       = 0;
 
@@ -90,6 +93,7 @@ typedef struct{
     int    subscribersQty = 0;
 
     bool   updtLocalJmmr = 1;
+    bool   needBtOff = 0;
 
     int    txtLen   = 0;
     char   txt[TXT_BUFF_LEN-128] = {0};

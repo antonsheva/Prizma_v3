@@ -2,7 +2,7 @@
 
 void AN_taskRs485Poll::run(void *param){
   _MSG_PACK msg;
-  AN_rs485 rs485;
+  AN_commRs485Bt rs485;
   AN_shiftDataArr sft;
   int cmdType;
   for(;;){
@@ -15,10 +15,10 @@ void AN_taskRs485Poll::run(void *param){
       } 
       vTaskDelay(200/portTICK_PERIOD_MS);
     }
- 
+    msg.cmdType = cmdType;
     rs485.sendMsgToBt(&msg);       
     if(cmdType == CMD_SET_JMMR_LIST){
-      msg.cmd           = CMD_RM_SET_STATE;
+      msg.cmd           = CMD_SET_JMMR_DATA;
       msg.direction     = MSG_DIR_REQUEST;
       msg.updtLocalJmmr = 0;
       xQueueSend(QueueCmd, &msg, portMAX_DELAY);      
