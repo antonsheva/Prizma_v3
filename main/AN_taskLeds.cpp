@@ -88,7 +88,24 @@ void AN_taskLeds::run(void *param){
                 stt |= 0x06;
                 setState(stt);
         break;   
-        case 7:  break;
+        case 7: if(!G_ledsStste[1]){
+                if(cntTm < 4)cntTm++;
+                else{
+                    cntTm = 0;
+                    stt &= 0x30;
+                    if(sftCnt%2)stt |= 0x03;
+                    else        stt |= 0x0C;
+                    setState(stt);
+                    sftCnt++;
+                    if(sftCnt>=6){                   
+                    sftCnt = 0;
+                    G_ledsStste[1] = 8;
+                    cntTm = 0;
+                    setState(0);
+                    }
+                }          
+              }
+        break;
       }
 
       vTaskDelay(50/portTICK_PERIOD_MS);

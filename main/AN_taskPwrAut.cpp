@@ -16,13 +16,9 @@ void AN_taskPwrAut::eventPwrOff(){
 }
 
 void AN_taskPwrAut::eventAplayChanges(){
-  _MSG_PACK msg;  
-  G_pwrMode = 0;
+  G_pwrMode = 5;
   btEnSwch = 0;
-  G_btConnect = 0;
-  ledsCode[0]=1;
   Serial.println("EVENT_APPLY_CHANGES");
-  xQueueSend(QueueLeds, ledsCode, 100);
 }
 void AN_taskPwrAut::eventDisconnect(){
   Serial.println("EVENT_BT_DISCONNECT");

@@ -128,10 +128,9 @@ void AN_taskCmd::rmGetState(){
 }
 
 void AN_taskCmd::setJmmrData(_MSG_PACK *msg){
-	AN_shiftDataArr sft;
-	 
-	sft.printMsg(msg);
-	if(msg->updtLocalJmmr)sft.loadMsgToJmrStt(msg, &G_lJmrStt, 1);
+	AN_shiftDataArr sft; 
+	// sft.printMsg(msg);
+  sft.loadMsgToJmrStt(msg, &G_lJmrStt, 1);
 
 	_SERIAL_PACK sPack;
 	sPack.cmd = EVENT_APPLY_CHANGES;
@@ -198,6 +197,8 @@ void AN_taskCmd::addJmmr(_JMMR_STATE *jmmr){
 
 void AN_taskCmd::setJmmrList(){
 	_MSG_PACK msg;
+	AN_shiftDataArr sft;
+	sft.printJmmrList();
 	msg.cmdType = CMD_SET_JMMR_LIST;
   msg.subscribersQty = G_jmmrsList.size(); 	
 	xQueueSend(QueueRs485Pool, &msg, portMAX_DELAY);

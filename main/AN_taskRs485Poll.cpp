@@ -20,7 +20,7 @@ void AN_taskRs485Poll::run(void *param){
     if(cmdType == CMD_SET_JMMR_LIST){
       msg.cmd           = CMD_SET_JMMR_DATA;
       msg.direction     = MSG_DIR_REQUEST;
-      msg.updtLocalJmmr = 0;
+      sft.loadJmmrStateToMsg(&msg, &G_lJmrStt);
       xQueueSend(QueueCmd, &msg, portMAX_DELAY);      
     }
   }
