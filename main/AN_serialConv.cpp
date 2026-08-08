@@ -75,28 +75,31 @@ int AN_serialConv::unpackData(char *data, _MSG_PACK *msg){
   std::string substr;
   AN_shiftDataArr sft;
 
-  char paramCmd[]     = PARAM_CMD;
-  char paramSender[]  = PARAM_SENDER;
+  char paramCmd[]         = PARAM_CMD;
+  char paramSender[]      = PARAM_SENDER;
   char paramAddressee[]   = PARAM_ADDRESSEE; 
-  char paramListLen[] = PARAM_JMMR_LIST_LEN;    
-  DWORD cmd       =  0;
-  DWORD sender    =  0;
-  DWORD addressee =  0; 
-  DWORD listLen   =  0;    
+  char paramListLen[]     = PARAM_JMMR_LIST_LEN;
+  char paramNeedBtOff[]   = PARAM_NEED_BT_OFF;     
+  DWORD cmd         =  0;
+  DWORD sender      =  0;
+  DWORD addressee   =  0; 
+  DWORD listLen     =  0; 
+  DWORD need_bt_off =  0; 
+     
 
   findParam(data,  paramCmd , &cmd);
   if(cmd == CMD_SET_JMMR_LIST){
     findParam(data, paramSender, &sender);
     findParam(data, paramAddressee, &addressee);
     findParam(data, paramListLen, &listLen);
-    
+    findParam(data, paramNeedBtOff, &need_bt_off);    
     
     getJmmrList(data);
-    msg->sender     = sender;
-    msg->cmd        = cmd;
-    msg->addressee  = addressee;
-    msg->jmmrListLen= listLen;
-
+    msg->sender       = sender;
+    msg->cmd          = cmd;
+    msg->addressee    = addressee;
+    msg->jmmrListLen  = listLen;
+    msg->needBtOff    = need_bt_off;
   }else{
     deserializeDataPack(NULL, msg, data);
   }

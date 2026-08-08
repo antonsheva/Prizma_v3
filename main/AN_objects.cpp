@@ -85,6 +85,7 @@ bool G_eventOccurred[32]    = {false};
 
 int  G_uartSelector = 0;
 bool G_mtxUart2Busy = 0;
+int  G_needBtOff = 0;
 
 void AN_print(std::string str, int len){
     if(len){

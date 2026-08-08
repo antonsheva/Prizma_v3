@@ -53,7 +53,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		 * 
 		 */
 		case CMD_GET_JMMR_LIST 	: getJammList();  			break;
-		case CMD_SET_JMMR_LIST 	: setJmmrList();				break;
+		case CMD_SET_JMMR_LIST 	: setJmmrList(msg);				break;
 		case CMD_GET_JMMR_DATA 	: getJmmrData(msg);  	  break; 
 		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     break;
  
@@ -133,7 +133,7 @@ void AN_taskCmd::setJmmrData(_MSG_PACK *msg){
   sft.loadMsgToJmrStt(msg, &G_lJmrStt, 1);
 
 	_SERIAL_PACK sPack;
-	sPack.cmd = EVENT_APPLY_CHANGES;
+
 	      
 	_RM_AUT rmAut;	
 	rmAut.opCodeList[0] = CMD_RM_SET_ATC ;
@@ -149,13 +149,18 @@ void AN_taskCmd::setJmmrData(_MSG_PACK *msg){
  	rmAut.cmd = CMD_RESTART_ESP;
 
   msg->cmd = CMD_SET_PWR;
+	Serial.println("need_bt_off - > "+String(msg->needBtOff));
 
-	if(msg->needBtOff) btStop(); 
-	applyPwr();
+	sPack.cmd = EVENT_APPLY_CHANGES;
+	if(msg->needBtOff) {
+		sPack.code = CMD_RESTART_ESP;
+	}else{
+		sPack.code = 0;
+	}
+	
 	xQueueSend(QueuePrefs, msg, portMAX_DELAY);
   xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY);
 	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 
-	// cRebMod->cmdAfterAutFinish = CMD_RESTART_ESP;
  
 }
 
@@ -195,13 +200,13 @@ void AN_taskCmd::addJmmr(_JMMR_STATE *jmmr){
 	G_jmmrsList.push_back(j);
 }
 
-void AN_taskCmd::setJmmrList(){
-	_MSG_PACK msg;
+void AN_taskCmd::setJmmrList(_MSG_PACK *msg){
+
 	AN_shiftDataArr sft;
 	sft.printJmmrList();
-	msg.cmdType = CMD_SET_JMMR_LIST;
-  msg.subscribersQty = G_jmmrsList.size(); 	
-	xQueueSend(QueueRs485Pool, &msg, portMAX_DELAY);
+	msg->cmdType = CMD_SET_JMMR_LIST;
+  msg->subscribersQty = G_jmmrsList.size(); 	
+	xQueueSend(QueueRs485Pool, msg, portMAX_DELAY);
 }
 
 void AN_taskCmd::updateLocalData(_MSG_PACK *msg)

@@ -5,9 +5,11 @@ void AN_taskRs485Poll::run(void *param){
   AN_commRs485Bt rs485;
   AN_shiftDataArr sft;
   int cmdType;
+  int needBtOff = 0;
   for(;;){
     xQueueReceive(QueueRs485Pool, &msg, portMAX_DELAY);
-    cmdType = msg.cmdType;
+    cmdType   = msg.cmdType;
+    needBtOff = msg.needBtOff;
     for(int i=0; i<msg.subscribersQty; i++){
       rs485.prepMsg(&msg, i);
       if(msg.addrEsp32 != G_lJmrStt.esp32Addr){   
@@ -20,6 +22,7 @@ void AN_taskRs485Poll::run(void *param){
     if(cmdType == CMD_SET_JMMR_LIST){
       msg.cmd           = CMD_SET_JMMR_DATA;
       msg.direction     = MSG_DIR_REQUEST;
+      msg.needBtOff     = needBtOff;
       sft.loadJmmrStateToMsg(&msg, &G_lJmrStt);
       xQueueSend(QueueCmd, &msg, portMAX_DELAY);      
     }

@@ -129,8 +129,9 @@ typedef struct{
 typedef struct {
     int  len=0;
     char *data;
-    BYTE dir=0;
-    BYTE cmd=0;
+    BYTE dir  = 0;
+    BYTE cmd  = 0;
+    BYTE code = 0;
 } _SERIAL_PACK;
 
 typedef struct {

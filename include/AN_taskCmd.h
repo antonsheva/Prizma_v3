@@ -35,11 +35,12 @@ private:
   static  void btStop();
   static  void getAllStack();
   static  void getStackSize(_MSG_PACK *msg);
- 
-  static  void setJmmrList();
+  
   static  void updateLocalData(_MSG_PACK *msg);
   static  void addJmmr(_MSG_PACK *msg);
-  static  void addJmmr(_JMMR_STATE *jmmr); 
+  static  void addJmmr(_JMMR_STATE *jmmr);
+  static  void setJmmrList(_MSG_PACK *msg);
+
   static  void selectRmModule(int sel, bool firstInit = 0);
   static  void sendCmdToRm(int cmd, int sel);  
 public:

@@ -1,4 +1,5 @@
 #include "../include/AN_taskPwrAut.h"
+#include "AN_taskPwrAut.h"
  
 static BYTE  ledsCode[4];  
 static bool  btEnSwch;
@@ -15,8 +16,9 @@ void AN_taskPwrAut::eventPwrOff(){
   for(;;){gpio_set_level(PIN_PWR_HOLD_DRV, 0);}
 }
 
-void AN_taskPwrAut::eventAplayChanges(){
+void AN_taskPwrAut::eventAplayChanges(int code){
   G_pwrMode = 5;
+  if(code == CMD_RESTART_ESP)G_pwrMode = 6;
   btEnSwch = 0;
   Serial.println("EVENT_APPLY_CHANGES");
 }
@@ -55,11 +57,11 @@ void AN_taskPwrAut::run(void *param){
         xQueueReceive(QueuePwrAut, &sPack, portMAX_DELAY); 
         Serial.println("EVENT_CODE -> "+String(sPack.cmd));   
         switch (sPack.cmd){
-            case EVENT_CODE_BTTN_ON       : eventBtOn();        break;          
-            case EVENT_BT_CONNECT         : eventConnect();     break;          
-            case EVENT_BT_DISCONNECT      : eventDisconnect();  break;        
-            case EVENT_TIMEOUT_BT_CONNECT : eventPwrOff();      break;        
-            case EVENT_APPLY_CHANGES      : eventAplayChanges();break;
+            case EVENT_CODE_BTTN_ON       : eventBtOn();                  break;          
+            case EVENT_BT_CONNECT         : eventConnect();               break;          
+            case EVENT_BT_DISCONNECT      : eventDisconnect();            break;        
+            case EVENT_TIMEOUT_BT_CONNECT : eventPwrOff();                break;        
+            case EVENT_APPLY_CHANGES      : eventAplayChanges(sPack.code);break;
         }
   }
 }

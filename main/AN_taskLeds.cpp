@@ -42,7 +42,7 @@ void AN_taskLeds::run(void *param){
         break;
 
         case 1: if(!G_ledsStste[1]){
-                if(cntTm < 4)cntTm++;
+                if(cntTm < 2)cntTm++;
                 else{
                     cntTm = 0;
                     setState(1 << (sftCnt < 6 ? sftCnt : sftCnt-6));

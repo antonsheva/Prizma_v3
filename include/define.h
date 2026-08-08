@@ -109,6 +109,9 @@
  
 #define PWR_ON  1
 #define PWR_OFF 2
+#define BT_ON  1
+ 
+
 
 
 #define MSG_DIR_REQUEST  0

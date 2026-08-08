@@ -6,7 +6,7 @@
 class AN_taskPwrAut{
 private:
   static void eventPwrOff();
-  static void eventAplayChanges();
+  static void eventAplayChanges(int code);
   static void eventDisconnect();
   static void eventConnect();
   static void eventBtOn();
