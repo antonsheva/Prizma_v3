@@ -5,12 +5,12 @@
 #include "AN_objects.h"
 #include "AN_shiftDataArr.h"
 
-class AN_taskRmReceive{
+class AN_taskRmAut{
 private:
   /* data */
 public:
-  AN_taskRmReceive(/* args */);
-  ~AN_taskRmReceive();
+  AN_taskRmAut(/* args */);
+  ~AN_taskRmAut();
 
   static void getDevInfo(String data);
   

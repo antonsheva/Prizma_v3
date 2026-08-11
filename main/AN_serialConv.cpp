@@ -75,24 +75,26 @@ int AN_serialConv::unpackData(char *data, _MSG_PACK *msg){
   std::string substr;
   AN_shiftDataArr sft;
 
-  char paramCmd[]         = PARAM_CMD;
-  char paramSender[]      = PARAM_SENDER;
-  char paramAddressee[]   = PARAM_ADDRESSEE; 
-  char paramListLen[]     = PARAM_JMMR_LIST_LEN;
-  char paramNeedBtOff[]   = PARAM_NEED_BT_OFF;     
-  DWORD cmd         =  0;
-  DWORD sender      =  0;
-  DWORD addressee   =  0; 
-  DWORD listLen     =  0; 
-  DWORD need_bt_off =  0; 
+  char paramCmd[]           = PARAM_CMD;
+  char paramSender[]        = PARAM_SENDER;
+  char paramAddressee[]     = PARAM_ADDRESSEE; 
+  char paramJmmrListLen[]   = PARAM_JMMR_LIST_LEN;
+  char paramNeedBtOff[]     = PARAM_NEED_BT_OFF;  
+  char paramNeedEspRestart[] = PARAM_NEED_ESP_RESTART;     
+  DWORD cmd                 = 0;
+  DWORD sender              = 0;
+  DWORD addressee           = 0; 
+  DWORD listLen             = 0; 
+  DWORD need_bt_off         = 0; 
+  DWORD need_esp_restart    = 0;   
      
-
   findParam(data,  paramCmd , &cmd);
   if(cmd == CMD_SET_JMMR_LIST){
     findParam(data, paramSender, &sender);
     findParam(data, paramAddressee, &addressee);
-    findParam(data, paramListLen, &listLen);
-    findParam(data, paramNeedBtOff, &need_bt_off);    
+    findParam(data, paramJmmrListLen, &listLen);
+    findParam(data, paramNeedBtOff, &need_bt_off);  
+    findParam(data, paramNeedEspRestart, &need_esp_restart);       
     
     getJmmrList(data);
     msg->sender       = sender;
@@ -131,7 +133,9 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   if(par.find(PARAM_RM_NUM    )   != -1)msg->rmNum      = atoi(val);  
   if(par.find(PARAM_BATT_STATE)   != -1)msg->devBattStt = atoi(val);
   if(par.find(PARAM_TEMPERATURE)  != -1)msg->devTemper  = atoi(val);
-  if(par.find(PARAM_NEED_BT_OFF)  != -1)msg->needBtOff  = atoi(val);       
+  if(par.find(PARAM_NEED_BT_OFF)  != -1)msg->needBtOff  = atoi(val); 
+  if(par.find(PARAM_NEED_ESP_RESTART)  != -1)msg->needBtRestart  = atoi(val);  
+
   
   
   if(par.find(PARAM_JMMR_LIST_LEN) != -1)msg->jmmrListLen = atoi(val);   

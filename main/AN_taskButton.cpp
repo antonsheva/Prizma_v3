@@ -29,7 +29,7 @@ void AN_taskButton::run(void *param){
             else     bttnPressCnt = 0;
             if(bttnPressCnt > 50){
                 bttnSwch = 0;
-                sPack.cmd = EVENT_CODE_BTTN_ON;
+                sPack.cmd = EVENT_BTTN_PRESS;
                 xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);   
                
             }

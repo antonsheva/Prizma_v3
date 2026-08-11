@@ -1,10 +1,10 @@
  
-#include "AN_taskRmReceive.h"
+#include "AN_taskRmAut.h"
  
  
 TimerHandle_t xTimerRm;
-AN_taskRmReceive::AN_taskRmReceive(/* args */){}
-AN_taskRmReceive::~AN_taskRmReceive(){}
+AN_taskRmAut::AN_taskRmAut(/* args */){}
+AN_taskRmAut::~AN_taskRmAut(){}
  
  static BYTE activeRebMod;
 static int rmSel = 0;
@@ -14,7 +14,7 @@ void startRmTimer(){
   xTimerStart(xTimerRm, 20);
 }
 
-void AN_taskRmReceive::fillDevParams(int dataArrLen, String *data){ 
+void AN_taskRmAut::fillDevParams(int dataArrLen, String *data){ 
     for(int i=0; i<dataArrLen; i++){
         if(data[i].indexOf(":")== -1)continue;
         if(data[i].indexOf("MT"  )  != -1){
@@ -36,7 +36,7 @@ void AN_taskRmReceive::fillDevParams(int dataArrLen, String *data){
     }      
 }
 
-void AN_taskRmReceive::getDevInfo(String data){
+void AN_taskRmAut::getDevInfo(String data){
      
     String strArr[24] = {""};
     String delimiter = "\r\n";
@@ -64,7 +64,7 @@ void AN_taskRmReceive::getDevInfo(String data){
  
  
 
-void AN_taskRmReceive::readData(){
+void AN_taskRmAut::readData(){
   
   _SERIAL_PACK sPack;
   sPack.len = Serial1.available();
@@ -75,15 +75,15 @@ void AN_taskRmReceive::readData(){
   }    
   memset(sPack.data, 0, sPack.len);
   Serial1.read(sPack.data, sPack.len);
-  AN_taskRmReceive::getDevInfo(String(sPack.data));  
+  AN_taskRmAut::getDevInfo(String(sPack.data));  
   free(sPack.data);  
 }
 
-void AN_taskRmReceive::callback(){
+void AN_taskRmAut::callback(){
     G_pauseRmDataCnt = 10;
 }
 
-void AN_taskRmReceive::send(String str){
+void AN_taskRmAut::send(String str){
     if(activeRebMod != rmSel){
         activeRebMod = rmSel;
         if(!activeRebMod) Serial1.begin(9600, SERIAL_8N1, UART_RM_RX1, UART_RM_TX1); 
@@ -94,7 +94,7 @@ void AN_taskRmReceive::send(String str){
     Serial.println(str);    
 }
 
-void AN_taskRmReceive::run(void *param){
+void AN_taskRmAut::run(void *param){
   _SERIAL_PACK sPack;
   AN_shiftDataArr sft;
   _RM_AUT rmAut;
@@ -124,7 +124,15 @@ void AN_taskRmReceive::run(void *param){
       if(rmAut.swtchActDev)rmSel = (rmSel == 0) ? 1 : 0;
     }
     sft.printJmmrData(&G_lJmrStt);
-    // if(rmAut.cmd = CMD_RESTART_ESP)esp_restart();
+    if(rmAut.cmd == CMD_RESTART_ESP){
+      sPack.cmd = EVENT_RESTART_ESP;
+      xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 
+    }
+    if(rmAut.cmd == CMD_RESUME_WORK){
+      sPack.cmd = EVENT_RESUME_WORK;
+      xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 
+    }    
+    
   }
 }
 

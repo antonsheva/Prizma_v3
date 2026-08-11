@@ -92,8 +92,9 @@ typedef struct{
     int    jmmrListLen    = 0;
     int    subscribersQty = 0;
 
-    bool   updtLocalJmmr = 1;
-    bool   needBtOff = 0;
+    bool   updtLocalJmmr  = 1;
+    bool   needBtOff      = 0;
+    bool   needBtRestart  = 0;    
 
     int    txtLen   = 0;
     char   txt[TXT_BUFF_LEN-128] = {0};
@@ -190,7 +191,7 @@ extern EventGroupHandle_t EventGroupBt    ;
 extern BYTE G_subscribersQty;
 
 extern BYTE G_voltToLeds;  
-extern BYTE G_ledsStste[2];
+extern BYTE G_ledsState[2];
 
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];

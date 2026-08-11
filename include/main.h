@@ -10,7 +10,7 @@
 
 
 #include "AN_taskUsb.h"
-#include "AN_taskRmReceive.h"
+#include "AN_taskRmAut.h"
 #include "AN_taskRs485Receive.h"
 #include "AN_taskAnalog.h"
 #include "AN_taskButton.h"
@@ -28,6 +28,6 @@
 #include "AN_taskBtSend.h"
 
 
-extern TaskHandle_t Handle_taskRmReceive;
+extern TaskHandle_t Handle_taskRmAut;
 
 #endif

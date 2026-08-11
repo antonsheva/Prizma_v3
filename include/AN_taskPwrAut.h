@@ -10,8 +10,7 @@ private:
   static void eventDisconnect();
   static void eventConnect();
   static void eventBtOn();
-
-
+  static void eventResumeWork();
 
 public:
   AN_taskPwrAut(/* args */);

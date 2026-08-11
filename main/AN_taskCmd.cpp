@@ -142,18 +142,17 @@ void AN_taskCmd::setJmmrData(_MSG_PACK *msg){
 	rmAut.opCodeList[3] = CMD_RM_SET_ATW ;
 	rmAut.opCodeList[4] = CMD_RM_ATZ     ;
 	rmAut.opCodeList[5] = CMD_RM_ATZ     ;
-	rmAut.opCodeList[6] = CMD_RM_GET_ATI ;
 	
-	rmAut.opCodeQty = 7;
+	rmAut.opCodeQty = 6;
 	rmAut.swtchActDev = true;
- 	rmAut.cmd = CMD_RESTART_ESP;
+
 
   msg->cmd = CMD_SET_PWR;
 	sPack.cmd = EVENT_APPLY_CHANGES;
 	if(msg->needBtOff) {
-		sPack.code = CMD_RESTART_ESP;
+		rmAut.cmd = CMD_RESTART_ESP;
 	}else{
-		sPack.code = 0;
+		rmAut.cmd = CMD_RESUME_WORK;
 	}
 	xQueueSend(QueuePrefs, msg, portMAX_DELAY);
   xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY);

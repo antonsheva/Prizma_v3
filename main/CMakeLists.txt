@@ -6,7 +6,7 @@ set(SOURCES main.cpp
             FastCRChw.cpp
             AN_serialConv.cpp
             AN_shiftDataArr.cpp
-            AN_taskRmReceive.cpp
+            AN_taskRmAut.cpp
             AN_taskRs485Receive.cpp
             AN_taskRs485Poll.cpp
             AN_taskRs485Send.cpp

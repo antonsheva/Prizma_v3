@@ -36,12 +36,12 @@ void AN_taskLeds::run(void *param){
     BYTE cntTm = 0;
     BYTE sftCnt = 0;
     for(;;){
-      switch(G_ledsStste[0]){
-        case 0: if(!G_ledsStste[1])setState(0);
-                G_ledsStste[1] = 1;
+      switch(G_ledsState[0]){
+        case 0: if(!G_ledsState[1])setState(0);
+                G_ledsState[1] = 1;
         break;
 
-        case 1: if(!G_ledsStste[1]){
+        case 1: if(!G_ledsState[1]){
                 if(cntTm < 2)cntTm++;
                 else{
                     cntTm = 0;
@@ -49,7 +49,7 @@ void AN_taskLeds::run(void *param){
                     sftCnt++;
                     if(sftCnt>=12){                   
                     sftCnt = 0;
-                    G_ledsStste[1] = 2;
+                    G_ledsState[1] = 2;
                     cntTm = 0;
                     setState(0);
                     }
@@ -88,7 +88,7 @@ void AN_taskLeds::run(void *param){
                 stt |= 0x06;
                 setState(stt);
         break;   
-        case 7: if(!G_ledsStste[1]){
+        case 7: if(!G_ledsState[1]){
                 if(cntTm < 4)cntTm++;
                 else{
                     cntTm = 0;
@@ -97,9 +97,9 @@ void AN_taskLeds::run(void *param){
                     else        stt |= 0x0C;
                     setState(stt);
                     sftCnt++;
-                    if(sftCnt>=6){                   
+                    if(sftCnt>=100){                   
                     sftCnt = 0;
-                    G_ledsStste[1] = 8;
+                    G_ledsState[1] = 8;
                     cntTm = 0;
                     setState(0);
                     }

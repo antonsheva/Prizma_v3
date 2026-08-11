@@ -44,7 +44,7 @@
 #define CMD_GEN_TEST_DATA   22
 #define CMD_SET_JMMR_LIST   23
 #define CMD_TEST            24     
-// #define CMD_SET_JMMR_DATA   25
+#define CMD_RESUME_WORK 25
 #define CMD_SET_ADDR_ESP    26
 #define CMD_SET_PWR         27
 #define CMD_RESTART_ESP     28
@@ -63,6 +63,7 @@
 #define CMD_BT_RECEIVE      41  
 #define CMD_PRINT_JMMR_DATA 42  
 #define CMD_PRINT_JMMR_LIST 43 
+
 
 
 #define PARAM_CMD               "cmd"                            
@@ -94,6 +95,7 @@
 #define PARAM_BATT_STATE        "batt_stt"                              
 #define PARAM_TEMPERATURE       "temper"  
 #define PARAM_NEED_BT_OFF       "need_bt_off"  
+#define PARAM_NEED_ESP_RESTART  "need_bt_restart"  
 #define PARAM_ADDRESSEE         "addressee" 
                                                          
 
@@ -145,11 +147,14 @@
 #define SERIAL_SRC_485       2
 #define SERIAL_SRC_BT        3
 
-#define EVENT_CODE_BTTN_ON          1
-#define EVENT_BT_CONNECT            2
-#define EVENT_BT_DISCONNECT         3
-#define EVENT_TIMEOUT_BT_CONNECT    4
-#define EVENT_APPLY_CHANGES         5
+#define EVENT_BTTN_PRESS            1
+#define EVENT_BTTN_LONG_PRESS       2
+#define EVENT_BT_CONNECT            3
+#define EVENT_BT_DISCONNECT         4
+#define EVENT_TIMEOUT_BT_CONNECT    5
+#define EVENT_APPLY_CHANGES         6
+#define EVENT_RESTART_ESP           7
+#define EVENT_RESUME_WORK           8
 
 #define A24_CRITICAL_VAL      2200
 #define A24_NORMAL_VAL        2800
