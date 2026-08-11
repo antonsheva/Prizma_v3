@@ -12,31 +12,31 @@ void AN_taskPwrAut::eventPwrOff(){
   Serial.println("EVENT_TIMEOUT_BT_CONNECT");
   msg.cmd = CMD_BT_STOP;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY);
-  G_pwrMode = 4;       
+  G_pwrMode = PWR_MODE_PWR_OFF;       
   for(;;){gpio_set_level(PIN_PWR_HOLD_DRV, 0);}
 }
 
 void AN_taskPwrAut::eventAplayChanges(int code){
-  G_pwrMode = 5;
-  if(code == CMD_RESTART_ESP)G_pwrMode = 6;
+  G_pwrMode = PWR_MODE_APPLY_CHANGE;
+  if(code == CMD_RESTART_ESP)G_pwrMode = PWR_MODE_RESTART;
   btEnSwch = 0;
   Serial.println("EVENT_APPLY_CHANGES");
 }
 void AN_taskPwrAut::eventDisconnect(){
   Serial.println("EVENT_BT_DISCONNECT");
-  G_pwrMode = 2; 
+  G_pwrMode = PWR_MODE_BT_WAIT_CONNECT; 
   G_waitBtConnect = 3000;
 }
 
 void AN_taskPwrAut::eventConnect(){
   Serial.println("EVENT_BT_CONNECT"); 
-  G_pwrMode = 3; 
+  G_pwrMode = PWR_MODE_BT_CONNECT; 
   G_waitBtConnect = 0;
 }
 
 void AN_taskPwrAut::eventBtOn(){
   _MSG_PACK msg;
-  G_pwrMode = 2; 
+  G_pwrMode = PWR_MODE_BT_WAIT_CONNECT; 
   if(btEnSwch)return;
   btEnSwch = 1;
   Serial.println("EVENT_CODE_BTTN_ON"); 
@@ -55,6 +55,9 @@ void AN_taskPwrAut::run(void *param){
   btEnSwch = 0;
     for(;;){
         xQueueReceive(QueuePwrAut, &sPack, portMAX_DELAY); 
+        if(G_pwrMode == PWR_MODE_RESTART) return;
+        if(G_pwrMode == PWR_MODE_PWR_OFF) return;
+        
         Serial.println("EVENT_CODE -> "+String(sPack.cmd));   
         switch (sPack.cmd){
             case EVENT_CODE_BTTN_ON       : eventBtOn();                  break;          

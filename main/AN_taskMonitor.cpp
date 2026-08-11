@@ -24,46 +24,48 @@ void AN_taskMonitor::checkAnalog(){
 }
 
 void AN_taskMonitor::setLedsState(){
-    if(G_pwrMode == 0){
+    if(G_pwrMode == PWR_MODE_START_ESP){
       if(G_ledsStste[0] != 1){
         G_ledsStste[0] = 1;
         G_ledsStste[1] = 0;
       }
       if(G_ledsStste[1] == 2){
-        G_pwrMode = 1;
+        G_pwrMode = PWR_MODE_MAIN;
         G_ledsStste[0] = 0;
         G_ledsStste[1] = 0;
       }
     }
-    if(G_pwrMode == 1){
+    if(G_pwrMode == PWR_MODE_MAIN){
       checkAnalog();
     }
-    if(G_pwrMode == 2){
+    if(G_pwrMode == PWR_MODE_BT_WAIT_CONNECT){
       G_ledsStste[0] = 4;
       G_ledsStste[1] = 0;
     }
-    if(G_pwrMode == 3){
+    if(G_pwrMode == PWR_MODE_BT_CONNECT){
       
       G_ledsStste[0] = 5;
       G_ledsStste[1] = 0;
     }
-    if(G_pwrMode == 4){
+    if(G_pwrMode == PWR_MODE_PWR_OFF){
       
       G_ledsStste[0] = 6;
       G_ledsStste[1] = 0;
     }    
-    if((G_pwrMode == 5)||(G_pwrMode == 6)){
+    if((G_pwrMode == PWR_MODE_APPLY_CHANGE)||(G_pwrMode == PWR_MODE_RESTART)){
       if( G_ledsStste[0]!=7){
         G_ledsStste[0] = 7;
         G_ledsStste[1] = 0;        
       }
       if(G_ledsStste[1] == 8){
-        if(G_pwrMode == 6){
+        if(G_pwrMode == PWR_MODE_RESTART){
+          Serial.println("Restart device");
           vTaskDelay(100);
           esp_restart();
         }else{
-          if(G_btConnect)G_pwrMode = 3;
-          else           G_pwrMode = 1;          
+          Serial.println("Save state ");
+          if(G_btConnect)G_pwrMode = PWR_MODE_BT_CONNECT;
+          else           G_pwrMode = PWR_MODE_MAIN;          
         }
         G_ledsStste[1] = 0; 
       }

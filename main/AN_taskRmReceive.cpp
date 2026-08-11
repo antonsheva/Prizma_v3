@@ -123,8 +123,8 @@ void AN_taskRmReceive::run(void *param){
       readData();
       if(rmAut.swtchActDev)rmSel = (rmSel == 0) ? 1 : 0;
     }
-    // if(rmAut.cmd = CMD_RESTART_ESP)esp_restart();
     sft.printJmmrData(&G_lJmrStt);
+    // if(rmAut.cmd = CMD_RESTART_ESP)esp_restart();
   }
 }
 

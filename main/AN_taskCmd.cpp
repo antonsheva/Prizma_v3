@@ -149,19 +149,15 @@ void AN_taskCmd::setJmmrData(_MSG_PACK *msg){
  	rmAut.cmd = CMD_RESTART_ESP;
 
   msg->cmd = CMD_SET_PWR;
-	Serial.println("need_bt_off - > "+String(msg->needBtOff));
-
 	sPack.cmd = EVENT_APPLY_CHANGES;
 	if(msg->needBtOff) {
 		sPack.code = CMD_RESTART_ESP;
 	}else{
 		sPack.code = 0;
 	}
-	
 	xQueueSend(QueuePrefs, msg, portMAX_DELAY);
   xQueueSend(QueueRmEvent, &rmAut, portMAX_DELAY);
 	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY); 
- 
 }
 
 void AN_taskCmd::test(){

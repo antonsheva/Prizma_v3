@@ -111,7 +111,13 @@
 #define PWR_OFF 2
 #define BT_ON  1
  
-
+#define PWR_MODE_START_ESP          0
+#define PWR_MODE_MAIN               1
+#define PWR_MODE_BT_WAIT_CONNECT    2
+#define PWR_MODE_BT_CONNECT         3
+#define PWR_MODE_PWR_OFF            4
+#define PWR_MODE_APPLY_CHANGE       5
+#define PWR_MODE_RESTART            6
 
 
 #define MSG_DIR_REQUEST  0
