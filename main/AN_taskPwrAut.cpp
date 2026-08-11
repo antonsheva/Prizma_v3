@@ -17,7 +17,7 @@ void AN_taskPwrAut::eventPwrOff(){
   for(;;){gpio_set_level(PIN_PWR_HOLD_DRV, 0);}
 }
 
-void AN_taskPwrAut::eventAplayChanges(int code){
+void AN_taskPwrAut::eventAplayChanges(){
   G_pwrMode = PWR_MODE_APPLY_CHANGE;
   _btEnSwch = 0;
   Serial.println("EVENT_APPLY_CHANGES");
@@ -37,6 +37,7 @@ void AN_taskPwrAut::eventConnect(){
 
 void AN_taskPwrAut::eventBtOn(){
   _MSG_PACK msg;
+  if(G_pwrMode != PWR_MODE_MAIN)return;
   G_pwrMode = PWR_MODE_BT_WAIT_CONNECT; 
   if(_btEnSwch)return;
   _btEnSwch = 1;
@@ -62,13 +63,15 @@ void AN_taskPwrAut::run(void *param){
       xQueueReceive(QueuePwrAut, &sPack, portMAX_DELAY); 
       Serial.println("EVENT_CODE -> "+String(sPack.cmd));   
       switch (sPack.cmd){
-        case EVENT_BTTN_PRESS         : if(!_ignr) eventBtOn();        break;          
-        case EVENT_BT_CONNECT         : if(!_ignr) eventConnect();     break;          
-        case EVENT_BT_DISCONNECT      : if(!_ignr) eventDisconnect();  break;        
-        case EVENT_TIMEOUT_BT_CONNECT : if(!_ignr) eventPwrOff();      break;        
-        case EVENT_APPLY_CHANGES      : if(!_ignr) eventAplayChanges(sPack.code); break;
-        case EVENT_RESTART_ESP        : esp_restart();                break;
-        case EVENT_RESUME_WORK        : eventResumeWork();            break;            
+        case EVENT_BTTN_PRESS         : if(!_ignr) eventBtOn();         break;          
+        case EVENT_BT_CONNECT         : if(!_ignr) eventConnect();      break;          
+        case EVENT_BT_DISCONNECT      : if(!_ignr) eventDisconnect();   break;        
+        case EVENT_TIMEOUT_BT_CONNECT : if(!_ignr) eventPwrOff();       break;        
+        case EVENT_APPLY_CHANGES      : if(!_ignr) eventAplayChanges(); break;
+        case EVENT_RESTART_ESP        : esp_restart();                  break;
+        case EVENT_RESUME_WORK        : eventResumeWork();              break;        
+        case EVENT_BTTN_LONG_PRESS    : eventPwrOff();                  break;        
+            
       }
   }
 }

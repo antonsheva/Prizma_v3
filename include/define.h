@@ -140,8 +140,6 @@
 
 #define MAX_DEVICE_QTY      10
 
-
-
 #define SERIAL_SRC_RM        0
 #define SERIAL_SRC_USB       1
 #define SERIAL_SRC_485       2
@@ -185,6 +183,7 @@
 #define UART_RM_TX2    GPIO_NUM_33
 #define UART_RM_RX2    GPIO_NUM_35
 
-
+#define PRESS_BTTN_OFF_ESP_TIME 400
+#define PRESS_BTTN_TIME         50
 
 #endif
