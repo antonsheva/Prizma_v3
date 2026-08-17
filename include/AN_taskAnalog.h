@@ -7,10 +7,12 @@
 
 class AN_taskAnalog{
 private:
-  /* data */
+  static void getAverageValues(int a24, int aTemper);
 public:
   AN_taskAnalog(/* args */);
   ~AN_taskAnalog();
+
+  
 
   static void run(void *param);
 };
