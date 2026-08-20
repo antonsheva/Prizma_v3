@@ -28,7 +28,7 @@ int AN_taskCmd::processingResponseData(_MSG_PACK *msg){
 
 void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	switch (msg->cmd){
-		case CMD_RM_AT			 			: sendCmdToRm(CMD_RM_AT,         msg->mask1);	break;
+		case CMD_RM_AT			 		: sendCmdToRm(CMD_RM_AT,         msg->mask1);	break;
 		case CMD_RM_GET_ATBT 			: sendCmdToRm(CMD_RM_GET_ATBT,	 	msg->mask1);	break;
 		case CMD_RM_GET_ATC	 			: sendCmdToRm(CMD_RM_GET_ATC,		msg->mask1);	break;
 		case CMD_RM_GET_ATI	 			: sendCmdToRm(CMD_RM_GET_ATI,		msg->mask1);	break;
@@ -102,6 +102,8 @@ void AN_taskCmd::printJmmrData(_MSG_PACK *msg){
 
 int AN_taskCmd::getJmmrData(_MSG_PACK *msg){
 	AN_shiftDataArr sft;
+	JMMR_1_OFF
+	JMMR_2_OFF
 	msg->addressee  = msg->sender;
 	msg->direction  = MSG_DIR_RESPONSE;		
 	if(msg->response == RESP_GET_JMMR_DATA){
