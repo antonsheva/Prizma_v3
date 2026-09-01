@@ -52,10 +52,12 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		 * @brief  RS485-related commands
 		 * 
 		 */
-		case CMD_GET_JMMR_LIST 	: getJammList();  			break;
+		case CMD_GET_JMMR_LIST 	: getJammList();  				break;
 		case CMD_SET_JMMR_LIST 	: setJmmrList(msg);				break;
-		case CMD_GET_JMMR_DATA 	: getJmmrData(msg);  	  break; 
-		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     break;
+		case CMD_GET_JMMR_DATA 	: getJmmrData(msg);  	  		break; 
+		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     		break;
+		case CMD_DISABLE_OUT    : disableOut();					break;
+		case CMD_DISABLE_RF_OUT : disableRfOut();				break;
  
   	/**
 		 * @brief BT functions
@@ -78,6 +80,16 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	G_serialBusy = 0;
 }
 
+void AN_taskCmd::disableRfOut(){
+	JMMR_1_OFF
+  	JMMR_2_OFF
+}
+void AN_taskCmd::disableOut(){
+	_MSG_PACK msg;
+	msg.subscribersQty = 5;
+	msg.cmdType = CMD_DISABLE_OUT;
+	xQueueSend(QueueRs485Pool, &msg, portMAX_DELAY);
+}
  
 void AN_taskCmd::printJmmrList(){
 	AN_shiftDataArr sft;

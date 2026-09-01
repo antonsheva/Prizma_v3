@@ -63,6 +63,9 @@
 #define CMD_BT_RECEIVE      41  
 #define CMD_PRINT_JMMR_DATA 42  
 #define CMD_PRINT_JMMR_LIST 43 
+#define CMD_DISABLE_RF_OUT  44 
+#define CMD_DISABLE_OUT     45 
+
 
 
 
@@ -138,7 +141,9 @@
 #define SRC_COM 0
 #define SRC_BT  1
 
-#define MAX_DEVICE_QTY      10
+#define MAX_DEVICE_QTY      16
+
+#define BROADCAST_ADDR      128
 
 #define SERIAL_SRC_RM        0
 #define SERIAL_SRC_USB       1
@@ -157,8 +162,8 @@
 #define A24_CRITICAL_VAL      2200
 #define A24_NORMAL_VAL        2800
 
-#define A_TEMPERATURE_ON_FAN  2580
-#define A_TEMPERATURE_OFF_FAN 2620
+#define A_TEMPERATURE_ON_FAN  2510
+#define A_TEMPERATURE_OFF_FAN 2520
 
 #define DEV_TYPE_A   1
 #define DEV_TYPE_B   2

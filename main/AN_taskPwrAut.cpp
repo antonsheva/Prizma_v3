@@ -45,9 +45,9 @@ void AN_taskPwrAut::eventBtOn(){
   JMMR_1_OFF
   JMMR_2_OFF
 
-  msg.cmd = CMD_GET_JMMR_LIST;
+  msg.cmd = CMD_DISABLE_OUT;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY); 
-  vTaskDelay(3000/portTICK_PERIOD_MS);
+  vTaskDelay(300/portTICK_PERIOD_MS);
 
   msg.cmd = CMD_BT_START;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY); 

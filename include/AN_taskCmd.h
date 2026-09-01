@@ -23,8 +23,9 @@ private:
   static  void init();
   static  void processingCmd(_MSG_PACK *msg);
   
- 
-  
+  static  void disableRfOut();
+  static  void disableOut();
+
   static void printJmmrList();
   static void printJmmrData(_MSG_PACK *msg);
   static void rmGetState();

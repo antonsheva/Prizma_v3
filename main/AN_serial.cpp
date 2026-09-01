@@ -107,7 +107,7 @@ void AN_serial::processingReceivedData(){
     if(dataSrc == SERIAL_SRC_485)Serial.println(" -- RS485 DATA --") ;
     Serial.println(dataStr.c_str()) ;
 
-    if(msg.addressee == G_lJmrStt.esp32Addr){ 
+    if((msg.addressee == G_lJmrStt.esp32Addr)||(msg.addressee == BROADCAST_ADDR)){ 
         xQueueSend(QueueCmd, &msg, 100);
         G_serialBusy = 0; 
     }

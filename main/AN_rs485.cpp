@@ -8,6 +8,12 @@ void AN_commRs485Bt::prepMsg(_MSG_PACK *msg, BYTE iterNum)
 {
   AN_shiftDataArr sft;
   switch(msg->cmdType){
+    case CMD_DISABLE_OUT  : msg->addressee  = BROADCAST_ADDR;
+                            msg->cmd        = CMD_DISABLE_RF_OUT;
+                            msg->direction  = MSG_DIR_REQUEST;
+                            msg->response   = 0;
+                            break;
+                            
     case CMD_GET_JMMR_LIST: msg->addressee = iterNum+1; 
                             msg->cmd       = CMD_GET_JMMR_DATA;
                             msg->direction = MSG_DIR_REQUEST;

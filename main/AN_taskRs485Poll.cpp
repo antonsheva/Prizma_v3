@@ -6,6 +6,7 @@ void AN_taskRs485Poll::run(void *param){
   AN_shiftDataArr sft;
   int cmdType;
   int needBtOff = 0;
+  int period;
   for(;;){
     xQueueReceive(QueueRs485Pool, &msg, portMAX_DELAY);
     cmdType   = msg.cmdType;
@@ -15,7 +16,8 @@ void AN_taskRs485Poll::run(void *param){
       if(msg.addrEsp32 != G_lJmrStt.esp32Addr){   
         xQueueSend(QueueRs485Send, &msg, portMAX_DELAY);	
       } 
-      vTaskDelay(200/portTICK_PERIOD_MS);
+      period = (msg.addressee == BROADCAST_ADDR) ? 50 : 200;
+      vTaskDelay(period/portTICK_PERIOD_MS);
     }
     msg.cmdType = cmdType;
     rs485.sendMsgToBt(&msg);       

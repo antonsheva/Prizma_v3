@@ -5,7 +5,7 @@
 #include "AN_serialConv.h"
 #include "AN_serial.h"
 
-#define BROADCAST_ADDR 0xFF
+
 #define DEV_STATUS_MASTER 1
 #define DEV_STATUS_SLAVE  0
 

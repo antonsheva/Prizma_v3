@@ -61,7 +61,7 @@ void AN_taskAnalog::run(void *param){
     mAverVoltage = 0;
     mAverTemper  = 0;  
     mCnt = 0;
-    // AN_print("ch_1 VAL -> "+std::to_string(G_lJmrStt.devBattStt)+" ;   ch_2 VAL -> "+std::to_string(G_lJmrStt.devTemper));
+    AN_print("ch_1 VAL -> "+std::to_string(G_lJmrStt.devBattStt)+" ;   ch_2 VAL -> "+std::to_string(G_lJmrStt.devTemper));
  
   }
 
