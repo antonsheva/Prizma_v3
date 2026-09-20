@@ -51,6 +51,7 @@ void AN_commRs485Bt::sendBtJammList(){
       ESP_LOGE("UART", "serializeJmmrList: malloc failed");
       return;
   }
+  memset(sPack.data, 0, MAX_SERIAL_DATA_LEN);
   sPack.len = serialConv.serializeJmmrList(G_jmmrsList, sPack.data);
   Serial.println(" ----QueueBtSend ----");
   Serial.println(sPack.data);

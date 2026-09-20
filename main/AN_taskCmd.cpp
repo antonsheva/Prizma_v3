@@ -54,12 +54,13 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		 * @brief  RS485-related commands
 		 * 
 		 */
-		case CMD_GET_JMMR_LIST 	: getJammList();  				break;
-		case CMD_SET_JMMR_LIST 	: setJmmrList(msg);				break;
-		case CMD_GET_JMMR_DATA 	: getJmmrData(msg);  	  		break; 
-		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     		break;
+		case CMD_GET_JMMR_LIST 	: getJammList();  			break;
+		case CMD_SET_JMMR_LIST 	: setJmmrList(msg);			break;
+		case CMD_GET_JMMR_DATA 	: getJmmrData(msg);  	  break; 
+		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     break;
 		case CMD_DISABLE_OUT    : disableOut();					break;
 		case CMD_DISABLE_RF_OUT : disableRfOut();				break;
+		case CMD_GET_LOACL_JMMR : getLocalJmmr();				break;
   	/**
 		 * @brief BT functions
 		 * 
@@ -81,6 +82,10 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	G_serialBusy = 0;
 }
 
+void AN_taskCmd::getLocalJmmr(){
+	AN_commRs485Bt rs;
+	rs.sendBtJmmrData(&G_lJmrStt);
+}
 
 void AN_taskCmd::initDev(_MSG_PACK *msg){
 AN_shiftDataArr shft;
