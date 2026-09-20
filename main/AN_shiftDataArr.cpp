@@ -16,6 +16,8 @@ void AN_shiftDataArr::loadMsgToJmrStt(_MSG_PACK *msg, _JMMR_STATE *jmmr, bool rm
 		jmmr->groupId						= msg->groupId; 
 		jmmr->devType						= msg->devType; 		
 		jmmr->devRange					= msg->devRange; 
+		jmmr->rebMod[0].rngMask	= msg->rngMask1;
+		jmmr->rebMod[1].rngMask	= msg->rngMask2;
 		jmmr->esp32Addr 				= msg->addrEsp32; 
 		jmmr->infoLen						= msg->txtLen;		
 		jmmr->devBattStt   	    = msg->devBattStt ;	
@@ -46,6 +48,9 @@ void AN_shiftDataArr::loadJmmrStateToMsg(_MSG_PACK *msg, _JMMR_STATE *jmmr){
 	msg->devRange   = jmmr->devRange;  	
 	msg->addrEsp32  = jmmr->esp32Addr;  		
 
+	msg->rngMask1		= jmmr->rebMod[0].rngMask;
+	msg->rngMask2		= jmmr->rebMod[1].rngMask;
+
 	msg->devBattStt = jmmr->devBattStt;	
 	msg->devTemper  = jmmr->devTemper ;
 
@@ -67,6 +72,8 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2, bool rmDa
 		jmmr1->groupId 								= jmmr2->groupId							;
 		jmmr1->devType 								= jmmr2->devType							;
 		jmmr1->devRange								= jmmr2->devRange							;		
+		jmmr1->rebMod[0].rngMask			= jmmr2->rebMod[0].rngMask		;
+		jmmr1->rebMod[1].rngMask			= jmmr2->rebMod[1].rngMask		;		
 		jmmr1->esp32Addr 							= jmmr2->esp32Addr						;		
 		jmmr1->devBattStt   	        = jmmr2->devBattStt           ;	
 		jmmr1->devTemper   		        = jmmr2->devTemper            ;
@@ -84,7 +91,8 @@ void AN_shiftDataArr::copyJmmr(_JMMR_STATE *jmmr1, _JMMR_STATE *jmmr2, bool rmDa
 		jmmr1->rebMod[i].pwr         	= jmmr2->rebMod[i].pwr        ;     				
 		jmmr1->rebMod[i].vcpu        	= jmmr2->rebMod[i].vcpu       ;      					
 		jmmr1->rebMod[i].temp        	= jmmr2->rebMod[i].temp       ;  
-		jmmr1->rebMod[i].infoLen 			= jmmr2->rebMod[i].infoLen		; 
+		jmmr1->rebMod[i].infoLen 			= jmmr2->rebMod[i].infoLen		;
+ 
 
 		if(jmmr1->rebMod[i].infoLen){
 			memset(jmmr1->rebMod[i].info, 0, TXT_INFO_LEN);	
@@ -99,6 +107,8 @@ void AN_shiftDataArr::printJmmrData(_JMMR_STATE *jmmr){
 		Serial.println("groupId ->  "+String(jmmr->groupId));
 		Serial.println("devType ->  "+String(jmmr->devType));
 		Serial.println("devRange->  "+String(jmmr->devRange));		
+		Serial.println("rng_mask1 -> "+String(jmmr->rebMod[0].rngMask)   );
+		Serial.println("rng_mask2 -> "+String(jmmr->rebMod[1].rngMask)   );
 		Serial.println("ESP addr->  "+String(jmmr->esp32Addr));
 		Serial.println("addrRm1 ->  "+String(jmmr->rebMod[0].address));
 		Serial.println("addrRm2 ->  "+String(jmmr->rebMod[1].address));
@@ -125,6 +135,9 @@ void AN_shiftDataArr::printMsg(_MSG_PACK *msg){
 	Serial.println("group_id  -> "+String(msg->groupId)   );
 	Serial.println("dev_type  -> "+String(msg->devType)   );
 	Serial.println("dev_range -> "+String(msg->devRange)   );
+	Serial.println("rng_mask1 -> "+String(msg->rngMask1)   );
+	Serial.println("rng_mask2 -> "+String(msg->rngMask2)   );
+	
 	Serial.println("ad_esp    -> "+String(msg->addrEsp32)   );
 	Serial.println("battStt 	->  "+String(msg->devBattStt));	
 	Serial.println("temper  	->  "+String(msg->devTemper));	

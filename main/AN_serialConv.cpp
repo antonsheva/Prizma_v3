@@ -64,7 +64,7 @@ int  AN_serialConv::findParam(char *data, char *param, DWORD *paramVal){
       substr = std::string(data).substr(pos, pos1-pos);
       getParam(&substr, strParam, strVal);
       *paramVal = atoi(strVal);
-      // AN_print("param -> "+std::string(param)+" : val -> "+std::string(strVal) );
+      AN_print("param -> "+std::string(param)+" : val -> "+std::string(strVal) );
       result = 1;
     }
   }
@@ -332,8 +332,8 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
     str.append("\"dev_type\":"  +std::to_string(msg->devType)+",");
     str.append("\"dev_range\":" +std::to_string(msg->devRange)+",");
 
-    str.append("\"rng_msk1\":"  +std::to_string(msg->rngMask1)+",");
-    str.append("\"rng_msk2\":"  +std::to_string(msg->rngMask2)+",");
+    str.append("\"rng_msk_1\":"  +std::to_string(msg->rngMask1)+",");
+    str.append("\"rng_msk_2\":"  +std::to_string(msg->rngMask2)+",");
 
     str.append("\"batt_stt\":"  +std::to_string(msg->devBattStt)+",");
     str.append("\"temper\":"    +std::to_string(msg->devTemper)+",");
@@ -380,11 +380,11 @@ int AN_serialConv::serializeMsgData(_MSG_PACK *msg, char *data){
 
   str.append("\"rng_start1\":"  +std::to_string(msg->rngStart1)+",");
   str.append("\"rng_stop1\":"   +std::to_string(msg->rngStop1)+",");
-  str.append("\"rng_msk1\":"    +std::to_string(msg->rngMask1)+",");
+  str.append("\"rng_msk_1\":"    +std::to_string(msg->rngMask1)+",");
   
   str.append("\"rng_start2\":"  +std::to_string(msg->rngStart2)+",");
   str.append("\"rng_stop2\":"   +std::to_string(msg->rngStop2)+",");  
-  str.append("\"rng_msk2\":"    +std::to_string(msg->rngMask2)+",");
+  str.append("\"rng_msk_2\":"    +std::to_string(msg->rngMask2)+",");
 
   str.append("\"ad_esp\":"      +std::to_string(msg->addrEsp32)+",");
   str.append("\"ad_rm1\":"      +std::to_string(msg->addrRm1)+",");
@@ -411,8 +411,8 @@ int AN_serialConv::serializeJmmrData(_JMMR_STATE *jmmr, char *data){
   str.append("\"dev_type\":" +std::to_string(jmmr->devType)+",");
   str.append("\"dev_range\":"+std::to_string(jmmr->devRange)+",");
 
-  str.append("\"rng_msk1\":"  +std::to_string(jmmr->rebMod[0].rngMask)+",");
-  str.append("\"rng_msk2\":"  +std::to_string(jmmr->rebMod[1].rngMask)+",");
+  str.append("\"rng_msk_1\":"  +std::to_string(jmmr->rebMod[0].rngMask)+",");
+  str.append("\"rng_msk_2\":"  +std::to_string(jmmr->rebMod[1].rngMask)+",");
   
   str.append("\"ad_esp\":"   +std::to_string(jmmr->esp32Addr)+",");
   str.append("\"ad_rm1\":"   +std::to_string(jmmr->rebMod[0].address)+",");

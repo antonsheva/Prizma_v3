@@ -107,10 +107,10 @@
 #define PARAM_ADDRESSEE         "addressee" 
 #define PARAM_RANGE_START_1     "rng_start1"
 #define PARAM_RANGE_STOP_1      "rng_stop1"
-#define PARAM_RANGE_MASK_1      "rng_msk1"
+#define PARAM_RANGE_MASK_1      "rng_msk_1"
 #define PARAM_RANGE_START_2     "rng_start2"
 #define PARAM_RANGE_STOP_2      "rng_stop2"
-#define PARAM_RANGE_MASK_2      "rng_msk2"
+#define PARAM_RANGE_MASK_2      "rng_msk_2"
 
 
 #define RESP_OK             1

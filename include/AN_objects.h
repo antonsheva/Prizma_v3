@@ -23,7 +23,7 @@ typedef struct{
     BYTE   pwr;
     BYTE   rngStart;
     BYTE   rngStop;
-    BYTE   rngMask;    
+    DWORD  rngMask;    
     float  vcpu;
     float  temp;
     char   info[TXT_INFO_LEN] = {0};

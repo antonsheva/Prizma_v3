@@ -83,11 +83,15 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 
 
 void AN_taskCmd::initDev(_MSG_PACK *msg){
+AN_shiftDataArr shft;
+shft.printMsg(msg);
 	msg->cmd = CMD_SET_DEV_ID     ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);       
 	msg->cmd = CMD_SET_GROUP_ID   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
 	msg->cmd = CMD_SET_DEV_TYPE   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
-	msg->cmd = CMD_SET_DEV_RANGE  ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);          
-	msg->cmd = CMD_SET_RANGE_MASK ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);              
+	msg->cmd = CMD_SET_DEV_RANGE  ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
+	msg->cmd = CMD_SET_RANGE_MASK ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
+	msg->cmd = CMD_SET_ADDR_ESP   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
+	         
 }
 
 void AN_taskCmd::disableRfOut(){
@@ -119,8 +123,6 @@ void AN_taskCmd::printJmmrData(_MSG_PACK *msg){
 	comm.prepMsg(msg,0);
   xQueueSend(QueueRs485Send, msg, portMAX_DELAY);	
 } 
-
- 
 
 int AN_taskCmd::getJmmrData(_MSG_PACK *msg){
 	AN_shiftDataArr sft;

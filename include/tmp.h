@@ -21,7 +21,7 @@ CMD_GET_DEV_PARAM
 {"cmd": 34}    
 
 CMD_INIT_DEV
-{"cmd":46, "dev_id":4972256563105366018, "group_id":2, "dev_type":1, "dev_range":3, "ad_esp": 11, "rng_msk1":111, "rng_msk2":222}    
+{"cmd":46, "dev_id":4972256563105366018, "group_id":2, "dev_type":1, "dev_range":3, "ad_esp": 11, "rng_msk_1":111, "rng_msk_2":222}    
 
 
 

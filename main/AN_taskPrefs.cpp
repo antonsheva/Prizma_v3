@@ -248,6 +248,7 @@ void AN_taskPrefs::printAddresses(){
 void AN_taskPrefs::getDevParam(){
 	Serial.println("   Параметры устройства   ");
 	Serial.println("devId   	->  "+String(G_lJmrStt.devId, HEX));
+	Serial.println("addrEsp 	->  "+String(G_lJmrStt.esp32Addr));
 	Serial.println("groupId 	->  "+String(G_lJmrStt.groupId));
 	Serial.println("devType 	->  "+String(G_lJmrStt.devType));
 	Serial.println("devRange	->  "+String(G_lJmrStt.devRange));
