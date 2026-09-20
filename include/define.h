@@ -67,7 +67,7 @@
 #define CMD_DISABLE_OUT     45 
 #define CMD_INIT_DEV        46
 #define CMD_SET_RANGE_MASK  47
-#define CMD_GET_LOACL_JMMR  48
+#define CMD_GET_LOCAL_JMMR  48
 
 
 

@@ -60,7 +60,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     break;
 		case CMD_DISABLE_OUT    : disableOut();					break;
 		case CMD_DISABLE_RF_OUT : disableRfOut();				break;
-		case CMD_GET_LOACL_JMMR : getLocalJmmr();				break;
+		case CMD_GET_LOCAL_JMMR : getLocalJmmr();				break;
   	/**
 		 * @brief BT functions
 		 * 
