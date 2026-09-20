@@ -1,0 +1,27 @@
+CMD_GET_JMMR_LIST
+{"cmd": 19}
+
+
+CMD_SET_ADDR_ESP
+{"cmd": 26, "ad_esp": 122} 
+
+CMD_SET_DEV_ID
+{"cmd": 30, "dev_id": 4972256563105366026}  4972256563105366018
+
+CMD_SET_GROUP_ID
+{"cmd": 32, "group_id": 2} 
+
+CMD_SET_DEV_TYPE
+{"cmd": 31, "dev_type": 1} 
+
+CMD_SET_DEV_RANGE
+{"cmd": 33, "dev_range": 3} 
+
+CMD_GET_DEV_PARAM
+{"cmd": 34}    
+
+CMD_INIT_DEV
+{"cmd":46, "dev_id":4972256563105366018, "group_id":2, "dev_type":1, "dev_range":3, "ad_esp": 11, "rng_msk1":111, "rng_msk2":222}    
+
+
+

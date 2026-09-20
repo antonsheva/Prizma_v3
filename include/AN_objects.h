@@ -21,6 +21,9 @@ typedef struct{
     BYTE   address;
     BYTE   echo;
     BYTE   pwr;
+    BYTE   rngStart;
+    BYTE   rngStop;
+    BYTE   rngMask;    
     float  vcpu;
     float  temp;
     char   info[TXT_INFO_LEN] = {0};
@@ -80,14 +83,23 @@ typedef struct{
     int    addrRm1     = 0;
     int    addrRm2     = 0;
     int    pwr1        = 0;
-    int    pwr2        = 0;  
+    int    pwr2        = 0; 
     
-    DDWORD devId       = 0;
-    int    groupId     = 0;    
-    int    devType     = 0;
-    int    devRange    = 0;  
-    WORD   devTemper   = 0;
-    WORD   devBattStt  = 0;
+    DDWORD devId            = 0;
+    int    groupId          = 0;    
+    int    devType          = 0;
+    int    devRange         = 0; 
+     
+    int    rngStart1  = 0;
+    int    rngStop1   = 0;
+    int    rngMask1   = 0;  
+    int    rngStart2  = 0;
+    int    rngStop2   = 0;
+    int    rngMask2   = 0;    
+
+    WORD   devTemper  = 0;
+    WORD   devBattStt = 0;
+
     
     int    jmmrListLen    = 0;
     int    subscribersQty = 0;

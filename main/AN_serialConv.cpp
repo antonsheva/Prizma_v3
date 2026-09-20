@@ -71,37 +71,99 @@ int  AN_serialConv::findParam(char *data, char *param, DWORD *paramVal){
   return result;
 }
 
-int AN_serialConv::unpackData(char *data, _MSG_PACK *msg){
+int  AN_serialConv::findParam(char *data, char *param, DDWORD *paramVal){
   std::string substr;
-  AN_shiftDataArr sft;
+  int pos = std::string(data).find(std::string(param));
+  int pos1;
+  char strParam[MAX_STR_LEN];
+  char strVal  [MAX_STR_LEN];
+  int result = 0;
+  if(pos != -1){
+    pos1 = std::string(data).find(",", pos);
+    if(pos1 == -1)pos1 = std::string(data).find("}", pos);
+    if(pos != -1){
+      substr = std::string(data).substr(pos, pos1-pos);
+      getParam(&substr, strParam, strVal);
+      *paramVal = atoll(strVal);
+      // AN_print("param -> "+std::string(param)+" : val -> "+std::string(strVal) );
+      result = 1;
+    }
+  }
+  return result;
+}
 
-  char paramCmd[]           = PARAM_CMD;
-  char paramSender[]        = PARAM_SENDER;
-  char paramAddressee[]     = PARAM_ADDRESSEE; 
-  char paramJmmrListLen[]   = PARAM_JMMR_LIST_LEN;
-  char paramNeedBtOff[]     = PARAM_NEED_BT_OFF;  
-  char paramNeedEspRestart[] = PARAM_NEED_ESP_RESTART;     
-  DWORD cmd                 = 0;
+void AN_serialConv::assemblyMsg_setJmmrList(char *data, _MSG_PACK *msg){
+  char paramSender[]          = PARAM_SENDER;
+  char paramAddressee[]       = PARAM_ADDRESSEE; 
+  char paramJmmrListLen[]     = PARAM_JMMR_LIST_LEN;
+  char paramNeedBtOff[]       = PARAM_NEED_BT_OFF;  
+  char paramNeedEspRestart[]  = PARAM_NEED_ESP_RESTART; 
+
   DWORD sender              = 0;
   DWORD addressee           = 0; 
   DWORD listLen             = 0; 
   DWORD need_bt_off         = 0; 
-  DWORD need_esp_restart    = 0;   
-     
-  findParam(data,  paramCmd , &cmd);
-  if(cmd == CMD_SET_JMMR_LIST){
-    findParam(data, paramSender, &sender);
-    findParam(data, paramAddressee, &addressee);
-    findParam(data, paramJmmrListLen, &listLen);
-    findParam(data, paramNeedBtOff, &need_bt_off);  
-    findParam(data, paramNeedEspRestart, &need_esp_restart);       
+  DWORD need_esp_restart    = 0;    
+  
     
-    getJmmrList(data);
-    msg->sender       = sender;
-    msg->cmd          = cmd;
-    msg->addressee    = addressee;
-    msg->jmmrListLen  = listLen;
-    msg->needBtOff    = need_bt_off;
+  findParam(data, paramAddressee, &addressee);
+  findParam(data, paramJmmrListLen, &listLen);
+  findParam(data, paramNeedBtOff, &need_bt_off);  
+  // findParam(data, paramNeedEspRestart, &need_esp_restart);       
+  
+  getJmmrList(data);
+  msg->sender       = sender;
+  msg->addressee    = addressee;
+  msg->jmmrListLen  = listLen;
+  msg->needBtOff    = need_bt_off;
+}
+
+void AN_serialConv::assemblyMsg_initDev(char *data, _MSG_PACK *msg){
+  char paramId[]      = PARAM_DEV_ID;
+  char paramGroupId[] = PARAM_GROUP_ID;
+  char paramType[]    = PARAM_DEV_TYPE; 
+  char paramRange[]   = PARAM_DEV_RANGE;
+  char paramAddress[] = PARAM_ADDR_ESP;  
+  char paramRngMask1[]= PARAM_RANGE_MASK_1;  
+  char paramRngMask2[]= PARAM_RANGE_MASK_2;  
+ 
+  DDWORD  id      ;      
+  DWORD   groupId ;  
+  DWORD   type    ;    
+  DWORD   range   ;   
+  DWORD   address ; 
+  DWORD   rngMask1;
+  DWORD   rngMask2;
+
+  findParam(data, paramId       , &id      );
+  findParam(data, paramGroupId  , &groupId );  
+  findParam(data, paramType     , &type    );
+  findParam(data, paramRange    , &range   );
+  findParam(data, paramAddress  , &address );
+  findParam(data, paramRngMask1 , &rngMask1);
+  findParam(data, paramRngMask2 , &rngMask2);
+  
+  msg->devId      = id;
+  msg->groupId    = groupId;
+  msg->devType    = type;
+  msg->devRange   = range;
+  msg->addrEsp32  = address;
+  msg->rngMask1   = rngMask1;
+  msg->rngMask2   = rngMask2;
+
+}
+
+int AN_serialConv::unpackData(char *data, _MSG_PACK *msg){
+  std::string substr;
+  AN_shiftDataArr sft;
+
+  char paramCmd[]           = PARAM_CMD;    
+  DWORD cmd                 = 0;
+
+  findParam(data,  paramCmd , &cmd);
+  msg->cmd = cmd;
+  if(cmd == CMD_SET_JMMR_LIST){
+    assemblyMsg_setJmmrList(data, msg);
   }else{
     deserializeDataPack(NULL, msg, data);
   }
@@ -120,7 +182,16 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   if(par.find(PARAM_DEV_ID    )   != -1)msg->devId      = atoll(val);                  
   if(par.find(PARAM_GROUP_ID  )   != -1)msg->groupId    = atoi(val);                               
   if(par.find(PARAM_DEV_TYPE  )   != -1)msg->devType    = atoi(val);              
-  if(par.find(PARAM_DEV_RANGE )   != -1)msg->devRange   = atoi(val);                
+  if(par.find(PARAM_DEV_RANGE )   != -1)msg->devRange   = atoi(val); 
+  
+  if(par.find(PARAM_RANGE_START_1)!= -1)msg->rngStart1   = atoi(val); 
+  if(par.find(PARAM_RANGE_STOP_1 )!= -1)msg->rngStop1    = atoi(val); 
+  if(par.find(PARAM_RANGE_MASK_1 )!= -1)msg->rngMask1    = atoi(val); 
+  if(par.find(PARAM_RANGE_START_2)!= -1)msg->rngStart2   = atoi(val); 
+  if(par.find(PARAM_RANGE_STOP_2 )!= -1)msg->rngStop2    = atoi(val); 
+  if(par.find(PARAM_RANGE_MASK_2 )!= -1)msg->rngMask2    = atoi(val); 
+
+
   if(par.find(PARAM_ADDR_ESP  )   != -1)msg->addrEsp32  = atoi(val);        
   if(par.find(PARAM_ADDR_RM_1 )   != -1)msg->addrRm1    = atoi(val);        
   if(par.find(PARAM_ADDR_RM_2 )   != -1)msg->addrRm2    = atoi(val);        
@@ -135,9 +206,6 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   if(par.find(PARAM_TEMPERATURE)  != -1)msg->devTemper  = atoi(val);
   if(par.find(PARAM_NEED_BT_OFF)  != -1)msg->needBtOff  = atoi(val); 
   if(par.find(PARAM_NEED_ESP_RESTART)  != -1)msg->needBtRestart  = atoi(val);  
-
-  
-  
   if(par.find(PARAM_JMMR_LIST_LEN) != -1)msg->jmmrListLen = atoi(val);   
 
   if(par.find(PARAM_TXT_LEN   ) != -1)msg->txtLen    = atoi(val); 
@@ -153,7 +221,15 @@ int AN_serialConv::saveJmmrParam(char *param, char *val, _JMMR_STATE *jmmr){
   if(par.find(PARAM_GROUP_ID  )   != -1)jmmr->groupId             = atoi(val);                               
   if(par.find(PARAM_DEV_TYPE  )   != -1)jmmr->devType             = atoi(val);              
   if(par.find(PARAM_DEV_RANGE )   != -1)jmmr->devRange            = atoi(val);                
-  if(par.find(PARAM_ADDR_ESP  )   != -1)jmmr->esp32Addr           = atoi(val);        
+  if(par.find(PARAM_ADDR_ESP  )   != -1)jmmr->esp32Addr           = atoi(val); 
+  
+  if(par.find(PARAM_RANGE_START_1)!= -1)jmmr->rebMod[0].rngStart   = atoi(val); 
+  if(par.find(PARAM_RANGE_STOP_1 )!= -1)jmmr->rebMod[0].rngStop    = atoi(val); 
+  if(par.find(PARAM_RANGE_MASK_1 )!= -1)jmmr->rebMod[0].rngMask    = atoi(val); 
+  if(par.find(PARAM_RANGE_START_2)!= -1)jmmr->rebMod[1].rngStart   = atoi(val); 
+  if(par.find(PARAM_RANGE_STOP_2 )!= -1)jmmr->rebMod[1].rngStop    = atoi(val); 
+  if(par.find(PARAM_RANGE_MASK_2 )!= -1)jmmr->rebMod[1].rngMask    = atoi(val); 
+  
   if(par.find(PARAM_ADDR_RM_1 )   != -1)jmmr->rebMod[0].address   = atoi(val);        
   if(par.find(PARAM_ADDR_RM_2 )   != -1)jmmr->rebMod[1].address   = atoi(val);        
   if(par.find(PARAM_MOD_CODE_1)   != -1)jmmr->rebMod[0].mc        = atoi(val);     
@@ -236,8 +312,6 @@ int AN_serialConv::deserializeDataPack(_JMMR_STATE *jmmr, _MSG_PACK *msg, char *
       }
     }
   }
-   
-
   return 0;
 }
 
@@ -257,6 +331,10 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
     str.append("\"group_id\":"  +std::to_string(msg->groupId)+",");
     str.append("\"dev_type\":"  +std::to_string(msg->devType)+",");
     str.append("\"dev_range\":" +std::to_string(msg->devRange)+",");
+
+    str.append("\"rng_msk1\":"  +std::to_string(msg->rngMask1)+",");
+    str.append("\"rng_msk2\":"  +std::to_string(msg->rngMask2)+",");
+
     str.append("\"batt_stt\":"  +std::to_string(msg->devBattStt)+",");
     str.append("\"temper\":"    +std::to_string(msg->devTemper)+",");
   }
@@ -289,27 +367,37 @@ int AN_serialConv::serializeRs485Data(_MSG_PACK *msg, char *data){
 
 int AN_serialConv::serializeMsgData(_MSG_PACK *msg, char *data){
   std::string str = "{";
-  str.append("\"cmd\":"        +std::to_string(msg->cmd)+",");
-  str.append("\"sender\":"     +std::to_string(msg->sender)+",");
-  str.append("\"resp\":"       +std::to_string(msg->response)+",");
-  str.append("\"dir\":"        +std::to_string(msg->direction)+",");
-  str.append("\"need_bt_off\":"+std::to_string(msg->needBtOff)+",");  
+  str.append("\"cmd\":"         +std::to_string(msg->cmd)+",");
+  str.append("\"sender\":"      +std::to_string(msg->sender)+",");
+  str.append("\"resp\":"        +std::to_string(msg->response)+",");
+  str.append("\"dir\":"         +std::to_string(msg->direction)+",");
+  str.append("\"need_bt_off\":" +std::to_string(msg->needBtOff)+",");  
   
-  str.append("\"dev_id\":"     +std::to_string(msg->devId)+",");
-  str.append("\"group_id\":"   +std::to_string(msg->groupId)+",");
-  str.append("\"dev_type\":"   +std::to_string(msg->devType)+",");
-  str.append("\"dev_range\":"  +std::to_string(msg->devRange)+",");
-  str.append("\"ad_esp\":"     +std::to_string(msg->addrEsp32)+",");
-  str.append("\"ad_rm1\":"     +std::to_string(msg->addrRm1)+",");
-  str.append("\"ad_rm2\":"     +std::to_string(msg->addrRm2)+",");
-  str.append("\"mc1\":"        +std::to_string(msg->modCode1)+",");
-  str.append("\"mc2\":"        +std::to_string(msg->modCode2)+",");
-  str.append("\"msk1\":"       +std::to_string(msg->mask1)+",");
-  str.append("\"msk2\":"       +std::to_string(msg->mask2)+",");
-  str.append("\"pwr1\":"       +std::to_string(msg->pwr1)+",");
-  str.append("\"pwr2\":"       +std::to_string(msg->pwr2)+",");
-  str.append("\"txt_len\":"    +std::to_string(msg->txtLen)+",");
-  str.append("\"txt\": \""     +std::string(msg->txt)+"\"");
+  str.append("\"dev_id\":"      +std::to_string(msg->devId)+",");
+  str.append("\"group_id\":"    +std::to_string(msg->groupId)+",");
+  str.append("\"dev_type\":"    +std::to_string(msg->devType)+",");
+  str.append("\"dev_range\":"   +std::to_string(msg->devRange)+",");
+
+  str.append("\"rng_start1\":"  +std::to_string(msg->rngStart1)+",");
+  str.append("\"rng_stop1\":"   +std::to_string(msg->rngStop1)+",");
+  str.append("\"rng_msk1\":"    +std::to_string(msg->rngMask1)+",");
+  
+  str.append("\"rng_start2\":"  +std::to_string(msg->rngStart2)+",");
+  str.append("\"rng_stop2\":"   +std::to_string(msg->rngStop2)+",");  
+  str.append("\"rng_msk2\":"    +std::to_string(msg->rngMask2)+",");
+
+  str.append("\"ad_esp\":"      +std::to_string(msg->addrEsp32)+",");
+  str.append("\"ad_rm1\":"      +std::to_string(msg->addrRm1)+",");
+  str.append("\"ad_rm2\":"      +std::to_string(msg->addrRm2)+",");
+  str.append("\"mc1\":"         +std::to_string(msg->modCode1)+",");
+  str.append("\"mc2\":"         +std::to_string(msg->modCode2)+",");
+  str.append("\"msk1\":"        +std::to_string(msg->mask1)+",");
+  str.append("\"msk2\":"        +std::to_string(msg->mask2)+",");
+  str.append("\"pwr1\":"        +std::to_string(msg->pwr1)+",");
+  str.append("\"pwr2\":"        +std::to_string(msg->pwr2)+",");
+
+  str.append("\"txt_len\":"     +std::to_string(msg->txtLen)+",");
+  str.append("\"txt\": \""      +std::string(msg->txt)+"\"");
   str.append("}");
   memccpy(data, str.c_str(), 0, 1024);
   return str.length();
@@ -322,6 +410,10 @@ int AN_serialConv::serializeJmmrData(_JMMR_STATE *jmmr, char *data){
   str.append("\"group_id\":" +std::to_string(jmmr->groupId)+",");
   str.append("\"dev_type\":" +std::to_string(jmmr->devType)+",");
   str.append("\"dev_range\":"+std::to_string(jmmr->devRange)+",");
+
+  str.append("\"rng_msk1\":"  +std::to_string(jmmr->rebMod[0].rngMask)+",");
+  str.append("\"rng_msk2\":"  +std::to_string(jmmr->rebMod[1].rngMask)+",");
+  
   str.append("\"ad_esp\":"   +std::to_string(jmmr->esp32Addr)+",");
   str.append("\"ad_rm1\":"   +std::to_string(jmmr->rebMod[0].address)+",");
   str.append("\"ad_rm2\":"   +std::to_string(jmmr->rebMod[1].address)+",");

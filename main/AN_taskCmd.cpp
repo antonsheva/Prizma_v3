@@ -28,13 +28,14 @@ int AN_taskCmd::processingResponseData(_MSG_PACK *msg){
 
 void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	switch (msg->cmd){
-		case CMD_RM_AT			 		: sendCmdToRm(CMD_RM_AT,         msg->mask1);	break;
-		case CMD_RM_GET_ATBT 			: sendCmdToRm(CMD_RM_GET_ATBT,	 	msg->mask1);	break;
+		case CMD_RM_AT			 		: sendCmdToRm(CMD_RM_AT,         	msg->mask1);	break;
+		case CMD_RM_GET_ATBT 			: sendCmdToRm(CMD_RM_GET_ATBT,	msg->mask1);	break;
 		case CMD_RM_GET_ATC	 			: sendCmdToRm(CMD_RM_GET_ATC,		msg->mask1);	break;
 		case CMD_RM_GET_ATI	 			: sendCmdToRm(CMD_RM_GET_ATI,		msg->mask1);	break;
 		case CMD_RM_GET_STATE			: rmGetState();  															break;
-
 		case CMD_PRINT_JMMR_DATA  : printJmmrData(msg); 												break;
+		case CMD_INIT_DEV				  : initDev(msg);																break;
+
 		/**
 		 * @brief preferences commands
 		 * saving data to preference such as: addresses, ID, group...
@@ -48,6 +49,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		case CMD_SET_DEV_RANGE  : xQueueSend(QueuePrefs, msg, portMAX_DELAY); break; 
 		case CMD_GET_DEV_PARAM  : xQueueSend(QueuePrefs, msg, portMAX_DELAY); break; 
 		case CMD_PRINT_ADDRESSES: xQueueSend(QueuePrefs, msg, portMAX_DELAY); break; 
+		case CMD_SET_RANGE_MASK : xQueueSend(QueuePrefs, msg, portMAX_DELAY); break; 		
 		/**
 		 * @brief  RS485-related commands
 		 * 
@@ -58,7 +60,6 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     		break;
 		case CMD_DISABLE_OUT    : disableOut();					break;
 		case CMD_DISABLE_RF_OUT : disableRfOut();				break;
- 
   	/**
 		 * @brief BT functions
 		 * 
@@ -80,9 +81,18 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	G_serialBusy = 0;
 }
 
+
+void AN_taskCmd::initDev(_MSG_PACK *msg){
+	msg->cmd = CMD_SET_DEV_ID     ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);       
+	msg->cmd = CMD_SET_GROUP_ID   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
+	msg->cmd = CMD_SET_DEV_TYPE   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
+	msg->cmd = CMD_SET_DEV_RANGE  ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);          
+	msg->cmd = CMD_SET_RANGE_MASK ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);              
+}
+
 void AN_taskCmd::disableRfOut(){
 	JMMR_1_OFF
-  	JMMR_2_OFF
+  JMMR_2_OFF
 }
 void AN_taskCmd::disableOut(){
 	_MSG_PACK msg;

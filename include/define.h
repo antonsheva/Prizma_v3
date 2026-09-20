@@ -44,7 +44,7 @@
 #define CMD_GEN_TEST_DATA   22
 #define CMD_SET_JMMR_LIST   23
 #define CMD_TEST            24     
-#define CMD_RESUME_WORK 25
+#define CMD_RESUME_WORK     25
 #define CMD_SET_ADDR_ESP    26
 #define CMD_SET_PWR         27
 #define CMD_RESTART_ESP     28
@@ -65,6 +65,11 @@
 #define CMD_PRINT_JMMR_LIST 43 
 #define CMD_DISABLE_RF_OUT  44 
 #define CMD_DISABLE_OUT     45 
+#define CMD_INIT_DEV        46
+#define CMD_SET_RANGE_MASK  47
+
+
+
 
 
 
@@ -100,7 +105,12 @@
 #define PARAM_NEED_BT_OFF       "need_bt_off"  
 #define PARAM_NEED_ESP_RESTART  "need_bt_restart"  
 #define PARAM_ADDRESSEE         "addressee" 
-                                                         
+#define PARAM_RANGE_START_1     "rng_start1"
+#define PARAM_RANGE_STOP_1      "rng_stop1"
+#define PARAM_RANGE_MASK_1      "rng_msk1"
+#define PARAM_RANGE_START_2     "rng_start2"
+#define PARAM_RANGE_STOP_2      "rng_stop2"
+#define PARAM_RANGE_MASK_2      "rng_msk2"
 
 
 #define RESP_OK             1

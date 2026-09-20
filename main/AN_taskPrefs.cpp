@@ -17,6 +17,7 @@ void AN_taskPrefs::init(){
 
 
 	uint8_t  val8;
+	uint32_t val32;	
 	uint64_t val64;
 	err = nvs_get_u8(nvsHandle, PARAM_ADDR_ESP, &val8);
   if (err == ESP_ERR_NVS_NOT_FOUND){
@@ -26,6 +27,24 @@ void AN_taskPrefs::init(){
   }else{
 		G_lJmrStt.esp32Addr = val8;		
 	}
+
+	err = nvs_get_u32(nvsHandle, PARAM_RANGE_MASK_1, &val32);
+  if (err == ESP_ERR_NVS_NOT_FOUND){
+		G_lJmrStt.rebMod[0].rngMask = 0;
+		ESP_ERROR_CHECK(nvs_set_u32(nvsHandle, PARAM_RANGE_MASK_1, 0));
+		ESP_ERROR_CHECK(nvs_commit(nvsHandle));
+  }else{
+		G_lJmrStt.rebMod[0].rngMask = val32;		
+	}
+	
+	err = nvs_get_u32(nvsHandle, PARAM_RANGE_MASK_2, &val32);
+  if (err == ESP_ERR_NVS_NOT_FOUND){
+		G_lJmrStt.rebMod[1].rngMask = 0;
+		ESP_ERROR_CHECK(nvs_set_u32(nvsHandle, PARAM_RANGE_MASK_2, 0));
+		ESP_ERROR_CHECK(nvs_commit(nvsHandle));
+  }else{
+		G_lJmrStt.rebMod[1].rngMask = val32;		
+	}	
 
 	err = nvs_get_u8(nvsHandle, PARAM_ADDR_RM_1, &val8);
   if (err == ESP_ERR_NVS_NOT_FOUND){
@@ -154,6 +173,8 @@ void AN_taskPrefs::setDevRange(BYTE range){
 	}
 }
 
+
+
 void AN_taskPrefs::setAddrEsp(BYTE addr){
 	char param[] = PARAM_ADDR_ESP;	
 	if((addr > 0) && (addr < 127)){
@@ -180,6 +201,22 @@ void AN_taskPrefs::setAddrRm(BYTE addrRm1, BYTE addrRm2){
  
 }
 
+void AN_taskPrefs::setRangeMask(DWORD mask1, DWORD mask2){
+	nvs_handle_t nvsHandle;
+	ESP_ERROR_CHECK(nvs_open("prefData", NVS_READWRITE, &nvsHandle));
+
+	ESP_ERROR_CHECK(nvs_set_u32(nvsHandle, PARAM_RANGE_MASK_1, mask1));
+	ESP_ERROR_CHECK(nvs_commit(nvsHandle)); 
+
+	ESP_ERROR_CHECK(nvs_set_u32(nvsHandle, PARAM_RANGE_MASK_2, mask2));
+	ESP_ERROR_CHECK(nvs_commit(nvsHandle)); 
+
+ 	nvs_close(nvsHandle);
+
+	G_lJmrStt.rebMod[0].rngMask = mask1;
+	G_lJmrStt.rebMod[1].rngMask = mask2;
+}
+
 void AN_taskPrefs::setPwr(BYTE pwr1, BYTE pwr2){
 	nvs_handle_t nvsHandle;	
 	BYTE p1 = pwr1 == PWR_OFF ? PWR_OFF : PWR_ON;
@@ -199,6 +236,9 @@ void AN_taskPrefs::setPwr(BYTE pwr1, BYTE pwr2){
 		
 }
 
+
+
+
 void AN_taskPrefs::printAddresses(){
 	Serial.println("ad_esp ->  "+String(G_lJmrStt.esp32Addr));
 	Serial.println("ad_rm1 ->  "+String(G_lJmrStt.rebMod[0].address));
@@ -206,27 +246,20 @@ void AN_taskPrefs::printAddresses(){
 }
 
 void AN_taskPrefs::getDevParam(){
-
-
 	Serial.println("   Параметры устройства   ");
-	Serial.println("devId   ->  "+String(G_lJmrStt.devId, HEX));
-	Serial.println("groupId ->  "+String(G_lJmrStt.groupId));
-	Serial.println("devType ->  "+String(G_lJmrStt.devType));
-	Serial.println("devRange->  "+String(G_lJmrStt.devRange));
-	
+	Serial.println("devId   	->  "+String(G_lJmrStt.devId, HEX));
+	Serial.println("groupId 	->  "+String(G_lJmrStt.groupId));
+	Serial.println("devType 	->  "+String(G_lJmrStt.devType));
+	Serial.println("devRange	->  "+String(G_lJmrStt.devRange));
+	Serial.println("rangeMask1->	"+String(G_lJmrStt.rebMod[0].rngMask));
+	Serial.println("rangeMask2->	"+String(G_lJmrStt.rebMod[1].rngMask));
 }
 
-
-
-
-
 void AN_taskPrefs::run(void *param){
-
   _MSG_PACK msg;
   init();
   for(;;){
     xQueueReceive(QueuePrefs, &msg, portMAX_DELAY);
-      
     switch (msg.cmd){
         case CMD_SET_ADDR_ESP   :  setAddrEsp     (msg.addrEsp32);                break;
         case CMD_SET_ADDR_RM    :  setAddrRm      (msg.addrRm1, msg.addrRm2);     break;
@@ -237,6 +270,7 @@ void AN_taskPrefs::run(void *param){
         case CMD_SET_DEV_RANGE  :  setDevRange    (msg.devRange);                 break;
         case CMD_GET_DEV_PARAM  :  getDevParam    ();                             break;
         case CMD_PRINT_ADDRESSES:  printAddresses ();                             break;
+				case CMD_SET_RANGE_MASK :  setRangeMask   (msg.rngMask1, msg.rngMask2);   break;
     }  
   }
 }

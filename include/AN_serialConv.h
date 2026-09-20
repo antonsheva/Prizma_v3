@@ -11,6 +11,8 @@
 
 class AN_serialConv{
 private:
+  void assemblyMsg_setJmmrList(char *data, _MSG_PACK *msg);
+  void assemblyMsg_initDev(char *data, _MSG_PACK *msg);
 
 public:
   AN_serialConv(/* args */);
@@ -20,6 +22,8 @@ public:
   int getJmmrList(char *data);
 
   int findParam(char *data, char *param, DWORD *paramVal);
+
+  int findParam(char *data, char *param, DDWORD *paramVal);
 
   int unpackData(char *data, _MSG_PACK *msg);
 

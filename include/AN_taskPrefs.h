@@ -25,6 +25,7 @@ public:
   static void setDevRange(BYTE range);
   static void setAddrEsp(BYTE addr);
   static void setAddrRm(BYTE addrRm1, BYTE addrRm2);
+  static void setRangeMask(DWORD mask1, DWORD mask2);
   static void setPwr(BYTE pwr1, BYTE pwr2);
   static void printAddresses();
   static void getDevParam();

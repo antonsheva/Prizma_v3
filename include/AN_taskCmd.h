@@ -22,7 +22,7 @@ private:
   static  void getDevParam();
   static  void init();
   static  void processingCmd(_MSG_PACK *msg);
-  
+  static  void initDev(_MSG_PACK *msg);
   static  void disableRfOut();
   static  void disableOut();
 

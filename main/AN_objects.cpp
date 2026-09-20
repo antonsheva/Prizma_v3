@@ -102,7 +102,7 @@ void initObjects()
  
     QueueRs485Send       = xQueueCreate(2, sizeof(_MSG_PACK));
     QueueRs485Receive    = xQueueCreate(2, 1024);
-    QueuePrefs           = xQueueCreate(2,  sizeof(_MSG_PACK));
+    QueuePrefs           = xQueueCreate(8,  sizeof(_MSG_PACK));
  
     QueuePwrAut          = xQueueCreate(16, sizeof(_SERIAL_PACK));
     QueueLeds            = xQueueCreate(4,  4);
