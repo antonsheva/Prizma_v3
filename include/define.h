@@ -34,41 +34,41 @@
 #define CMD_PRINT_ADDRESSES 14
 // #define CMD_SEARCH_DEVICES 15
 
-#define CMD_SET_ADDR_RM_1   16
-#define CMD_SET_ADDR_RM_2   17
-#define CMD_RESPONSE_DATA   18
-#define CMD_GET_JMMR_LIST   19
-#define CMD_GET_JMMR_DATA   20
-
-#define CMD_GET_STACK_SIZE  21
-#define CMD_GEN_TEST_DATA   22
-#define CMD_SET_JMMR_LIST   23
-#define CMD_TEST            24     
-#define CMD_RESUME_WORK     25
-#define CMD_SET_ADDR_ESP    26
-#define CMD_SET_PWR         27
-#define CMD_RESTART_ESP     28
-#define CMD_SET_ADDR_RM     29
-#define CMD_SET_DEV_ID      30
-#define CMD_SET_DEV_TYPE    31
-#define CMD_SET_GROUP_ID    32
-#define CMD_SET_DEV_RANGE   33
-#define CMD_GET_DEV_PARAM   34
-#define CMD_GET_ALL_STACK   35
-#define CMD_APLAY_PWR       36
-#define CMD_UPDT_LOC_DATA   37
-#define CMD_BT_START        38
-#define CMD_BT_STOP         39
-#define CMD_BT_SEND         40
-#define CMD_BT_RECEIVE      41  
-#define CMD_PRINT_JMMR_DATA 42  
-#define CMD_PRINT_JMMR_LIST 43 
-#define CMD_DISABLE_RF_OUT  44 
-#define CMD_DISABLE_OUT     45 
-#define CMD_INIT_DEV        46
-#define CMD_SET_RANGE_MASK  47
-#define CMD_GET_LOCAL_JMMR  48
-
+#define CMD_SET_ADDR_RM_1       16
+#define CMD_SET_ADDR_RM_2       17
+#define CMD_RESPONSE_DATA       18
+#define CMD_GET_JMMR_LIST       19
+#define CMD_GET_JMMR_DATA       20
+#define CMD_GET_STACK_SIZE      21
+#define CMD_GEN_TEST_DATA       22
+#define CMD_SET_JMMR_LIST       23
+#define CMD_TEST                24     
+#define CMD_RESUME_WORK         25
+#define CMD_SET_ADDR_ESP        26
+#define CMD_SET_PWR             27
+#define CMD_RESTART_ESP         28
+#define CMD_SET_ADDR_RM         29
+#define CMD_SET_DEV_ID          30
+#define CMD_SET_DEV_TYPE        31
+#define CMD_SET_GROUP_ID        32
+#define CMD_SET_DEV_RANGE       33
+#define CMD_GET_DEV_PARAM       34
+#define CMD_GET_ALL_STACK       35
+#define CMD_APLAY_PWR           36
+#define CMD_UPDT_LOC_DATA       37
+#define CMD_BT_START            38
+#define CMD_BT_STOP             39
+#define CMD_BT_SEND             40
+#define CMD_BT_RECEIVE          41  
+#define CMD_PRINT_JMMR_DATA     42  
+#define CMD_PRINT_JMMR_LIST     43 
+#define CMD_DISABLE_RF_OUT      44 
+#define CMD_DISABLE_OUT         45 
+#define CMD_INIT_DEV            46
+#define CMD_SET_RANGE_MASK      47
+#define CMD_GET_LOCAL_JMMR      48
+#define CMD_SET_PWR_MODE_MAIN   49
+#define CMD_SET_STATUS_MASTER   50
 
 
 
@@ -138,6 +138,9 @@
 #define MSG_DIR_REQUEST  0
 #define MSG_DIR_RESPONSE 1
 
+#define DEV_STATUS_MASTER 0
+#define DEV_STATUS_SLAVE  1
+
 #define MAX_SERIAL_DATA_LEN 4096
 #define RS485_BUFF_LEN      1024
 #define RM_BUFF_LEN         512
@@ -168,6 +171,7 @@
 #define EVENT_APPLY_CHANGES         6
 #define EVENT_RESTART_ESP           7
 #define EVENT_RESUME_WORK           8
+#define EVENT_SET_PWR_MODE_MAIN     9
 
 #define A24_CRITICAL_VAL      2200
 #define A24_NORMAL_VAL        2800

@@ -47,6 +47,7 @@ typedef struct{
     BYTE   infoLen = 0;
     WORD   devTemper   = 0;
     WORD   devBattStt  = 0;
+    BYTE   status = 0;
     struct_rebMod rebMod[2];
     _bt_param bt;
 }_JMMR_STATE;

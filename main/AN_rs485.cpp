@@ -7,7 +7,14 @@
 void AN_commRs485Bt::prepMsg(_MSG_PACK *msg, BYTE iterNum)
 {
   AN_shiftDataArr sft;
-  switch(msg->cmdType){
+  switch(msg->cmdType){\
+    
+    case CMD_SET_PWR_MODE_MAIN  : msg->addressee  = BROADCAST_ADDR;
+                                  msg->cmd        = CMD_SET_PWR_MODE_MAIN;
+                                  msg->direction  = MSG_DIR_REQUEST;
+                                  msg->response   = 0;
+                                  break;
+
     case CMD_DISABLE_OUT  : msg->addressee  = BROADCAST_ADDR;
                             msg->cmd        = CMD_DISABLE_RF_OUT;
                             msg->direction  = MSG_DIR_REQUEST;

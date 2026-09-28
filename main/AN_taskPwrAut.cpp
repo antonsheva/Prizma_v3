@@ -30,9 +30,12 @@ void AN_taskPwrAut::eventDisconnect(){
 }
 
 void AN_taskPwrAut::eventConnect(){
+  _MSG_PACK msg;
   Serial.println("EVENT_BT_CONNECT"); 
   G_pwrMode = PWR_MODE_BT_CONNECT; 
   G_waitBtConnect = 0;
+  msg.cmd = CMD_SET_STATUS_MASTER;
+  xQueueSend(QueueCmd, &msg, portMAX_DELAY); 
 }
 
 void AN_taskPwrAut::eventBtOn(){
@@ -52,6 +55,13 @@ void AN_taskPwrAut::eventBtOn(){
   msg.cmd = CMD_BT_START;
   xQueueSend(QueueCmd, &msg, portMAX_DELAY); 
   G_waitBtConnect = 3000; 
+}
+
+
+void AN_taskPwrAut::eventSetPwrModeMain(){
+  G_pwrMode = PWR_MODE_MAIN;
+  G_waitBtConnect = 0;
+  _btEnSwch = 0;
 }
 
 void AN_taskPwrAut::eventResumeWork(){
@@ -76,7 +86,7 @@ void AN_taskPwrAut::run(void *param){
         case EVENT_RESTART_ESP        : esp_restart();                  break;
         case EVENT_RESUME_WORK        : eventResumeWork();              break;        
         case EVENT_BTTN_LONG_PRESS    : eventPwrOff();                  break;        
-            
+        case EVENT_SET_PWR_MODE_MAIN  : eventSetPwrModeMain();          break;    
       }
   }
 }

@@ -72,15 +72,32 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		 * @brief other funcs
 		 * 
 		 */
-		case CMD_APLAY_PWR      : applyPwr();						break;
-		case CMD_UPDT_LOC_DATA  : updateLocalData(msg);	break;
-		case CMD_GET_ALL_STACK  : getAllStack();				break;
-			
-		case CMD_TEST           : test(); 							break;
- 
+		case CMD_APLAY_PWR      	: applyPwr();						break;
+		case CMD_UPDT_LOC_DATA  	: updateLocalData(msg);	break;
+		case CMD_GET_ALL_STACK  	: getAllStack();				break;
+		case CMD_TEST           	: test(); 							break;
+ 		case CMD_SET_STATUS_MASTER	: setStatusMaster();	break;
+		case CMD_SET_PWR_MODE_MAIN	: setPwrModeMain();		break;
+
 	}
 	G_serialBusy = 0;
 }
+
+
+void AN_taskCmd::setStatusMaster(){
+	_MSG_PACK msg;
+	G_lJmrStt.status = DEV_STATUS_MASTER;
+	msg.subscribersQty = 3;
+	msg.cmdType = CMD_SET_PWR_MODE_MAIN;
+	xQueueSend(QueueRs485Pool, &msg, portMAX_DELAY);	
+}
+
+void AN_taskCmd::setPwrModeMain(){
+	_SERIAL_PACK sPack;
+	sPack.cmd = EVENT_SET_PWR_MODE_MAIN;
+	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
+}
+
 
 void AN_taskCmd::getLocalJmmr(){
 	AN_commRs485Bt rs;

@@ -6,8 +6,7 @@
 #include "AN_serial.h"
 
 
-#define DEV_STATUS_MASTER 1
-#define DEV_STATUS_SLAVE  0
+
 
 
 #define RS485_TMP_BUFF_SIZE 512

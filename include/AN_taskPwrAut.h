@@ -10,6 +10,7 @@ private:
   static void eventDisconnect();
   static void eventConnect();
   static void eventBtOn();
+  static void eventSetPwrModeMain();
   static void eventResumeWork();
 
 public:

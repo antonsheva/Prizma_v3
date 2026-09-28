@@ -27,6 +27,10 @@ private:
   static  void disableRfOut();
   static  void disableOut();
 
+  static  void setStatusMaster();
+  static  void setPwrModeMain();
+
+
   static void printJmmrList();
   static void printJmmrData(_MSG_PACK *msg);
   static void rmGetState();
