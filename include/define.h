@@ -133,6 +133,8 @@
 #define PWR_MODE_PWR_OFF            4
 #define PWR_MODE_APPLY_CHANGE       5
 #define PWR_MODE_RESTART            6
+#define PWR_MODE_SAVE_DEV_ID        7
+
 
 
 #define MSG_DIR_REQUEST  0
@@ -172,6 +174,8 @@
 #define EVENT_RESTART_ESP           7
 #define EVENT_RESUME_WORK           8
 #define EVENT_SET_PWR_MODE_MAIN     9
+#define EVENT_SAVE_DEV_ID           10
+
 
 #define A24_CRITICAL_VAL      2200
 #define A24_NORMAL_VAL        2800

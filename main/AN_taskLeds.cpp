@@ -89,7 +89,7 @@ void AN_taskLeds::run(void *param){
                 setState(stt);
         break;   
         case 7: if(!G_ledsState[1]){
-                if(cntTm < 4)cntTm++;
+                if(cntTm < 3)cntTm++;
                 else{
                     cntTm = 0;
                     stt &= 0x30;
@@ -97,15 +97,24 @@ void AN_taskLeds::run(void *param){
                     else        stt |= 0x0C;
                     setState(stt);
                     sftCnt++;
+                    if(G_ledsState[2]){
+                      G_ledsState[2]--;
+                      if(!G_ledsState[2]){
+                        sftCnt = 0;
+                        G_ledsState[1] = 8;
+                        cntTm = 0;
+                        setState(0);                        
+                      }
+                    }
                     if(sftCnt>=100){                   
-                    sftCnt = 0;
-                    G_ledsState[1] = 8;
-                    cntTm = 0;
-                    setState(0);
+                      sftCnt = 0;
+                      G_ledsState[1] = 8;
+                      cntTm = 0;
+                      setState(0);
                     }
                 }          
               }
-        break;
+        break;       
       }
 
       vTaskDelay(50/portTICK_PERIOD_MS);

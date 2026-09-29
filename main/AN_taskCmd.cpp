@@ -28,7 +28,7 @@ int AN_taskCmd::processingResponseData(_MSG_PACK *msg){
 
 void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	switch (msg->cmd){
-		case CMD_RM_AT			 		: sendCmdToRm(CMD_RM_AT,         	msg->mask1);	break;
+		case CMD_RM_AT			 			: sendCmdToRm(CMD_RM_AT,         	msg->mask1);	break;
 		case CMD_RM_GET_ATBT 			: sendCmdToRm(CMD_RM_GET_ATBT,	msg->mask1);	break;
 		case CMD_RM_GET_ATC	 			: sendCmdToRm(CMD_RM_GET_ATC,		msg->mask1);	break;
 		case CMD_RM_GET_ATI	 			: sendCmdToRm(CMD_RM_GET_ATI,		msg->mask1);	break;
@@ -105,15 +105,19 @@ void AN_taskCmd::getLocalJmmr(){
 }
 
 void AN_taskCmd::initDev(_MSG_PACK *msg){
-AN_shiftDataArr shft;
-shft.printMsg(msg);
+	_SERIAL_PACK sPack;
+	AN_shiftDataArr shft;
+	shft.printMsg(msg);
+	sPack.cmd = EVENT_SAVE_DEV_ID;
+	xQueueSend(QueuePwrAut, &sPack, portMAX_DELAY);
+	
 	msg->cmd = CMD_SET_DEV_ID     ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);       
 	msg->cmd = CMD_SET_GROUP_ID   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
 	msg->cmd = CMD_SET_DEV_TYPE   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
 	msg->cmd = CMD_SET_DEV_RANGE  ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
 	msg->cmd = CMD_SET_RANGE_MASK ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
 	msg->cmd = CMD_SET_ADDR_ESP   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
-	         
+
 }
 
 void AN_taskCmd::disableRfOut(){

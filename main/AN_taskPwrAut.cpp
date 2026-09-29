@@ -70,6 +70,11 @@ void AN_taskPwrAut::eventResumeWork(){
   _ignr = 0;   
 }
 
+
+void AN_taskPwrAut::eventsaveParams(){
+  G_pwrMode = PWR_MODE_SAVE_DEV_ID;
+}
+
 void AN_taskPwrAut::run(void *param){
   _SERIAL_PACK sPack;
  
@@ -87,6 +92,7 @@ void AN_taskPwrAut::run(void *param){
         case EVENT_RESUME_WORK        : eventResumeWork();              break;        
         case EVENT_BTTN_LONG_PRESS    : eventPwrOff();                  break;        
         case EVENT_SET_PWR_MODE_MAIN  : eventSetPwrModeMain();          break;    
+        case EVENT_SAVE_DEV_ID        : eventsaveParams();              break;
       }
   }
 }

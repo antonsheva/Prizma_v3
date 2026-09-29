@@ -12,7 +12,7 @@ private:
   static void eventBtOn();
   static void eventSetPwrModeMain();
   static void eventResumeWork();
-
+  static void eventsaveParams();
 public:
   AN_taskPwrAut(/* args */);
   ~AN_taskPwrAut();
@@ -22,10 +22,7 @@ public:
 
 
   static void run(void *param);
+  
 };
-
-
-
-
 
 #endif

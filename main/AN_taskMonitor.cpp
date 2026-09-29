@@ -63,9 +63,22 @@ void AN_taskMonitor::setLedsState(){
         else           G_pwrMode = PWR_MODE_MAIN;          
         G_ledsState[1] = 0; 
       }
-
     }      
- 
+    
+    if(G_pwrMode == PWR_MODE_SAVE_DEV_ID){
+      if( G_ledsState[0]!=7){
+        G_ledsState[2] = 4;
+        G_ledsState[0] = 7;
+        G_ledsState[1] = 0;        
+      }
+      if(G_ledsState[1] == 8){
+        Serial.println("Save state ");
+        if(G_btConnect)G_pwrMode = PWR_MODE_BT_CONNECT;
+        else           G_pwrMode = PWR_MODE_MAIN;          
+        G_ledsState[1] = 0; 
+      }
+    }      
+
 }
 
 void AN_taskMonitor::run(void *param){

@@ -204,7 +204,7 @@ extern EventGroupHandle_t EventGroupBt    ;
 extern BYTE G_subscribersQty;
 
 extern BYTE G_voltToLeds;  
-extern BYTE G_ledsState[2];
+extern BYTE G_ledsState[4];
 
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];
