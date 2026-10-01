@@ -45,36 +45,46 @@ void AN_taskAnalog::run(void *param){
   ESP_ERROR_CHECK(adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_3, &config));
     
   
- 
+  int tmpCnt = 0;
   for(;;){
  
     ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_0, &a24));
     ESP_ERROR_CHECK(adc_oneshot_read(adc_handle, ADC_CHANNEL_3, &aTemper));
     
-  if(mCnt<20){
-    mAverVoltage += a24;
-    mAverTemper  += aTemper;
-    mCnt++;
-  }else{
-    G_lJmrStt.devBattStt = mAverVoltage/21;
-    G_lJmrStt.devTemper  = mAverTemper/21;
-    mAverVoltage = 0;
-    mAverTemper  = 0;  
-    mCnt = 0;
-    // AN_print("ch_1 VAL -> "+std::to_string(G_lJmrStt.devBattStt)+" ;   ch_2 VAL -> "+std::to_string(G_lJmrStt.devTemper));
- 
-  }
-
-    
-    if((G_lJmrStt.devTemper < A_TEMPERATURE_ON_FAN)&&(!fanEn)){
-      fanEn = 1;
-      gpio_set_level(PIN_FAN,1);
-    } 
-
-    if((G_lJmrStt.devTemper > A_TEMPERATURE_OFF_FAN)&&(fanEn)){
-      fanEn = 0;
-      gpio_set_level(PIN_FAN,0);
+    if(mCnt<20){
+      mAverVoltage += a24;
+      mAverTemper  += aTemper;
+      mCnt++;
+    }else{
+      G_lJmrStt.devBattStt = mAverVoltage/21;
+      G_lJmrStt.devTemper  = mAverTemper/21;
+      mAverVoltage = 0;
+      mAverTemper  = 0;  
+      mCnt = 0;
+      // AN_print("ch_1 VAL -> "+std::to_string(G_lJmrStt.devBattStt)+" ;   ch_2 VAL -> "+std::to_string(G_lJmrStt.devTemper));
+  
     }
+
+    tmpCnt++;
+    if(!(tmpCnt%600)){
+      if(fanEn){
+        fanEn = 0;
+        gpio_set_level(PIN_FAN,0);
+      }else{
+        fanEn = 1;
+        gpio_set_level(PIN_FAN,1);
+      }
+    }
+
+    // if((G_lJmrStt.devTemper < A_TEMPERATURE_ON_FAN)&&(!fanEn)){
+    //   fanEn = 1;
+    //   gpio_set_level(PIN_FAN,1);
+    // } 
+
+    // if((G_lJmrStt.devTemper > A_TEMPERATURE_OFF_FAN)&&(fanEn)){
+    //   fanEn = 0;
+    //   gpio_set_level(PIN_FAN,0);
+    // }
 
     if(G_lJmrStt.devBattStt < A24_CRITICAL_VAL){
       G_voltToLeds = 0;
@@ -89,11 +99,6 @@ void AN_taskAnalog::run(void *param){
         for(int i=0; i<a24_tmp;i++)G_voltToLeds |= (1<<i);
         G_voltToLeds &= 0x0F;                 
     }
-
-
-
-
-
     vTaskDelay(50/portTICK_PERIOD_MS);
   }
 
