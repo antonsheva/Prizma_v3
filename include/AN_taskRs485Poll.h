@@ -8,14 +8,17 @@
 class AN_taskRs485Poll{
 private:
 
+  static int checkStopPoll(_MSG_PACK *msg);
 
+  static bool checkExistAddr(BYTE addr);
 
 public:
   AN_taskRs485Poll(/* args */);
   ~AN_taskRs485Poll();
 
-  static void run(void *param);
 
+
+  static void run(void *param);
 };
 
 

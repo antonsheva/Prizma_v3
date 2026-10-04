@@ -44,10 +44,12 @@ _RS485_data RS485_data;
 _MSG_PACK G_rm_msg;
 _MSG_PACK G_485_msg;
   
+std::vector<BYTE>G_foundAddr;
+
 int G_pauseBtDataCnt = 0;
-
 BYTE G_subscribersQty = 0;  
-
+ 
+BYTE G_foundSubscribers = 0;
 char G_txtJsonBuff[3968];
 char G_txtSerialBuff[4096];
  

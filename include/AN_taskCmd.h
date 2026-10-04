@@ -27,7 +27,9 @@ private:
   static  void disableRfOut();
   static  void disableOut();
 
-  static  void setStatusMaster();
+  static  void addFoundSubscriber(_MSG_PACK *msg);
+
+  static void setStatusMaster();
   static  void setPwrModeMain();
 
 

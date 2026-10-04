@@ -111,6 +111,7 @@
 #define PARAM_RANGE_START_2     "rng_start2"
 #define PARAM_RANGE_STOP_2      "rng_stop2"
 #define PARAM_RANGE_MASK_2      "rng_msk_2"
+#define PARAM_SRCH_SUBSCRIBERS  "srch_sbscrbr"
 
 
 #define RESP_OK             1
@@ -135,7 +136,9 @@
 #define PWR_MODE_RESTART            6
 #define PWR_MODE_SAVE_DEV_ID        7
 
-
+#define POLL_STATE_CONTINUE 0
+#define POLL_STATE_STOP     1  
+#define POLL_STATE_ERROR    2
 
 #define MSG_DIR_REQUEST  0
 #define MSG_DIR_RESPONSE 1
@@ -152,6 +155,7 @@
 
 #define MAX_STR_LEN         64
 
+#define MAX_TRY_QTY 5
 
 #define SRC_COM 0
 #define SRC_BT  1

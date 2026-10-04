@@ -13,7 +13,7 @@ int AN_taskCmd::processingResponseData(_MSG_PACK *msg){
   AN_shiftDataArr sft;
   AN_commRs485Bt        btSend;
   switch (msg->response){
-		case RESP_GET_JMMR_LIST: addJmmr(msg); break;
+		case RESP_GET_JMMR_LIST: addFoundSubscriber(msg); break;
 		case RESP_GET_JMMR_DATA: btSend.sendBtJmmrData(msg);
 			msg->addrEsp32 = msg->sender;	
 			xQueueSend(QueueBt, msg, portMAX_DELAY);
@@ -83,7 +83,12 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 	G_serialBusy = 0;
 }
 
-
+void AN_taskCmd::addFoundSubscriber(_MSG_PACK *msg){
+	BYTE addr = msg->addrEsp32;
+	addJmmr(msg);
+	G_foundAddr.push_back(addr);
+	G_foundSubscribers++;
+}
 void AN_taskCmd::setStatusMaster(){
 	_MSG_PACK msg;
 	G_lJmrStt.status = DEV_STATUS_MASTER;
@@ -116,7 +121,9 @@ void AN_taskCmd::initDev(_MSG_PACK *msg){
 	msg->cmd = CMD_SET_DEV_TYPE   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);         
 	msg->cmd = CMD_SET_DEV_RANGE  ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
 	msg->cmd = CMD_SET_RANGE_MASK ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
-	msg->cmd = CMD_SET_ADDR_ESP   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY);     
+	msg->cmd = CMD_SET_ADDR_ESP   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY); 
+	msg->cmd = CMD_SET_DEV_TYPE   ;xQueueSend(QueuePrefs, msg, portMAX_DELAY); 
+	    
 
 }
 
@@ -313,9 +320,13 @@ void AN_taskCmd::getStackSize(_MSG_PACK *msg){
 
 int AN_taskCmd::getJammList(){
 	_MSG_PACK msg;
+	G_foundAddr.clear();
 	G_subscribersQty = MAX_DEVICE_QTY;
+	
 	G_jmmrsList.clear();
   addJmmr(&G_lJmrStt);
+	G_foundSubscribers = 1;
+	G_foundAddr.push_back(G_lJmrStt.esp32Addr);
 	msg.subscribersQty = MAX_DEVICE_QTY;
 	msg.cmdType = CMD_GET_JMMR_LIST;
 	xQueueSend(QueueRs485Pool, &msg, portMAX_DELAY);	

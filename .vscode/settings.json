@@ -5,7 +5,7 @@
     "board/esp32-wrover-kit-3.3v.cfg"
   ],
   "idf.portWin": "COM15",
-  "idf.currentSetup": "D:\\esp\\v5.5.5\\esp-idf",
+  "idf.currentSetup": "C:\\esp5\\.espressif\\v5.5.5\\esp-idf",
   "idf.customExtraVars": {
     "IDF_TARGET": "esp32"
   },
@@ -16,6 +16,6 @@
     "--compile-commands-dir=d:\\Anton\\Projects\\ESP_IDF\\Prizma_v3\\build"
   ],
   "idf.flashType": "UART",
-  "idf.port": "COM4",
-  "idf.monitorPort": "COM4"
+  "idf.port": "COM15",
+  "idf.monitorPort": "COM15"
 }

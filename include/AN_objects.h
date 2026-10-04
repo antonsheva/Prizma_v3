@@ -101,16 +101,18 @@ typedef struct{
     WORD   devTemper  = 0;
     WORD   devBattStt = 0;
 
+    int   searchSubscribersQty = 0;
     
-    int    jmmrListLen    = 0;
-    int    subscribersQty = 0;
+    int   jmmrListLen    = 0;
+    int   subscribersQty = 0;
 
-    bool   updtLocalJmmr  = 1;
-    bool   needBtOff      = 0;
-    bool   needBtRestart  = 0;    
+    bool  updtLocalJmmr  = 1;
+    bool  needBtOff      = 0;
+    bool  needBtRestart  = 0;    
+ 
 
-    int    txtLen   = 0;
-    char   txt[TXT_BUFF_LEN-128] = {0};
+    int   txtLen   = 0;
+    char  txt[TXT_BUFF_LEN-128] = {0};
 
 }_MSG_PACK;
 
@@ -202,9 +204,11 @@ extern EventGroupHandle_t EventGroupSpp   ;
 extern EventGroupHandle_t EventGroupBt    ;  
  
 extern BYTE G_subscribersQty;
-
+extern BYTE G_foundSubscribers;
 extern BYTE G_voltToLeds;  
 extern BYTE G_ledsState[4];
+
+extern std::vector<BYTE>G_foundAddr;
 
 extern char G_txtJsonBuff[3968];
 extern char G_txtSerialBuff[4096];
