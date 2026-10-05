@@ -1,9 +1,13 @@
 #include "../include/AN_taskRs485Poll.h"
 #include <vector>
-int AN_taskRs485Poll::checkStopPoll(_MSG_PACK *msg){
-  int searchSubscribers = G_lJmrStt.devType == DEV_TYPE_A ? 2 : 4;
+
+
+
+
+int AN_taskRs485Poll::checkStopPoll(_MSG_PACK *msg){ 
   if(msg->cmdType == CMD_GET_JMMR_LIST){
-    if(G_foundSubscribers >= searchSubscribers) return POLL_STATE_STOP;
+    Serial.println("devQty -> "+String(msg->devQty));
+    if(G_foundSubscribers >=  msg->devQty) return POLL_STATE_STOP;
     else                                        return POLL_STATE_ERROR;
   }
   return POLL_STATE_CONTINUE;
@@ -11,9 +15,7 @@ int AN_taskRs485Poll::checkStopPoll(_MSG_PACK *msg){
 
 bool AN_taskRs485Poll::checkExistAddr(BYTE addr){
   for(int i=0; i<G_foundAddr.size(); i++){
-
     // Serial.println("addr -> "+String(addr));
-
     if(G_foundAddr[i] == addr){
       // Serial.println("Found addr -> "+String(G_foundAddr[i]));
       return true;
@@ -45,7 +47,7 @@ void AN_taskRs485Poll::run(void *param){
           xQueueSend(QueueRs485Send, &msg, portMAX_DELAY);	
         } 
         period = (msg.addressee == BROADCAST_ADDR) ? 50 : 200;
-        if(checkStopPoll(&msg)==POLL_STATE_STOP)break;
+        if(t>0)if(checkStopPoll(&msg)==POLL_STATE_STOP)break;
         vTaskDelay(period/portTICK_PERIOD_MS);
       }      
 

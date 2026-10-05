@@ -15,7 +15,7 @@ private:
   static  int  setATC(_MSG_PACK *msg);
   static  int  getATBT();           
   static  int  getATC();
-  static  int  getJammList();
+ 
   static  int  processingResponseData(_MSG_PACK *msg);
   static  int  getJmmrData(_MSG_PACK *msg);    
   static  void applyPwr();
@@ -43,7 +43,9 @@ private:
   static  void btStop();
   static  void getAllStack();
   static  void getStackSize(_MSG_PACK *msg);
-  
+
+  static  int getJammList(_MSG_PACK *msg);
+
   static  void updateLocalData(_MSG_PACK *msg);
   static  void addJmmr(_MSG_PACK *msg);
   static  void addJmmr(_JMMR_STATE *jmmr);

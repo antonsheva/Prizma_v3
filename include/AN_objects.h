@@ -101,7 +101,7 @@ typedef struct{
     WORD   devTemper  = 0;
     WORD   devBattStt = 0;
 
-    int   searchSubscribersQty = 0;
+    int   devQty = 0;
     
     int   jmmrListLen    = 0;
     int   subscribersQty = 0;

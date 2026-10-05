@@ -54,7 +54,7 @@ void AN_taskCmd::processingCmd(_MSG_PACK *msg){
 		 * @brief  RS485-related commands
 		 * 
 		 */
-		case CMD_GET_JMMR_LIST 	: getJammList();  			break;
+		case CMD_GET_JMMR_LIST 	: getJammList(msg);  			break;
 		case CMD_SET_JMMR_LIST 	: setJmmrList(msg);			break;
 		case CMD_GET_JMMR_DATA 	: getJmmrData(msg);  	  break; 
 		case CMD_SET_JMMR_DATA 	: setJmmrData(msg);     break;
@@ -318,18 +318,19 @@ void AN_taskCmd::getStackSize(_MSG_PACK *msg){
  
 }
 
-int AN_taskCmd::getJammList(){
-	_MSG_PACK msg;
+int AN_taskCmd::getJammList(_MSG_PACK *msg){
+	_MSG_PACK msg1;
 	G_foundAddr.clear();
 	G_subscribersQty = MAX_DEVICE_QTY;
 	
 	G_jmmrsList.clear();
-  addJmmr(&G_lJmrStt);
+    addJmmr(&G_lJmrStt);
 	G_foundSubscribers = 1;
 	G_foundAddr.push_back(G_lJmrStt.esp32Addr);
-	msg.subscribersQty = MAX_DEVICE_QTY;
-	msg.cmdType = CMD_GET_JMMR_LIST;
-	xQueueSend(QueueRs485Pool, &msg, portMAX_DELAY);	
+	msg1.subscribersQty = MAX_DEVICE_QTY;
+	msg1.cmdType = CMD_GET_JMMR_LIST;
+	msg1.devQty = msg->devQty;
+	xQueueSend(QueueRs485Pool, &msg1, portMAX_DELAY);	
   return 0;
 }
 

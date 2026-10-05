@@ -111,7 +111,7 @@
 #define PARAM_RANGE_START_2     "rng_start2"
 #define PARAM_RANGE_STOP_2      "rng_stop2"
 #define PARAM_RANGE_MASK_2      "rng_msk_2"
-#define PARAM_SRCH_SUBSCRIBERS  "srch_sbscrbr"
+#define PARAM_DEV_QTY           "dev_qty"
 
 
 #define RESP_OK             1

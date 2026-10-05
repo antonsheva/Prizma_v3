@@ -191,21 +191,20 @@ int AN_serialConv::saveMsgParam(char *param, char *val, _MSG_PACK *msg){
   if(par.find(PARAM_RANGE_STOP_2 )!= -1)msg->rngStop2    = atoi(val); 
   if(par.find(PARAM_RANGE_MASK_2 )!= -1)msg->rngMask2    = atoi(val); 
 
-
-  if(par.find(PARAM_ADDR_ESP  )         != -1)msg->addrEsp32  = atoi(val);        
-  if(par.find(PARAM_ADDR_RM_1 )         != -1)msg->addrRm1    = atoi(val);        
-  if(par.find(PARAM_ADDR_RM_2 )         != -1)msg->addrRm2    = atoi(val);        
-  if(par.find(PARAM_MOD_CODE_1)         != -1)msg->modCode1   = atoi(val);     
-  if(par.find(PARAM_MOD_CODE_2)         != -1)msg->modCode2   = atoi(val);     
-  if(par.find(PARAM_MASK_1    )         != -1)msg->mask1      = atoi(val);     
-  if(par.find(PARAM_MASK_2    )         != -1)msg->mask2      = atoi(val);     
-  if(par.find(PARAM_PWR_1     )         != -1)msg->pwr1       = atoi(val);  
-  if(par.find(PARAM_PWR_2     )         != -1)msg->pwr2       = atoi(val);   
-  if(par.find(PARAM_RM_NUM    )         != -1)msg->rmNum      = atoi(val);  
-  if(par.find(PARAM_BATT_STATE)         != -1)msg->devBattStt = atoi(val);
-  if(par.find(PARAM_TEMPERATURE)        != -1)msg->devTemper  = atoi(val);
-  if(par.find(PARAM_NEED_BT_OFF)        != -1)msg->needBtOff  = atoi(val); 
-  if(par.find(PARAM_SRCH_SUBSCRIBERS)   != -1)msg->searchSubscribersQty  = atoi(val); 
+  if(par.find(PARAM_ADDR_ESP   )         != -1)msg->addrEsp32   = atoi(val);        
+  if(par.find(PARAM_ADDR_RM_1  )         != -1)msg->addrRm1     = atoi(val);        
+  if(par.find(PARAM_ADDR_RM_2  )         != -1)msg->addrRm2     = atoi(val);        
+  if(par.find(PARAM_MOD_CODE_1 )         != -1)msg->modCode1    = atoi(val);     
+  if(par.find(PARAM_MOD_CODE_2 )         != -1)msg->modCode2    = atoi(val);     
+  if(par.find(PARAM_MASK_1     )         != -1)msg->mask1       = atoi(val);     
+  if(par.find(PARAM_MASK_2     )         != -1)msg->mask2       = atoi(val);     
+  if(par.find(PARAM_PWR_1      )         != -1)msg->pwr1        = atoi(val);  
+  if(par.find(PARAM_PWR_2      )         != -1)msg->pwr2        = atoi(val);   
+  if(par.find(PARAM_RM_NUM     )         != -1)msg->rmNum       = atoi(val);  
+  if(par.find(PARAM_BATT_STATE )         != -1)msg->devBattStt  = atoi(val);
+  if(par.find(PARAM_TEMPERATURE)         != -1)msg->devTemper   = atoi(val);
+  if(par.find(PARAM_NEED_BT_OFF)         != -1)msg->needBtOff   = atoi(val); 
+  if(par.find(PARAM_DEV_QTY   )          != -1)msg->devQty      = atoi(val); 
 
   if(par.find(PARAM_NEED_ESP_RESTART)  != -1)msg->needBtRestart  = atoi(val);  
   if(par.find(PARAM_JMMR_LIST_LEN) != -1)msg->jmmrListLen = atoi(val);   
@@ -225,12 +224,12 @@ int AN_serialConv::saveJmmrParam(char *param, char *val, _JMMR_STATE *jmmr){
   if(par.find(PARAM_DEV_RANGE )   != -1)jmmr->devRange            = atoi(val);                
   if(par.find(PARAM_ADDR_ESP  )   != -1)jmmr->esp32Addr           = atoi(val); 
   
-  if(par.find(PARAM_RANGE_START_1)!= -1)jmmr->rebMod[0].rngStart   = atoi(val); 
-  if(par.find(PARAM_RANGE_STOP_1 )!= -1)jmmr->rebMod[0].rngStop    = atoi(val); 
-  if(par.find(PARAM_RANGE_MASK_1 )!= -1)jmmr->rebMod[0].rngMask    = atoi(val); 
-  if(par.find(PARAM_RANGE_START_2)!= -1)jmmr->rebMod[1].rngStart   = atoi(val); 
-  if(par.find(PARAM_RANGE_STOP_2 )!= -1)jmmr->rebMod[1].rngStop    = atoi(val); 
-  if(par.find(PARAM_RANGE_MASK_2 )!= -1)jmmr->rebMod[1].rngMask    = atoi(val); 
+  if(par.find(PARAM_RANGE_START_1)!= -1)jmmr->rebMod[0].rngStart  = atoi(val); 
+  if(par.find(PARAM_RANGE_STOP_1 )!= -1)jmmr->rebMod[0].rngStop   = atoi(val); 
+  if(par.find(PARAM_RANGE_MASK_1 )!= -1)jmmr->rebMod[0].rngMask   = atoi(val); 
+  if(par.find(PARAM_RANGE_START_2)!= -1)jmmr->rebMod[1].rngStart  = atoi(val); 
+  if(par.find(PARAM_RANGE_STOP_2 )!= -1)jmmr->rebMod[1].rngStop   = atoi(val); 
+  if(par.find(PARAM_RANGE_MASK_2 )!= -1)jmmr->rebMod[1].rngMask   = atoi(val); 
   
   if(par.find(PARAM_ADDR_RM_1 )   != -1)jmmr->rebMod[0].address   = atoi(val);        
   if(par.find(PARAM_ADDR_RM_2 )   != -1)jmmr->rebMod[1].address   = atoi(val);        
